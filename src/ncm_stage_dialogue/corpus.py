@@ -11,6 +11,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 SPEAKER_RE = re.compile(r"^[A-Z][A-Z .’'\-]{1,60}\.$")
 ACT_RE = re.compile(r"^(FIRST|SECOND|THIRD|FOURTH|FIFTH) ACT$")
@@ -18,10 +19,49 @@ DIRECTION_RE = re.compile(r"\[([^]]+)\]", re.DOTALL)
 VALID_SPLITS = {"train", "validation", "test"}
 ORDINALS = {"FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4, "FIFTH": 5}
 SOURCE_ID_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
+PARSER_ALLOWED_HOSTS = {
+    "gutenberg_stage_play_v1": {"gutenberg.org", "www.gutenberg.org"},
+}
 
 
 class CorpusError(RuntimeError):
     """Raised when source provenance or parsing invariants fail."""
+
+
+def _validate_https_url(url: str, field: str, allowed_hosts: set[str]) -> None:
+    parsed = urlsplit(url)
+    try:
+        port = parsed.port
+    except ValueError as error:
+        raise CorpusError(f"unsafe {field}: {url}") from error
+    if (
+        parsed.scheme != "https"
+        or parsed.hostname not in allowed_hosts
+        or parsed.username is not None
+        or parsed.password is not None
+        or port not in {None, 443}
+    ):
+        raise CorpusError(f"unsafe {field}: {url}")
+
+
+class HttpsOnlyRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Allow redirects only to HTTPS URLs on the parser's trusted hosts."""
+
+    def __init__(self, allowed_hosts: set[str]) -> None:
+        super().__init__()
+        self.allowed_hosts = allowed_hosts
+
+    def redirect_request(
+        self,
+        req: urllib.request.Request,
+        fp: Any,
+        code: int,
+        msg: str,
+        headers: Any,
+        newurl: str,
+    ) -> urllib.request.Request | None:
+        _validate_https_url(newurl, "redirect URL", self.allowed_hosts)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
 @dataclass(frozen=True)
@@ -119,6 +159,13 @@ def load_sources(manifest_path: Path) -> list[Source]:
         seen.add(source_id)
         if not re.fullmatch(r"[0-9a-f]{64}", raw["source_sha256"]):
             raise CorpusError(f"invalid SHA-256 for {source_id}")
+        allowed_hosts = PARSER_ALLOWED_HOSTS.get(raw["parser"])
+        if allowed_hosts is None:
+            raise CorpusError(f"unsupported parser: {raw['parser']}")
+        _validate_https_url(raw["source_url"], "source_url", allowed_hosts)
+        _validate_https_url(
+            raw["source_landing_page"], "source_landing_page", allowed_hosts
+        )
         if set(raw["scene_splits"].values()) - VALID_SPLITS:
             raise CorpusError(f"invalid scene split for {source_id}")
         sources.append(
@@ -151,7 +198,10 @@ def download_source(
 
     def fetch_url(url: str) -> bytes:
         request = urllib.request.Request(url, headers={"User-Agent": "ncm-stage-dialogue/0.1"})
-        with urllib.request.urlopen(request, timeout=60) as response:
+        allowed_hosts = PARSER_ALLOWED_HOSTS[source.parser]
+        opener = urllib.request.build_opener(HttpsOnlyRedirectHandler(allowed_hosts))
+        with opener.open(request, timeout=60) as response:
+            _validate_https_url(response.geturl(), "final source URL", allowed_hosts)
             return response.read()
 
     content = (fetch or fetch_url)(source.source_url)

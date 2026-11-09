@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import urllib.request
 from collections.abc import Callable
 from pathlib import Path
 
@@ -10,6 +11,7 @@ import pytest
 from ncm_stage_dialogue.cli import main
 from ncm_stage_dialogue.corpus import (
     CorpusError,
+    HttpsOnlyRedirectHandler,
     Source,
     build_corpus,
     download_source,
@@ -51,8 +53,8 @@ def complete_manifest_source(content: bytes) -> dict[str, object]:
         "author": "Test Author",
         "language": "en",
         "original_publication_year": 1900,
-        "source_landing_page": "https://example.invalid/landing",
-        "source_url": "https://example.invalid/play.txt",
+        "source_landing_page": "https://www.gutenberg.org/ebooks/999999",
+        "source_url": "https://www.gutenberg.org/cache/epub/999999/pg999999.txt",
         "source_sha256": sha256_bytes(content),
         "source_bytes": len(content),
         "retrieved_on": "2026-11-08",
@@ -285,3 +287,77 @@ def test_cli_reports_malformed_manifest_without_traceback(
 
     assert exit_info.value.code == 1
     assert capsys.readouterr().err == "build-corpus: source 0 must be an object\n"
+
+
+@pytest.mark.parametrize(
+    "source_url",
+    [
+        "file:///etc/hosts",
+        "http://www.gutenberg.org/cache/epub/1/pg1.txt",
+        "https://example.invalid/play.txt",
+        "https://user:password@www.gutenberg.org/play.txt",
+    ],
+)
+def test_manifest_rejects_unsafe_source_urls(tmp_path: Path, source_url: str) -> None:
+    content = wrapped("FIRST ACT\nALICE.\nHello.")
+    raw_source = complete_manifest_source(content)
+    raw_source["source_url"] = source_url
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(
+        json.dumps({"schema_version": 1, "sources": [raw_source]}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(CorpusError, match="unsafe source_url"):
+        load_sources(manifest)
+
+
+def test_https_redirect_handler_rejects_scheme_or_host_changes() -> None:
+    handler = HttpsOnlyRedirectHandler({"www.gutenberg.org"})
+    request = urllib.request.Request("https://www.gutenberg.org/ebooks/1")
+
+    for target in (
+        "http://www.gutenberg.org/ebooks/1",
+        "file:///etc/hosts",
+        "https://example.invalid/ebooks/1",
+    ):
+        with pytest.raises(CorpusError, match="unsafe redirect URL"):
+            handler.redirect_request(request, None, 302, "Found", {}, target)
+
+    redirected = handler.redirect_request(
+        request,
+        None,
+        302,
+        "Found",
+        {},
+        "https://www.gutenberg.org/cache/epub/1/pg1.txt",
+    )
+    assert redirected is not None
+    assert redirected.full_url == "https://www.gutenberg.org/cache/epub/1/pg1.txt"
+
+
+def test_unsupported_parser_causes_no_fetch_or_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    content = wrapped("FIRST ACT\nALICE.\nHello.")
+    raw_source = complete_manifest_source(content)
+    raw_source["parser"] = "unknown_parser"
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(
+        json.dumps({"schema_version": 1, "sources": [raw_source]}),
+        encoding="utf-8",
+    )
+    fetched = False
+
+    def fake_download(source: Source, destination: Path) -> Path:
+        nonlocal fetched
+        fetched = True
+        return destination
+
+    monkeypatch.setattr("ncm_stage_dialogue.corpus.download_source", fake_download)
+
+    with pytest.raises(CorpusError, match="unsupported parser"):
+        build_corpus(manifest, tmp_path / "data")
+
+    assert fetched is False
+    assert not (tmp_path / "data").exists()
