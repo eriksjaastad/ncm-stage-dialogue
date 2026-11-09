@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 
+from ncm_stage_dialogue.cli import main
 from ncm_stage_dialogue.corpus import (
     CorpusError,
     Source,
@@ -39,6 +42,26 @@ def wrapped(body: str) -> bytes:
         "*** END OF THE PROJECT GUTENBERG EBOOK FIXTURE ***\n"
         "Project Gutenberg license footer\n"
     ).encode()
+
+
+def complete_manifest_source(content: bytes) -> dict[str, object]:
+    return {
+        "id": "fixture-play",
+        "title": "Fixture Play",
+        "author": "Test Author",
+        "language": "en",
+        "original_publication_year": 1900,
+        "source_landing_page": "https://example.invalid/landing",
+        "source_url": "https://example.invalid/play.txt",
+        "source_sha256": sha256_bytes(content),
+        "source_bytes": len(content),
+        "retrieved_on": "2026-11-08",
+        "jurisdiction": "Test",
+        "public_domain_basis": "Synthetic fixture",
+        "source_terms": "Synthetic fixture terms",
+        "parser": "gutenberg_stage_play_v1",
+        "scene_splits": {"act-1": "train"},
+    }
 
 
 def test_strip_gutenberg_wrapper_removes_header_and_footer() -> None:
@@ -130,27 +153,11 @@ def test_manifest_requires_provenance_fields(tmp_path: Path) -> None:
 
 def test_manifest_rejects_source_id_path_traversal(tmp_path: Path) -> None:
     content = wrapped("FIRST ACT\nALICE.\nHello.")
+    raw_source = complete_manifest_source(content)
+    raw_source["id"] = "../escaped"
     manifest = tmp_path / "plays.json"
     manifest.write_text(
-        json.dumps(
-            {
-                "schema_version": 1,
-                "sources": [
-                    {
-                        "id": "../escaped",
-                        "title": "Fixture Play",
-                        "author": "Test Author",
-                        "source_url": "https://example.invalid/play.txt",
-                        "source_sha256": sha256_bytes(content),
-                        "source_bytes": len(content),
-                        "parser": "gutenberg_stage_play_v1",
-                        "scene_splits": {"act-1": "train"},
-                        "jurisdiction": "Test",
-                        "public_domain_basis": "Synthetic fixture",
-                    }
-                ],
-            }
-        ),
+        json.dumps({"schema_version": 1, "sources": [raw_source]}),
         encoding="utf-8",
     )
 
@@ -172,23 +179,7 @@ def test_processed_records_retain_complete_source_provenance(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     content = wrapped("FIRST ACT\nALICE.\nHello.")
-    raw_source = {
-        "id": "fixture-play",
-        "title": "Fixture Play",
-        "author": "Test Author",
-        "language": "en",
-        "original_publication_year": 1900,
-        "source_landing_page": "https://example.invalid/landing",
-        "source_url": "https://example.invalid/play.txt",
-        "source_sha256": sha256_bytes(content),
-        "source_bytes": len(content),
-        "retrieved_on": "2026-11-08",
-        "jurisdiction": "Test",
-        "public_domain_basis": "Synthetic fixture",
-        "source_terms": "Synthetic fixture terms",
-        "parser": "gutenberg_stage_play_v1",
-        "scene_splits": {"act-1": "train"},
-    }
+    raw_source = complete_manifest_source(content)
     manifest = tmp_path / "plays.json"
     manifest.write_text(
         json.dumps({"schema_version": 1, "sources": [raw_source]}),
@@ -214,3 +205,83 @@ def test_processed_records_retain_complete_source_provenance(
         "project_gutenberg_wrapper_removed": True,
         "stage_directions_separated": True,
     }
+
+
+@pytest.mark.parametrize(
+    "missing_field",
+    [
+        "language",
+        "original_publication_year",
+        "source_landing_page",
+        "retrieved_on",
+        "source_terms",
+    ],
+)
+def test_manifest_requires_complete_provenance(
+    tmp_path: Path, missing_field: str
+) -> None:
+    content = wrapped("FIRST ACT\nALICE.\nHello.")
+    raw_source = complete_manifest_source(content)
+    del raw_source[missing_field]
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(
+        json.dumps({"schema_version": 1, "sources": [raw_source]}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(CorpusError, match=missing_field):
+        load_sources(manifest)
+
+
+@pytest.mark.parametrize(
+    ("mutate", "message"),
+    [
+        (lambda payload: payload.update(sources={}), "sources must be a list"),
+        (lambda payload: payload.update(sources=[None]), "source 0 must be an object"),
+        (
+            lambda payload: payload["sources"][0].update(scene_splits=[]),
+            "scene_splits must be an object",
+        ),
+        (
+            lambda payload: payload["sources"][0].update(source_bytes="100"),
+            "source_bytes must be an integer",
+        ),
+    ],
+)
+def test_malformed_manifest_raises_corpus_error(
+    tmp_path: Path,
+    mutate: Callable[[dict[str, object]], None],
+    message: str,
+) -> None:
+    content = wrapped("FIRST ACT\nALICE.\nHello.")
+    payload: dict[str, object] = {
+        "schema_version": 1,
+        "sources": [complete_manifest_source(content)],
+    }
+    mutate(payload)
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(CorpusError, match=message):
+        load_sources(manifest)
+
+
+def test_cli_reports_malformed_manifest_without_traceback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(
+        json.dumps({"schema_version": 1, "sources": [None]}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["build-corpus", "--manifest", str(manifest), "--data-root", str(tmp_path / "data")],
+    )
+
+    with pytest.raises(SystemExit) as exit_info:
+        main()
+
+    assert exit_info.value.code == 1
+    assert capsys.readouterr().err == "build-corpus: source 0 must be an object\n"

@@ -42,51 +42,98 @@ class Source:
 def load_sources(manifest_path: Path) -> list[Source]:
     """Load and validate corpus sources from a JSON manifest."""
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if payload.get("schema_version") != 1:
+    if not isinstance(payload, dict):
+        raise CorpusError("manifest must be an object")
+    if type(payload.get("schema_version")) is not int or payload["schema_version"] != 1:
         raise CorpusError("manifest schema_version must be 1")
+
+    raw_sources = payload.get("sources")
+    if not isinstance(raw_sources, list):
+        raise CorpusError("manifest sources must be a list")
+    if not raw_sources:
+        raise CorpusError("manifest contains no sources")
 
     required = {
         "id",
         "title",
         "author",
+        "language",
+        "original_publication_year",
+        "source_landing_page",
         "source_url",
         "source_sha256",
         "source_bytes",
-        "parser",
-        "scene_splits",
+        "retrieved_on",
         "jurisdiction",
         "public_domain_basis",
+        "source_terms",
+        "parser",
+        "scene_splits",
+    }
+    string_fields = {
+        "id",
+        "title",
+        "author",
+        "language",
+        "source_landing_page",
+        "source_url",
+        "source_sha256",
+        "retrieved_on",
+        "jurisdiction",
+        "public_domain_basis",
+        "source_terms",
+        "parser",
     }
     sources: list[Source] = []
     seen: set[str] = set()
-    for raw in payload.get("sources", []):
+    for index, raw in enumerate(raw_sources):
+        if not isinstance(raw, dict):
+            raise CorpusError(f"source {index} must be an object")
         missing = sorted(required - raw.keys())
         if missing:
             raise CorpusError(f"source is missing required fields: {', '.join(missing)}")
-        if raw["id"] in seen:
-            raise CorpusError(f"duplicate source id: {raw['id']}")
-        if not SOURCE_ID_RE.fullmatch(raw["id"]):
-            raise CorpusError(f"unsafe source id: {raw['id']}")
-        seen.add(raw["id"])
+        for field in sorted(string_fields):
+            if not isinstance(raw[field], str) or not raw[field].strip():
+                raise CorpusError(f"source {field} must be a non-empty string")
+        if type(raw["original_publication_year"]) is not int:
+            raise CorpusError("source original_publication_year must be an integer")
+        if type(raw["source_bytes"]) is not int:
+            raise CorpusError("source source_bytes must be an integer")
+        if raw["source_bytes"] < 0:
+            raise CorpusError("source source_bytes must not be negative")
+        if not isinstance(raw["scene_splits"], dict):
+            raise CorpusError("source scene_splits must be an object")
+        if not raw["scene_splits"]:
+            raise CorpusError("source scene_splits must not be empty")
+        if not all(
+            isinstance(scene_id, str) and isinstance(split, str)
+            for scene_id, split in raw["scene_splits"].items()
+        ):
+            raise CorpusError("source scene_splits keys and values must be strings")
+
+        source_id = raw["id"]
+        if source_id in seen:
+            raise CorpusError(f"duplicate source id: {source_id}")
+        if not SOURCE_ID_RE.fullmatch(source_id):
+            raise CorpusError(f"unsafe source id: {source_id}")
+        seen.add(source_id)
         if not re.fullmatch(r"[0-9a-f]{64}", raw["source_sha256"]):
-            raise CorpusError(f"invalid SHA-256 for {raw['id']}")
+            raise CorpusError(f"invalid SHA-256 for {source_id}")
         if set(raw["scene_splits"].values()) - VALID_SPLITS:
-            raise CorpusError(f"invalid scene split for {raw['id']}")
+            raise CorpusError(f"invalid scene split for {source_id}")
         sources.append(
             Source(
-                id=raw["id"],
+                id=source_id,
                 title=raw["title"],
                 author=raw["author"],
                 source_url=raw["source_url"],
                 source_sha256=raw["source_sha256"],
-                source_bytes=int(raw["source_bytes"]),
+                source_bytes=raw["source_bytes"],
                 parser=raw["parser"],
                 scene_splits=dict(raw["scene_splits"]),
                 metadata=dict(raw),
             )
         )
-    if not sources:
-        raise CorpusError("manifest contains no sources")
     return sources
 
 
