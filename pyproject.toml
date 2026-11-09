@@ -1,0 +1,26 @@
+[project]
+name = "ncm-stage-dialogue"
+version = "0.1.0"
+description = "Reproducible public-domain stage-play corpus and MLX NCM benchmark"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+build-corpus = "ncm_stage_dialogue.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "ruff>=0.14",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

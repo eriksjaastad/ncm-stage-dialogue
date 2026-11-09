@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "gutenberg-844-importance-of-being-earnest",
+      "title": "The Importance of Being Earnest",
+      "subtitle": "A Trivial Comedy for Serious People",
+      "author": "Oscar Wilde",
+      "author_death_year": 1900,
+      "original_publication_year": 1895,
+      "language": "en",
+      "source_landing_page": "https://www.gutenberg.org/ebooks/844",
+      "source_url": "https://www.gutenberg.org/cache/epub/844/pg844.txt",
+      "source_sha256": "1b8a58099bb1cdef6a845277a4bacf2f4a268702c165bde30124d4b5105d1851",
+      "source_bytes": 141840,
+      "retrieved_on": "2026-11-08",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg distributes ebook 844 as a public-domain work in the United States; the play was first performed and published in 1895. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_play_v1",
+      "scene_splits": {
+        "act-1": "train",
+        "act-2": "validation",
+        "act-3": "test"
+      }
+    }
+  ]
+}

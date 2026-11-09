@@ -1,0 +1,15 @@
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+
+# Corpus inputs and derived artifacts are reproducible and stay out of Git.
+data/raw/
+data/processed/
+data/checkpoints/
+data/runs/
+
+# Local handoff state.
+PROGRESS.md
