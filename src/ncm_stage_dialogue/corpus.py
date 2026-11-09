@@ -17,6 +17,7 @@ ACT_RE = re.compile(r"^(FIRST|SECOND|THIRD|FOURTH|FIFTH) ACT$")
 DIRECTION_RE = re.compile(r"\[([^]]+)\]", re.DOTALL)
 VALID_SPLITS = {"train", "validation", "test"}
 ORDINALS = {"FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4, "FIFTH": 5}
+SOURCE_ID_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
 
 
 class CorpusError(RuntimeError):
@@ -64,6 +65,8 @@ def load_sources(manifest_path: Path) -> list[Source]:
             raise CorpusError(f"source is missing required fields: {', '.join(missing)}")
         if raw["id"] in seen:
             raise CorpusError(f"duplicate source id: {raw['id']}")
+        if not SOURCE_ID_RE.fullmatch(raw["id"]):
+            raise CorpusError(f"unsafe source id: {raw['id']}")
         seen.add(raw["id"])
         if not re.fullmatch(r"[0-9a-f]{64}", raw["source_sha256"]):
             raise CorpusError(f"invalid SHA-256 for {raw['id']}")
@@ -158,6 +161,7 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
     current_speaker: str | None = None
     turn_lines: list[str] = []
     prelude_lines: list[str] = []
+    seen_scene_ids: set[str] = set()
 
     def flush_turn() -> None:
         nonlocal current_speaker, turn_lines
@@ -199,6 +203,9 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             flush_scene()
             act_number = ORDINALS[act_match.group(1)]
             scene_id = f"act-{act_number}"
+            if scene_id in seen_scene_ids:
+                raise CorpusError(f"duplicate scene id: {scene_id}")
+            seen_scene_ids.add(scene_id)
             split = source.scene_splits.get(scene_id)
             if split not in VALID_SPLITS:
                 raise CorpusError(f"missing valid split for {source.id}/{scene_id}")
@@ -241,7 +248,10 @@ def build_corpus(manifest_path: Path, data_root: Path) -> dict[str, int]:
     sources = load_sources(manifest_path)
     output_records: list[dict[str, Any]] = []
     for source in sources:
-        raw_path = data_root / "raw" / f"{source.id}.txt"
+        raw_root = (data_root / "raw").resolve()
+        raw_path = (raw_root / f"{source.id}.txt").resolve()
+        if not raw_path.is_relative_to(raw_root):
+            raise CorpusError(f"source path escapes data root: {source.id}")
         download_source(source, raw_path)
         text = raw_path.read_text(encoding="utf-8-sig")
         if source.parser != "gutenberg_stage_play_v1":
@@ -249,11 +259,12 @@ def build_corpus(manifest_path: Path, data_root: Path) -> dict[str, int]:
         scenes = parse_gutenberg_stage_play(source, text)
         for scene in scenes:
             scene["provenance"] = {
-                "source_url": source.source_url,
-                "source_sha256": source.source_sha256,
-                "parser": source.parser,
-                "jurisdiction": source.metadata["jurisdiction"],
-                "public_domain_basis": source.metadata["public_domain_basis"],
+                "source": source.metadata,
+                "transformation": {
+                    "parser": source.parser,
+                    "project_gutenberg_wrapper_removed": True,
+                    "stage_directions_separated": True,
+                },
             }
         output_records.extend(scenes)
 
