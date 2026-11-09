@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
-SPEAKER_RE = re.compile(r"^[A-Z][A-Z .’'\-]{1,60}\.$")
 ACT_RE = re.compile(r"^(FIRST|SECOND|THIRD|FOURTH|FIFTH) ACT$")
 DIRECTION_RE = re.compile(r"\[([^]]+)\]", re.DOTALL)
 VALID_SPLITS = {"train", "validation", "test"}
@@ -76,6 +75,7 @@ class Source:
     source_bytes: int
     parser: str
     scene_splits: dict[str, str]
+    speaker_labels: tuple[str, ...]
     metadata: dict[str, Any]
 
 
@@ -109,6 +109,7 @@ def load_sources(manifest_path: Path) -> list[Source]:
         "source_terms",
         "parser",
         "scene_splits",
+        "speaker_labels",
     }
     string_fields = {
         "id",
@@ -150,6 +151,17 @@ def load_sources(manifest_path: Path) -> list[Source]:
             for scene_id, split in raw["scene_splits"].items()
         ):
             raise CorpusError("source scene_splits keys and values must be strings")
+        if not isinstance(raw["speaker_labels"], list):
+            raise CorpusError("source speaker_labels must be a list")
+        if not raw["speaker_labels"]:
+            raise CorpusError("source speaker_labels must not be empty")
+        if not all(
+            isinstance(label, str) and label and label == label.upper()
+            for label in raw["speaker_labels"]
+        ):
+            raise CorpusError("source speaker_labels must be non-empty uppercase strings")
+        if len(set(raw["speaker_labels"])) != len(raw["speaker_labels"]):
+            raise CorpusError("source speaker_labels must be unique")
 
         source_id = raw["id"]
         if source_id in seen:
@@ -178,6 +190,7 @@ def load_sources(manifest_path: Path) -> list[Source]:
                 source_bytes=raw["source_bytes"],
                 parser=raw["parser"],
                 scene_splits=dict(raw["scene_splits"]),
+                speaker_labels=tuple(raw["speaker_labels"]),
                 metadata=dict(raw),
             )
         )
@@ -250,6 +263,20 @@ def _normalize_passage(lines: list[str]) -> tuple[str, list[str]]:
     return spoken, directions
 
 
+def _match_speaker_line(line: str, speaker_labels: tuple[str, ...]) -> tuple[str, str] | None:
+    """Return a declared speaker and any same-line direction/dialogue."""
+    for label in sorted(speaker_labels, key=len, reverse=True):
+        if line[: len(label)].casefold() != label.casefold():
+            continue
+        remainder = line[len(label) :]
+        if remainder.startswith("."):
+            return label, remainder[1:].strip()
+        stripped = remainder.lstrip()
+        if remainder != stripped and stripped.startswith("["):
+            return label, stripped
+    return None
+
+
 def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]]:
     """Parse an act-structured Gutenberg play into scene-level records."""
     body = strip_gutenberg_wrapper(text)
@@ -319,9 +346,12 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             continue
         if current_scene is None:
             continue
-        if SPEAKER_RE.fullmatch(line):
+        speaker_match = _match_speaker_line(line, source.speaker_labels)
+        if speaker_match is not None:
             flush_turn()
-            current_speaker = line[:-1]
+            current_speaker, same_line_content = speaker_match
+            if same_line_content:
+                turn_lines.append(same_line_content)
             continue
         if current_speaker is None:
             if line != "SCENE":

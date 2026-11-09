@@ -22,7 +22,11 @@ from ncm_stage_dialogue.corpus import (
 )
 
 
-def source_for(content: bytes, scene_splits: dict[str, str] | None = None) -> Source:
+def source_for(
+    content: bytes,
+    scene_splits: dict[str, str] | None = None,
+    speaker_labels: tuple[str, ...] = ("ALICE", "BOB"),
+) -> Source:
     return Source(
         id="fixture-play",
         title="Fixture Play",
@@ -32,6 +36,7 @@ def source_for(content: bytes, scene_splits: dict[str, str] | None = None) -> So
         source_bytes=len(content),
         parser="gutenberg_stage_play_v1",
         scene_splits=scene_splits or {"act-1": "train"},
+        speaker_labels=speaker_labels,
         metadata={"jurisdiction": "Test", "public_domain_basis": "Synthetic fixture"},
     )
 
@@ -63,6 +68,7 @@ def complete_manifest_source(content: bytes) -> dict[str, object]:
         "source_terms": "Synthetic fixture terms",
         "parser": "gutenberg_stage_play_v1",
         "scene_splits": {"act-1": "train"},
+        "speaker_labels": ["ALICE", "BOB"],
     }
 
 
@@ -175,6 +181,49 @@ def test_parser_rejects_duplicate_scene_ids() -> None:
 
     with pytest.raises(CorpusError, match="duplicate scene id: act-1"):
         parse_gutenberg_stage_play(source_for(content), content.decode())
+
+
+def test_uppercase_prose_is_not_misclassified_as_a_speaker() -> None:
+    content = wrapped(
+        "FIRST ACT\n"
+        "ALICE.\n"
+        "Before the emphasis.\n"
+        "THIS IS A SENTENCE.\n"
+        "After the emphasis.\n"
+        "BOB.\n"
+        "Reply."
+    )
+
+    scenes = parse_gutenberg_stage_play(source_for(content), content.decode())
+
+    assert scenes[0]["turns"][0] == {
+        "speaker": "ALICE",
+        "text": "Before the emphasis. THIS IS A SENTENCE. After the emphasis.",
+        "stage_directions": [],
+    }
+
+
+def test_parser_recognizes_joint_speakers_with_inline_direction_and_text() -> None:
+    content = wrapped(
+        "FIRST ACT\n"
+        "ALICE.\n"
+        "A solo line.\n"
+        "ALICE and BOB [Speaking together.] Our joint line.\n"
+        "BOB.\n"
+        "A final line."
+    )
+    source = source_for(
+        content,
+        speaker_labels=("ALICE", "BOB", "ALICE AND BOB"),
+    )
+
+    scenes = parse_gutenberg_stage_play(source, content.decode())
+
+    assert scenes[0]["turns"][1] == {
+        "speaker": "ALICE AND BOB",
+        "text": "Our joint line.",
+        "stage_directions": ["Speaking together."],
+    }
 
 
 def test_processed_records_retain_complete_source_provenance(

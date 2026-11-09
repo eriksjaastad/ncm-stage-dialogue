@@ -36,7 +36,7 @@ Every source must declare:
 - source landing page and exact downloadable URL;
 - retrieval date, byte count, and SHA-256;
 - jurisdiction and the stated public-domain basis;
-- source terms and parser version;
+- source terms, parser version, and an explicit speaker-label inventory;
 - explicit whole-scene train/validation/test assignments.
 
 The seed play uses complete acts as scene units: Act I is training, Act II is validation, and Act III is test. Later corpus releases should prefer holding out complete plays when enough material exists; scene-level holdouts remain useful for within-author structure tests.
