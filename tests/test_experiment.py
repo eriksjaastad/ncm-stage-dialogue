@@ -346,6 +346,21 @@ def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
     assert (checkpoint / "model.safetensors").is_file()
     assert (checkpoint / "optimizer.safetensors").is_file()
     assert (run_dir / "latest").read_text(encoding="utf-8").strip() == checkpoint.name
+    with (run_dir / "metrics.jsonl").open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps({"step": 3, "split": "train", "loss": 99.0}) + "\n")
+    train(
+        dataset,
+        model_config,
+        training_config,
+        run_dir,
+        Path(__file__).parents[1],
+        checkpoint,
+    )
+    events = [
+        json.loads(line)
+        for line in (run_dir / "metrics.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    assert [event["step"] for event in events if event["split"] == "train"] == [1, 2]
     interrupted = run_dir / ".checkpoint-00000003.tmp-interrupted"
     interrupted.mkdir()
     assert (run_dir / "latest").read_text(encoding="utf-8").strip() == checkpoint.name

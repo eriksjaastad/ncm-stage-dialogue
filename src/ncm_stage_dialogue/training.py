@@ -114,6 +114,30 @@ def _fsync_directory(path: Path) -> None:
         os.close(directory_fd)
 
 
+def _reconcile_metrics(metrics_path: Path, checkpoint_step: int) -> None:
+    """Discard events newer than the durable checkpoint before resuming."""
+    if not metrics_path.exists():
+        return
+    retained: list[str] = []
+    for line_number, line in enumerate(
+        metrics_path.read_text(encoding="utf-8").splitlines(), start=1
+    ):
+        try:
+            event = json.loads(line)
+            step = event["step"]
+        except (json.JSONDecodeError, KeyError, TypeError) as error:
+            raise TrainingError(f"invalid metrics event at line {line_number}") from error
+        if not isinstance(step, int):
+            raise TrainingError(f"invalid metrics step at line {line_number}")
+        if step <= checkpoint_step:
+            retained.append(json.dumps(event, sort_keys=True))
+    temporary = metrics_path.with_name(f".{metrics_path.name}.tmp-{uuid.uuid4().hex}")
+    content = (("\n".join(retained) + "\n") if retained else "").encode("utf-8")
+    _write_file_synced(temporary, content)
+    os.replace(temporary, metrics_path)
+    _fsync_directory(metrics_path.parent)
+
+
 def build_optimizer(model_config: ModelConfig, training_config: TrainingConfig) -> optim.AdamW:
     del model_config
     decay_steps = max(1, training_config.train_steps - training_config.warmup_steps)
@@ -463,6 +487,7 @@ def train(
     model = build_model(model_config)
     optimizer = build_optimizer(model_config, training_config)
     state = TrainerState()
+    metrics_path = run_dir / "metrics.jsonl"
     if resume_checkpoint is not None:
         state = load_checkpoint(
             resume_checkpoint,
@@ -472,8 +497,8 @@ def train(
             training_config,
             dataset.manifest,
         )
+        _reconcile_metrics(metrics_path, state.global_step)
     loss_and_grad = nn.value_and_grad(model, language_model_loss)
-    metrics_path = run_dir / "metrics.jsonl"
     started = time.perf_counter()
     last_checkpoint: Path | None = resume_checkpoint
 
