@@ -175,6 +175,11 @@ def test_collection_parser_validates_optional_marker_fields() -> None:
     with pytest.raises(CorpusError, match="include_marker must be a boolean"):
         parse_gutenberg_stage_collection(replace(source, metadata=metadata), text)
 
+    metadata = deepcopy(source.metadata)
+    metadata["works"][0]["scene_markers"][0]["match_mode"] = []
+    with pytest.raises(CorpusError, match="match_mode must be exact or prefix"):
+        parse_gutenberg_stage_collection(replace(source, metadata=metadata), text)
+
 
 def test_chekhov_manifest_declares_complete_play_splits() -> None:
     manifest_path = Path(__file__).parents[1] / "sources" / "plays.json"

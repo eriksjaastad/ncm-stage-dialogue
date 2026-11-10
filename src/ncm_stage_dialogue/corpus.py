@@ -178,7 +178,8 @@ def _validate_collection_works(value: Any, source_id: str) -> None:
                 raise CorpusError("collection scene end_marker must be a non-empty string")
             if "include_marker" in marker and not isinstance(marker["include_marker"], bool):
                 raise CorpusError("collection scene include_marker must be a boolean")
-            if marker.get("match_mode", "prefix") not in {"exact", "prefix"}:
+            match_mode = marker.get("match_mode", "prefix")
+            if not isinstance(match_mode, str) or match_mode not in {"exact", "prefix"}:
                 raise CorpusError("collection scene match_mode must be exact or prefix")
             if not SOURCE_ID_RE.fullmatch(marker["scene_id"]):
                 raise CorpusError(f"unsafe scene id: {marker['scene_id']}")
