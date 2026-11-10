@@ -36,6 +36,113 @@
         "act-2": "validation",
         "act-3": "test"
       }
+    },
+    {
+      "id": "gutenberg-59432-glaspell-plays",
+      "title": "Plays",
+      "author": "Susan Glaspell",
+      "contributor": "George Cram Cook",
+      "original_publication_year": 1920,
+      "edition": "Boston: Small, Maynard & Company, Publishers, 1920",
+      "language": "en",
+      "source_landing_page": "https://www.gutenberg.org/ebooks/59432",
+      "source_url": "https://www.gutenberg.org/cache/epub/59432/pg59432.txt",
+      "source_sha256": "a3bce26c00562bf6aa32ccb46d265710fee31625df22828ea424ef8c1ededf22",
+      "source_bytes": 317999,
+      "retrieved_on": "2026-11-09",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 59432 as public domain in the United States. The electronic text was produced from images of the 1920 Small, Maynard & Company edition. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_collection_v1",
+      "works": [
+        {
+          "id": "trifles",
+          "title": "Trifles",
+          "author": "Susan Glaspell",
+          "heading": "TRIFLES",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
+          "speaker_labels": ["COUNTY ATTORNEY", "MRS. PETERS", "SHERIFF", "HALE", "MRS. HALE"]
+        },
+        {
+          "id": "the-people",
+          "title": "The People",
+          "author": "Susan Glaspell",
+          "heading": "THE PEOPLE",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
+          "speaker_labels": ["TOM", "OSCAR", "THE WOMAN", "SARA", "ARTIST", "ED", "EARNEST APPROACH", "LIGHT TOUCH", "FIREBRAND", "PHILOSOPHER", "THE BOY", "THE MAN"]
+        },
+        {
+          "id": "close-the-book",
+          "title": "Close the Book",
+          "author": "Susan Glaspell",
+          "heading": "CLOSE THE BOOK",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
+          "speaker_labels": ["MRS. ROOT", "JHANSI", "PEYTON", "GRANDMOTHER", "UNCLE GEORGE", "BESSIE", "SENATOR BYRD", "MRS. BYRD"]
+        },
+        {
+          "id": "the-outside",
+          "title": "The Outside",
+          "author": "Susan Glaspell",
+          "heading": "THE OUTSIDE",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
+          "speaker_labels": ["CAPTAIN", "BRADFORD", "TONY", "MRS. PATRICK", "ALLIE MAYO"]
+        },
+        {
+          "id": "womans-honor",
+          "title": "Woman’s Honor",
+          "author": "Susan Glaspell",
+          "heading": "WOMAN’S HONOR",
+          "heading_occurrence": 2,
+          "split": "validation",
+          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
+          "speaker_labels": ["LAWYER", "PRISONER", "SHIELDED ONE", "MOTHERLY ONE", "SCORNFUL ONE", "SILLY ONE", "BOY", "MERCENARY ONE", "CHEATED ONE"]
+        },
+        {
+          "id": "bernice",
+          "title": "Bernice",
+          "author": "Susan Glaspell",
+          "heading": "BERNICE",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {"prefix": "ACT ONE", "scene_id": "act-1"},
+            {"prefix": "ACT TWO", "scene_id": "act-2"},
+            {"prefix": "ACT THREE", "scene_id": "act-3"}
+          ],
+          "speaker_labels": ["FATHER", "ABBIE", "LAURA", "CRAIG", "MARGARET"]
+        },
+        {
+          "id": "suppressed-desires",
+          "title": "Suppressed Desires",
+          "author": "Susan Glaspell and George Cram Cook",
+          "heading": "SUPPRESSED DESIRES",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {"prefix": "SCENE I:", "scene_id": "scene-1"},
+            {"prefix": "SCENE II:", "scene_id": "scene-2"}
+          ],
+          "speaker_labels": ["HENRIETTA", "STEVE", "MABEL"]
+        },
+        {
+          "id": "tickless-time",
+          "title": "Tickless Time",
+          "author": "Susan Glaspell and George Cram Cook",
+          "heading": "TICKLESS TIME",
+          "heading_occurrence": 2,
+          "split": "test",
+          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
+          "speaker_labels": ["IAN", "ELOISE", "MRS. STUBBS", "EDDY", "ALICE", "ANNIE"]
+        }
+      ]
     }
   ]
 }

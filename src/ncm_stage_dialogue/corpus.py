@@ -18,8 +18,10 @@ DIRECTION_RE = re.compile(r"\[([^]]+)\]", re.DOTALL)
 VALID_SPLITS = {"train", "validation", "test"}
 ORDINALS = {"FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4, "FIFTH": 5}
 SOURCE_ID_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
+SUSPICIOUS_SPEAKER_RE = re.compile(r"^[A-Z][A-Z .’'&-]+$")
 PARSER_ALLOWED_HOSTS = {
     "gutenberg_stage_play_v1": {"gutenberg.org", "www.gutenberg.org"},
+    "gutenberg_stage_collection_v1": {"gutenberg.org", "www.gutenberg.org"},
 }
 
 
@@ -79,6 +81,89 @@ class Source:
     metadata: dict[str, Any]
 
 
+def _validate_scene_splits(value: Any, context: str) -> dict[str, str]:
+    if not isinstance(value, dict):
+        raise CorpusError("source scene_splits must be an object")
+    if not value:
+        raise CorpusError("source scene_splits must not be empty")
+    if not all(
+        isinstance(scene_id, str) and isinstance(split, str) for scene_id, split in value.items()
+    ):
+        raise CorpusError("source scene_splits keys and values must be strings")
+    if set(value.values()) - VALID_SPLITS:
+        raise CorpusError(f"invalid scene split for {context}")
+    return dict(value)
+
+
+def _validate_speaker_labels(value: Any, context: str) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        raise CorpusError("source speaker_labels must be a list")
+    if not value:
+        raise CorpusError("source speaker_labels must not be empty")
+    if not all(isinstance(label, str) and label and label == label.upper() for label in value):
+        raise CorpusError("source speaker_labels must be non-empty uppercase strings")
+    if len(set(value)) != len(value):
+        raise CorpusError(f"duplicate speaker label in {context}")
+    return tuple(value)
+
+
+def _validate_collection_works(value: Any, source_id: str) -> None:
+    if not isinstance(value, list) or not value:
+        raise CorpusError("collection works must be a non-empty list")
+    seen_work_ids: set[str] = set()
+
+    required = {
+        "id",
+        "title",
+        "author",
+        "heading",
+        "heading_occurrence",
+        "split",
+        "scene_markers",
+        "speaker_labels",
+    }
+    for index, work in enumerate(value):
+        if not isinstance(work, dict):
+            raise CorpusError(f"collection work {index} must be an object")
+        missing = sorted(required - work.keys())
+        if missing:
+            raise CorpusError(f"collection work is missing fields: {', '.join(missing)}")
+        for field in ("id", "title", "author", "heading"):
+            if not isinstance(work[field], str) or not work[field].strip():
+                raise CorpusError(f"collection work {field} must be a non-empty string")
+        if not SOURCE_ID_RE.fullmatch(work["id"]):
+            raise CorpusError(f"unsafe work id: {work['id']}")
+        if work["id"] in seen_work_ids:
+            raise CorpusError(f"duplicate work id: {work['id']}")
+        seen_work_ids.add(work["id"])
+        if type(work["heading_occurrence"]) is not int or work["heading_occurrence"] < 1:
+            raise CorpusError("collection heading_occurrence must be a positive integer")
+        if work["split"] not in VALID_SPLITS:
+            raise CorpusError(f"invalid work split for {source_id}/{work['id']}")
+
+        _validate_speaker_labels(work["speaker_labels"], f"work {work['id']}")
+        markers = work["scene_markers"]
+        if not isinstance(markers, list) or not markers:
+            raise CorpusError("collection scene_markers must be a non-empty list")
+        seen_scene_ids: set[str] = set()
+        seen_prefixes: set[str] = set()
+        for marker in markers:
+            if not isinstance(marker, dict):
+                raise CorpusError("collection scene marker must be an object")
+            if set(marker) != {"prefix", "scene_id"}:
+                raise CorpusError("collection scene marker requires prefix and scene_id")
+            if not all(isinstance(marker[field], str) and marker[field] for field in marker):
+                raise CorpusError("collection scene marker values must be strings")
+            if not SOURCE_ID_RE.fullmatch(marker["scene_id"]):
+                raise CorpusError(f"unsafe scene id: {marker['scene_id']}")
+            if marker["scene_id"] in seen_scene_ids:
+                raise CorpusError(f"duplicate scene id in work {work['id']}")
+            if marker["prefix"] in seen_prefixes:
+                raise CorpusError(f"duplicate scene prefix in work {work['id']}")
+            seen_scene_ids.add(marker["scene_id"])
+            seen_prefixes.add(marker["prefix"])
+
+
 def load_sources(manifest_path: Path) -> list[Source]:
     """Load and validate corpus sources from a JSON manifest."""
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -93,7 +178,7 @@ def load_sources(manifest_path: Path) -> list[Source]:
     if not raw_sources:
         raise CorpusError("manifest contains no sources")
 
-    required = {
+    common_required = {
         "id",
         "title",
         "author",
@@ -108,8 +193,6 @@ def load_sources(manifest_path: Path) -> list[Source]:
         "public_domain_basis",
         "source_terms",
         "parser",
-        "scene_splits",
-        "speaker_labels",
     }
     string_fields = {
         "id",
@@ -130,7 +213,7 @@ def load_sources(manifest_path: Path) -> list[Source]:
     for index, raw in enumerate(raw_sources):
         if not isinstance(raw, dict):
             raise CorpusError(f"source {index} must be an object")
-        missing = sorted(required - raw.keys())
+        missing = sorted(common_required - raw.keys())
         if missing:
             raise CorpusError(f"source is missing required fields: {', '.join(missing)}")
         for field in sorted(string_fields):
@@ -142,27 +225,6 @@ def load_sources(manifest_path: Path) -> list[Source]:
             raise CorpusError("source source_bytes must be an integer")
         if raw["source_bytes"] < 0:
             raise CorpusError("source source_bytes must not be negative")
-        if not isinstance(raw["scene_splits"], dict):
-            raise CorpusError("source scene_splits must be an object")
-        if not raw["scene_splits"]:
-            raise CorpusError("source scene_splits must not be empty")
-        if not all(
-            isinstance(scene_id, str) and isinstance(split, str)
-            for scene_id, split in raw["scene_splits"].items()
-        ):
-            raise CorpusError("source scene_splits keys and values must be strings")
-        if not isinstance(raw["speaker_labels"], list):
-            raise CorpusError("source speaker_labels must be a list")
-        if not raw["speaker_labels"]:
-            raise CorpusError("source speaker_labels must not be empty")
-        if not all(
-            isinstance(label, str) and label and label == label.upper()
-            for label in raw["speaker_labels"]
-        ):
-            raise CorpusError("source speaker_labels must be non-empty uppercase strings")
-        if len(set(raw["speaker_labels"])) != len(raw["speaker_labels"]):
-            raise CorpusError("source speaker_labels must be unique")
-
         source_id = raw["id"]
         if source_id in seen:
             raise CorpusError(f"duplicate source id: {source_id}")
@@ -175,11 +237,18 @@ def load_sources(manifest_path: Path) -> list[Source]:
         if allowed_hosts is None:
             raise CorpusError(f"unsupported parser: {raw['parser']}")
         _validate_https_url(raw["source_url"], "source_url", allowed_hosts)
-        _validate_https_url(
-            raw["source_landing_page"], "source_landing_page", allowed_hosts
-        )
-        if set(raw["scene_splits"].values()) - VALID_SPLITS:
-            raise CorpusError(f"invalid scene split for {source_id}")
+        _validate_https_url(raw["source_landing_page"], "source_landing_page", allowed_hosts)
+        if raw["parser"] == "gutenberg_stage_play_v1":
+            parser_required = {"scene_splits", "speaker_labels"}
+            parser_missing = sorted(parser_required - raw.keys())
+            if parser_missing:
+                raise CorpusError(f"source is missing required fields: {', '.join(parser_missing)}")
+            scene_splits = _validate_scene_splits(raw["scene_splits"], source_id)
+            speaker_labels = _validate_speaker_labels(raw["speaker_labels"], f"source {source_id}")
+        else:
+            _validate_collection_works(raw.get("works"), source_id)
+            scene_splits = {}
+            speaker_labels = ()
         sources.append(
             Source(
                 id=source_id,
@@ -189,8 +258,8 @@ def load_sources(manifest_path: Path) -> list[Source]:
                 source_sha256=raw["source_sha256"],
                 source_bytes=raw["source_bytes"],
                 parser=raw["parser"],
-                scene_splits=dict(raw["scene_splits"]),
-                speaker_labels=tuple(raw["speaker_labels"]),
+                scene_splits=scene_splits,
+                speaker_labels=speaker_labels,
                 metadata=dict(raw),
             )
         )
@@ -242,7 +311,11 @@ def strip_gutenberg_wrapper(text: str) -> str:
     """Remove the Project Gutenberg header and license footer from a text."""
     lines = text.splitlines()
     start = next(
-        (index for index, line in enumerate(lines) if "START OF THE PROJECT GUTENBERG EBOOK" in line),
+        (
+            index
+            for index, line in enumerate(lines)
+            if "START OF THE PROJECT GUTENBERG EBOOK" in line
+        ),
         None,
     )
     end = next(
@@ -256,6 +329,7 @@ def strip_gutenberg_wrapper(text: str) -> str:
 
 def _normalize_passage(lines: list[str]) -> tuple[str, list[str]]:
     raw = " ".join(line.strip() for line in lines if line.strip())
+    raw = raw.replace("_", "")
     raw = re.sub(r"\s+", " ", raw).strip()
     directions = [re.sub(r"\s+", " ", item).strip() for item in DIRECTION_RE.findall(raw)]
     spoken = DIRECTION_RE.sub(" ", raw)
@@ -266,14 +340,22 @@ def _normalize_passage(lines: list[str]) -> tuple[str, list[str]]:
 def _match_speaker_line(line: str, speaker_labels: tuple[str, ...]) -> tuple[str, str] | None:
     """Return a declared speaker and any same-line direction/dialogue."""
     for label in sorted(speaker_labels, key=len, reverse=True):
-        if line[: len(label)].casefold() != label.casefold():
+        variants = {label, label.replace(" AND ", " and ")}
+        matched = next((variant for variant in variants if line.startswith(variant)), None)
+        if matched is None:
             continue
-        remainder = line[len(label) :]
+        remainder = line[len(matched) :]
+        if not remainder:
+            return label, ""
         if remainder.startswith("."):
-            return label, remainder[1:].strip()
-        stripped = remainder.lstrip()
-        if remainder != stripped and stripped.startswith("["):
-            return label, stripped
+            after_period = remainder[1:]
+            if not after_period or after_period.startswith((" ", "[")):
+                return label, after_period.strip()
+            continue
+        if remainder.startswith(" "):
+            stripped = remainder.strip()
+            if stripped.startswith("["):
+                return label, stripped
     return None
 
 
@@ -370,6 +452,138 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
     return scenes
 
 
+def parse_gutenberg_stage_collection(source: Source, text: str) -> list[dict[str, Any]]:
+    """Split a manifest-declared Gutenberg collection into independent works."""
+    body_lines = strip_gutenberg_wrapper(text).splitlines()
+    works = source.metadata.get("works")
+    _validate_collection_works(works, source.id)
+    if not isinstance(works, list):
+        raise CorpusError("collection works must be a non-empty list")
+    work_starts: list[int] = []
+    seen_work_ids: set[str] = set()
+
+    for work in works:
+        if work["id"] in seen_work_ids:
+            raise CorpusError(f"duplicate work id: {work['id']}")
+        seen_work_ids.add(work["id"])
+        occurrences = [
+            index for index, line in enumerate(body_lines) if line.strip() == work["heading"]
+        ]
+        expected_occurrences = work["heading_occurrence"]
+        if len(occurrences) != expected_occurrences:
+            raise CorpusError(
+                f"work heading occurrence changed for {work['id']}: "
+                f"expected {expected_occurrences}, got {len(occurrences)}"
+            )
+        work_starts.append(occurrences[expected_occurrences - 1])
+
+    if work_starts != sorted(work_starts) or len(set(work_starts)) != len(work_starts):
+        raise CorpusError("collection work headings are missing, duplicated, or out of order")
+
+    output: list[dict[str, Any]] = []
+    ordinal_names = ("FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH")
+    for work_index, work in enumerate(works):
+        start = work_starts[work_index]
+        end = work_starts[work_index + 1] if work_index + 1 < len(works) else len(body_lines)
+        section = body_lines[start:end]
+        curtain_positions = [
+            index for index, line in enumerate(section) if line.strip() == "(CURTAIN)"
+        ]
+        expected_curtains = len(work["scene_markers"])
+        if len(curtain_positions) != expected_curtains:
+            raise CorpusError(
+                f"curtain occurrence changed for {work['id']}: "
+                f"expected {expected_curtains}, got {len(curtain_positions)}"
+            )
+
+        marker_positions: list[int] = []
+        for marker in work["scene_markers"]:
+            occurrences = [
+                index
+                for index, line in enumerate(section)
+                if line.strip().startswith(marker["prefix"])
+            ]
+            if len(occurrences) != 1:
+                raise CorpusError(
+                    f"scene marker occurrence changed for {work['id']}/{marker['scene_id']}: "
+                    f"expected 1, got {len(occurrences)}"
+                )
+            marker_positions.append(occurrences[0])
+        if marker_positions != sorted(marker_positions):
+            raise CorpusError(f"scene markers are out of order for {work['id']}")
+        if len(marker_positions) > len(ordinal_names):
+            raise CorpusError(f"too many scenes in work {work['id']}")
+
+        normalized_lines: list[str] = []
+        for scene_index, (marker, marker_position) in enumerate(
+            zip(work["scene_markers"], marker_positions, strict=True)
+        ):
+            scene_end = (
+                marker_positions[scene_index + 1]
+                if scene_index + 1 < len(marker_positions)
+                else len(section)
+            )
+            scene_curtains = [
+                index for index in curtain_positions if marker_position < index < scene_end
+            ]
+            if len(scene_curtains) != 1:
+                raise CorpusError(f"scene curtain changed for {work['id']}/{marker['scene_id']}")
+            scene_end = scene_curtains[0]
+            marker_line = section[marker_position].strip()
+            remainder = marker_line[len(marker["prefix"]) :].strip()
+            segment = section[marker_position + 1 : scene_end]
+            if segment and segment[0].strip().startswith("SCENE:"):
+                scene_line = segment[0].strip()
+                segment[0] = scene_line[len("SCENE:") :].strip()
+            for line in segment:
+                candidate = line.strip()
+                if SUSPICIOUS_SPEAKER_RE.fullmatch(candidate) and not _match_speaker_line(
+                    candidate, tuple(work["speaker_labels"])
+                ):
+                    raise CorpusError(
+                        f"suspicious undeclared speaker label in {work['id']}: {candidate}"
+                    )
+            normalized_lines.append(f"{ordinal_names[scene_index]} ACT")
+            if remainder:
+                normalized_lines.append(remainder)
+            normalized_lines.extend(segment)
+
+        scene_splits = {
+            f"act-{index + 1}": work["split"] for index in range(len(work["scene_markers"]))
+        }
+        work_source = Source(
+            id=f"{source.id}-{work['id']}",
+            title=work["title"],
+            author=work["author"],
+            source_url=source.source_url,
+            source_sha256=source.source_sha256,
+            source_bytes=source.source_bytes,
+            parser="gutenberg_stage_play_v1",
+            scene_splits=scene_splits,
+            speaker_labels=tuple(work["speaker_labels"]),
+            metadata=source.metadata,
+        )
+        normalized = (
+            "*** START OF THE PROJECT GUTENBERG EBOOK NORMALIZED WORK ***\n"
+            + "\n".join(normalized_lines)
+            + "\n*** END OF THE PROJECT GUTENBERG EBOOK NORMALIZED WORK ***"
+        )
+        parsed_scenes = parse_gutenberg_stage_play(work_source, normalized)
+        observed_speakers = {turn["speaker"] for scene in parsed_scenes for turn in scene["turns"]}
+        missing_speakers = sorted(set(work["speaker_labels"]) - observed_speakers)
+        if missing_speakers:
+            raise CorpusError(
+                f"declared speakers missing from {work['id']}: {', '.join(missing_speakers)}"
+            )
+        for scene_index, scene in enumerate(parsed_scenes):
+            declared_scene_id = work["scene_markers"][scene_index]["scene_id"]
+            scene["source_id"] = source.id
+            scene["work_id"] = work["id"]
+            scene["scene_id"] = f"{work['id']}-{declared_scene_id}"
+        output.extend(parsed_scenes)
+    return output
+
+
 def build_corpus(manifest_path: Path, data_root: Path) -> dict[str, int]:
     """Download all manifest sources and emit validated scene-level JSONL."""
     sources = load_sources(manifest_path)
@@ -381,9 +595,12 @@ def build_corpus(manifest_path: Path, data_root: Path) -> dict[str, int]:
             raise CorpusError(f"source path escapes data root: {source.id}")
         download_source(source, raw_path)
         text = raw_path.read_text(encoding="utf-8-sig")
-        if source.parser != "gutenberg_stage_play_v1":
+        if source.parser == "gutenberg_stage_play_v1":
+            scenes = parse_gutenberg_stage_play(source, text)
+        elif source.parser == "gutenberg_stage_collection_v1":
+            scenes = parse_gutenberg_stage_collection(source, text)
+        else:
             raise CorpusError(f"unsupported parser: {source.parser}")
-        scenes = parse_gutenberg_stage_play(source, text)
         for scene in scenes:
             scene["provenance"] = {
                 "source": source.metadata,

@@ -10,7 +10,7 @@ A local, reproducible research project comparing a small **Neural Cellular Model
 
 ## Current milestone
 
-The first end-to-end slice downloads and parses Oscar Wilde's *The Importance of Being Earnest* from Project Gutenberg:
+The corpus pipeline currently downloads and parses two pinned Project Gutenberg ebooks: Oscar Wilde's *The Importance of Being Earnest* and Susan Glaspell's eight-play collection *Plays*:
 
 ```bash
 uv sync
@@ -19,14 +19,15 @@ uv run pytest
 uv run ruff check .
 ```
 
-`build-corpus` downloads the pinned source, verifies its byte count and SHA-256, removes the Gutenberg wrapper, parses all three acts into speaker-labeled scene records, preserves stage directions separately, and writes:
+`build-corpus` downloads each pinned source, verifies its byte count and SHA-256, removes the Gutenberg wrapper, splits collections into independent works, parses speaker-labeled scene records, preserves stage directions separately, and writes:
 
 ```text
 data/raw/gutenberg-844-importance-of-being-earnest.txt
+data/raw/gutenberg-59432-glaspell-plays.txt
 data/processed/scenes.jsonl
 ```
 
-Generated data is intentionally gitignored. A clean checkout rebuilds it from `sources/plays.json`.
+The current manifest produces 9 independent plays, 14 scenes, and 2,775 speaker turns. Generated data is intentionally gitignored. A clean checkout rebuilds it from `sources/plays.json`.
 
 ## Dataset record
 
@@ -37,13 +38,14 @@ Every source must declare:
 - retrieval date, byte count, and SHA-256;
 - jurisdiction and the stated public-domain basis;
 - source terms, parser version, and an explicit speaker-label inventory;
-- explicit whole-scene train/validation/test assignments.
+- collection boundaries and per-work authorship where an ebook contains multiple plays;
+- explicit complete-play train/validation/test assignments for collections.
 
-The seed play uses complete acts as scene units: Act I is training, Act II is validation, and Act III is test. Later corpus releases should prefer holding out complete plays when enough material exists; scene-level holdouts remain useful for within-author structure tests.
+The Wilde parser fixture uses complete acts as scene units: Act I is training, Act II is validation, and Act III is test. The Glaspell collection is split only at complete-play boundaries: six plays are training data, *Woman's Honor* is validation data, and *Tickless Time* is test data. Future corpus releases will continue to hold out complete plays and, where scale permits, complete authors or translators.
 
 ## Legal and provenance scope
 
-Project Gutenberg ebook 844 is distributed as public-domain material in the United States. The original play was first performed and published in 1895. The downloaded file includes Project Gutenberg's license and trademark language. This repository does not commit or relicense the source text; it stores the source URL, hash, provenance statement, and reproducible transformations. Anyone using the corpus outside the United States must verify the law in their jurisdiction.
+Project Gutenberg ebooks 844 and 59432 are cataloged as public-domain material in the United States. Ebook 59432 was transcribed from images of the 1920 Small, Maynard & Company edition; *Suppressed Desires* and *Tickless Time* are attributed to Susan Glaspell in collaboration with George Cram Cook. The downloaded files include Project Gutenberg's license and trademark language. This repository does not commit or relicense the source text; it stores source URLs, hashes, provenance statements, and reproducible transformations. Anyone using the corpus outside the United States must verify the law in their jurisdiction.
 
 The repository's MIT license covers code and original documentation only.
 

@@ -174,10 +174,7 @@ def test_manifest_rejects_source_id_path_traversal(tmp_path: Path) -> None:
 
 
 def test_parser_rejects_duplicate_scene_ids() -> None:
-    content = wrapped(
-        "FIRST ACT\nALICE.\nFirst version.\n"
-        "FIRST ACT\nBOB.\nDuplicate version."
-    )
+    content = wrapped("FIRST ACT\nALICE.\nFirst version.\nFIRST ACT\nBOB.\nDuplicate version.")
 
     with pytest.raises(CorpusError, match="duplicate scene id: act-1"):
         parse_gutenberg_stage_play(source_for(content), content.decode())
@@ -201,6 +198,25 @@ def test_uppercase_prose_is_not_misclassified_as_a_speaker() -> None:
         "text": "Before the emphasis. THIS IS A SENTENCE. After the emphasis.",
         "stage_directions": [],
     }
+
+
+def test_title_case_names_and_direction_continuations_are_not_speakers() -> None:
+    content = wrapped(
+        "FIRST ACT\n"
+        "BOB.\n"
+        "Alice. Your name.\n"
+        "ALICE._] remains part of the damaged direction.\n"
+        "ALICE.\n"
+        "A real turn."
+    )
+
+    scenes = parse_gutenberg_stage_play(source_for(content), content.decode())
+
+    assert scenes[0]["turns"][0]["speaker"] == "BOB"
+    assert scenes[0]["turns"][0]["text"] == (
+        "Alice. Your name. ALICE.] remains part of the damaged direction."
+    )
+    assert scenes[0]["turns"][1]["speaker"] == "ALICE"
 
 
 def test_parser_recognizes_joint_speakers_with_inline_direction_and_text() -> None:
@@ -268,9 +284,7 @@ def test_processed_records_retain_complete_source_provenance(
         "source_terms",
     ],
 )
-def test_manifest_requires_complete_provenance(
-    tmp_path: Path, missing_field: str
-) -> None:
+def test_manifest_requires_complete_provenance(tmp_path: Path, missing_field: str) -> None:
     content = wrapped("FIRST ACT\nALICE.\nHello.")
     raw_source = complete_manifest_source(content)
     del raw_source[missing_field]
