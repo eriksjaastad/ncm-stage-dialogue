@@ -602,6 +602,112 @@
         "act-2": "train",
         "act-3": "train"
       }
+    },
+    {
+      "id": "gutenberg-3825-pygmalion",
+      "title": "Pygmalion",
+      "author": "George Bernard Shaw",
+      "original_publication_year": 1912,
+      "edition": "The embedded title page states “Pygmalion / Bernard Shaw / 1912.” Project Gutenberg does not identify a publisher, place, edition statement, or exact print source.",
+      "language": "en",
+      "source_landing_page": "https://www.gutenberg.org/ebooks/3825",
+      "source_url": "https://www.gutenberg.org/cache/epub/3825/pg3825.txt",
+      "source_sha256": "bf2518b5c0f1e46e3190ab2e77a0ecb3e35a1e120b233e6cb27134395dff048a",
+      "source_bytes": 215094,
+      "retrieved_on": "2026-11-09",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 3825 as public domain in the United States. The embedded title page dates the work to 1912. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. Its transcriber’s note states that omitted contraction apostrophes were restored in the electronic text. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_play_v1",
+      "complete_play_split": true,
+      "strict_speaker_labels": true,
+      "act_markers": [
+        {
+          "act_number": 1,
+          "scene_id": "act-1",
+          "line": "ACT I",
+          "occurrence": 1
+        },
+        {
+          "act_number": 2,
+          "scene_id": "act-2",
+          "line": "ACT II",
+          "occurrence": 1
+        },
+        {
+          "act_number": 3,
+          "scene_id": "act-3",
+          "line": "ACT III",
+          "occurrence": 1
+        },
+        {
+          "act_number": 4,
+          "scene_id": "act-4",
+          "line": "ACT IV",
+          "occurrence": 1
+        },
+        {
+          "act_number": 5,
+          "scene_id": "act-5",
+          "line": "ACT V",
+          "occurrence": 1
+        }
+      ],
+      "line_replacements": [
+        {
+          "source": "DOOLITTLE   {exclaiming  Bly me! it’s Eliza!",
+          "replacement": "DOOLITTLE. [exclaiming] Bly me! it’s Eliza!",
+          "occurrence": 1
+        },
+        {
+          "source": "HIGGINS     {simul-      What’s that! This!",
+          "replacement": "HIGGINS. [simultaneously] What’s that! This!",
+          "occurrence": 1
+        },
+        {
+          "source": "PICKERING   {taneously   By Jove!",
+          "replacement": "PICKERING. [simultaneously] By Jove!",
+          "occurrence": 1
+        }
+      ],
+      "play_end_marker": {
+        "line": "***********************",
+        "occurrence": 1
+      },
+      "speaker_labels": [
+        "A BYSTANDER",
+        "A SARCASTIC BYSTANDER",
+        "CLARA",
+        "DOOLITTLE",
+        "FREDDY",
+        "HIGGINS",
+        "LIZA",
+        "MISS EYNSFORD HILL",
+        "MRS. EYNSFORD HILL",
+        "MRS. HIGGINS",
+        "MRS. PEARCE",
+        "PICKERING",
+        "SEVERAL BYSTANDERS",
+        "THE BYSTANDER",
+        "THE BYSTANDERS GENERALLY",
+        "THE DAUGHTER",
+        "THE FLOWER GIRL",
+        "THE GENTLEMAN",
+        "THE GENTLEMEN",
+        "THE JAPANESE LADY",
+        "THE MOTHER",
+        "THE NOTE TAKER",
+        "THE PARLOR-MAID",
+        "THE SARCASTIC BYSTANDER",
+        "THE SARCASTIC ONE"
+      ],
+      "scene_splits": {
+        "act-1": "train",
+        "act-2": "train",
+        "act-3": "train",
+        "act-4": "train",
+        "act-5": "train"
+      }
     }
   ]
 }

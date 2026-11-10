@@ -21,6 +21,7 @@ ACT_ROMANS = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V"}
 ACT_CARDINALS = {1: "ONE", 2: "TWO", 3: "THREE", 4: "FOUR", 5: "FIVE"}
 SOURCE_ID_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
 SUSPICIOUS_SPEAKER_RE = re.compile(r"^[A-Z][A-Z .’'&-]+$")
+INLINE_SPEAKER_RE = re.compile(r"^([A-Z](?:[A-Z .’'&-]*[A-Z])?)(?:\.(?:\s|$)|\s+\[)")
 PARSER_ALLOWED_HOSTS = {
     "gutenberg_stage_play_v1": {"gutenberg.org", "www.gutenberg.org"},
     "gutenberg_stage_collection_v1": {"gutenberg.org", "www.gutenberg.org"},
@@ -158,6 +159,46 @@ def _validate_act_markers(
             f"act marker scene set changed for {source_id}: "
             f"expected {sorted(scene_splits)}, got {sorted(seen_scene_ids)}"
         )
+    return value
+
+
+def _validate_line_replacements(value: Any, source_id: str) -> list[dict[str, Any]]:
+    if not isinstance(value, list) or not value:
+        raise CorpusError(f"line_replacements must be a non-empty list: {source_id}")
+    seen: set[tuple[str, int]] = set()
+    for replacement in value:
+        if not isinstance(replacement, dict) or set(replacement) != {
+            "source",
+            "replacement",
+            "occurrence",
+        }:
+            raise CorpusError("line replacement requires source, replacement, and occurrence")
+        if (
+            not isinstance(replacement["source"], str)
+            or not replacement["source"]
+            or not isinstance(replacement["replacement"], str)
+            or not replacement["replacement"]
+            or type(replacement["occurrence"]) is not int
+            or replacement["occurrence"] < 1
+        ):
+            raise CorpusError(f"invalid line replacement for {source_id}")
+        identity = (replacement["source"], replacement["occurrence"])
+        if identity in seen:
+            raise CorpusError(f"duplicate line replacement for {source_id}")
+        seen.add(identity)
+    return value
+
+
+def _validate_play_end_marker(value: Any, source_id: str) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != {"line", "occurrence"}:
+        raise CorpusError(f"play_end_marker requires line and occurrence: {source_id}")
+    if (
+        not isinstance(value["line"], str)
+        or not value["line"]
+        or type(value["occurrence"]) is not int
+        or value["occurrence"] < 1
+    ):
+        raise CorpusError(f"invalid play_end_marker for {source_id}")
     return value
 
 
@@ -328,6 +369,10 @@ def load_sources(manifest_path: Path) -> list[Source]:
             speaker_labels = _validate_speaker_labels(raw["speaker_labels"], f"source {source_id}")
             if "act_markers" in raw:
                 _validate_act_markers(raw["act_markers"], scene_splits, source_id)
+            if "line_replacements" in raw:
+                _validate_line_replacements(raw["line_replacements"], source_id)
+            if "play_end_marker" in raw:
+                _validate_play_end_marker(raw["play_end_marker"], source_id)
             for flag in ("complete_play_split", "strict_speaker_labels"):
                 if flag in raw and not isinstance(raw[flag], bool):
                     raise CorpusError(f"source {flag} must be a boolean")
@@ -421,6 +466,7 @@ def _normalize_passage(lines: list[str]) -> tuple[str, list[str]]:
     raw = re.sub(r"\s+", " ", raw).strip()
     directions = [re.sub(r"\s+", " ", item).strip() for item in DIRECTION_RE.findall(raw)]
     spoken = DIRECTION_RE.sub(" ", raw)
+    spoken = re.sub(r"(?<!\S)[.;:](?!\S)", " ", spoken)
     spoken = re.sub(r"\s+", " ", spoken).strip()
     return spoken, directions
 
@@ -455,6 +501,7 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
     current_speaker: str | None = None
     turn_lines: list[str] = []
     prelude_lines: list[str] = []
+    paragraph_break = True
     seen_scene_ids: set[str] = set()
 
     def flush_turn() -> None:
@@ -511,6 +558,36 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
         }
 
     body_lines = body.splitlines()
+    line_replacements = source.metadata.get("line_replacements")
+    if line_replacements is not None:
+        replacements = _validate_line_replacements(line_replacements, source.id)
+        for replacement in replacements:
+            occurrences = [
+                index
+                for index, line in enumerate(body_lines)
+                if line.strip() == replacement["source"]
+            ]
+            expected_occurrences = replacement["occurrence"]
+            if len(occurrences) != expected_occurrences:
+                raise CorpusError(
+                    f"line replacement occurrence changed for {source.id}: "
+                    f"expected {expected_occurrences} {replacement['source']!r}, "
+                    f"got {len(occurrences)}"
+                )
+            body_lines[occurrences[expected_occurrences - 1]] = replacement["replacement"]
+    play_end_marker = source.metadata.get("play_end_marker")
+    if play_end_marker is not None:
+        end_marker = _validate_play_end_marker(play_end_marker, source.id)
+        occurrences = [
+            index for index, line in enumerate(body_lines) if line.strip() == end_marker["line"]
+        ]
+        expected_occurrences = end_marker["occurrence"]
+        if len(occurrences) != expected_occurrences:
+            raise CorpusError(
+                f"play end marker occurrence changed for {source.id}: "
+                f"expected {expected_occurrences}, got {len(occurrences)}"
+            )
+        body_lines = body_lines[: occurrences[expected_occurrences - 1]]
     act_markers = source.metadata.get("act_markers")
     marker_by_position: dict[int, tuple[str, int]] = {}
     if act_markers is not None:
@@ -538,19 +615,39 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
         declared_marker = marker_by_position.get(line_index)
         if declared_marker is not None:
             start_scene(*declared_marker)
+            paragraph_break = True
             continue
         act_match = ACT_RE.fullmatch(line) if act_markers is None else None
         if act_match is not None:
             act_number = ORDINALS[act_match.group(1)]
             start_scene(f"act-{act_number}", act_number)
+            paragraph_break = True
             continue
         if current_scene is None:
+            continue
+        if not line:
+            paragraph_break = True
             continue
         speaker_match = _match_speaker_line(line, source.speaker_labels)
         if (
             source.metadata.get("strict_speaker_labels", False)
-            and SUSPICIOUS_SPEAKER_RE.fullmatch(line)
+            and current_speaker is not None
+            and paragraph_break
             and speaker_match is None
+            and not line.startswith("[")
+        ):
+            flush_turn()
+        inline_speaker_match = INLINE_SPEAKER_RE.match(line)
+        if (
+            source.metadata.get("strict_speaker_labels", False)
+            and speaker_match is None
+            and (
+                SUSPICIOUS_SPEAKER_RE.fullmatch(line)
+                or (
+                    inline_speaker_match is not None
+                    and inline_speaker_match.group(1) not in source.speaker_labels
+                )
+            )
         ):
             raise CorpusError(f"suspicious undeclared speaker label in {source.id}: {line}")
         if speaker_match is not None:
@@ -558,12 +655,14 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             current_speaker, same_line_content = speaker_match
             if same_line_content:
                 turn_lines.append(same_line_content)
+            paragraph_break = False
             continue
         if current_speaker is None:
             if line != "SCENE":
                 prelude_lines.append(line)
         else:
             turn_lines.append(line)
+        paragraph_break = False
 
     flush_scene()
     expected_scenes = set(source.scene_splits)

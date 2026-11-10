@@ -292,7 +292,91 @@ def test_declared_act_markers_skip_toc_and_enforce_complete_play_split() -> None
         parse_gutenberg_stage_play(replace(source, metadata=reordered_metadata), content.decode())
 
     with pytest.raises(CorpusError, match="suspicious undeclared speaker label"):
-        parse_gutenberg_stage_play(source, content.decode().replace("BOB.", "INTRUDER."))
+        parse_gutenberg_stage_play(
+            source,
+            content.decode().replace("BOB.\nGoodbye.", "INTRUDER. Wrong speaker."),
+        )
+
+
+def test_declared_line_replacement_preserves_nonstandard_speaker_layout() -> None:
+    content = wrapped("FIRST ACT\nALICE   {exclaiming  Hello!\n***\nALICE. Leaked prose.")
+    source = source_for(content, speaker_labels=("ALICE",))
+    source = replace(
+        source,
+        metadata={
+            **source.metadata,
+            "line_replacements": [
+                {
+                    "source": "ALICE   {exclaiming  Hello!",
+                    "replacement": "ALICE. [exclaiming] Hello!",
+                    "occurrence": 1,
+                }
+            ],
+            "play_end_marker": {"line": "***", "occurrence": 1},
+            "strict_speaker_labels": True,
+        },
+    )
+
+    scenes = parse_gutenberg_stage_play(source, content.decode())
+
+    assert scenes[0]["turns"] == [
+        {"speaker": "ALICE", "text": "Hello!", "stage_directions": ["exclaiming"]}
+    ]
+    with pytest.raises(CorpusError, match="line replacement occurrence changed"):
+        parse_gutenberg_stage_play(source, content.decode().replace("exclaiming", "calling"))
+    with pytest.raises(CorpusError, match="play end marker occurrence changed"):
+        parse_gutenberg_stage_play(source, content.decode().replace("***", "---"))
+
+
+def test_strict_parser_separates_unlabelled_action_paragraphs() -> None:
+    content = wrapped(
+        "FIRST ACT\nALICE. Hello.\n\n[She smiles].\nStill speaking.\n\nShe exits.\n\nBOB. Goodbye."
+    )
+    source = source_for(content)
+    source = replace(
+        source,
+        metadata={**source.metadata, "strict_speaker_labels": True},
+    )
+
+    scenes = parse_gutenberg_stage_play(source, content.decode())
+
+    assert scenes[0]["turns"] == [
+        {
+            "speaker": "ALICE",
+            "text": "Hello. Still speaking.",
+            "stage_directions": ["She smiles"],
+        },
+        {"speaker": "BOB", "text": "Goodbye.", "stage_directions": []},
+    ]
+    assert scenes[0]["stage_directions"] == ["She exits."]
+
+
+def test_pygmalion_manifest_pins_five_act_complete_play() -> None:
+    manifest = Path(__file__).parents[1] / "sources" / "plays.json"
+    source = next(item for item in load_sources(manifest) if item.id == "gutenberg-3825-pygmalion")
+
+    assert source.source_sha256 == (
+        "bf2518b5c0f1e46e3190ab2e77a0ecb3e35a1e120b233e6cb27134395dff048a"
+    )
+    assert source.source_bytes == 215094
+    assert source.metadata["act_markers"] == [
+        {
+            "act_number": act_number,
+            "scene_id": f"act-{act_number}",
+            "line": f"ACT {roman}",
+            "occurrence": 1,
+        }
+        for act_number, roman in enumerate(("I", "II", "III", "IV", "V"), start=1)
+    ]
+    assert source.scene_splits == {f"act-{number}": "train" for number in range(1, 6)}
+    assert source.metadata["complete_play_split"] is True
+    assert source.metadata["strict_speaker_labels"] is True
+    assert source.metadata["play_end_marker"] == {
+        "line": "***********************",
+        "occurrence": 1,
+    }
+    assert "THE GENTLEMAN" in source.speaker_labels
+    assert "THE GENTLEMEN" in source.speaker_labels
 
 
 def test_manifest_rejects_mixed_complete_play_splits(tmp_path: Path) -> None:
