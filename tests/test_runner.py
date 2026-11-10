@@ -14,6 +14,8 @@ import pytest
 
 from ncm_stage_dialogue.runner import (
     _process_group_alive,
+    _process_identity,
+    _runner_process_group,
     _terminate_process_group,
     resume,
     start,
@@ -210,6 +212,69 @@ def test_runner_rejects_checkpoint_pointer_escape(tmp_path: Path) -> None:
         _kill_if_running(session)
 
 
+def test_runner_rejects_symlinked_run_directory(tmp_path: Path) -> None:
+    repository, config = _repository(tmp_path, train_steps=2)
+    run_id = f"run-link-{uuid.uuid4().hex[:8]}"
+    session = f"ncm-{run_id}"
+    try:
+        start(run_id, [config])
+        _wait(repository, run_id, "complete")
+        run_dir = repository / "data" / "runs" / run_id / "tiny"
+        external = repository / "external-run"
+        os.replace(run_dir, external)
+        run_dir.symlink_to(external, target_is_directory=True)
+        with pytest.raises(TrainingError, match="run directory"):
+            status(repository, run_id)
+    finally:
+        _kill_if_running(session)
+
+
+def test_runner_rejects_symlinked_checkpoint_payload(tmp_path: Path) -> None:
+    repository, config = _repository(tmp_path, train_steps=2)
+    run_id = f"payload-link-{uuid.uuid4().hex[:8]}"
+    session = f"ncm-{run_id}"
+    try:
+        start(run_id, [config])
+        completed = _wait(repository, run_id, "complete")
+        run_dir = Path(completed["experiments"][0]["run_dir"])
+        checkpoint = run_dir / completed["experiments"][0]["latest"]
+        model = checkpoint / "model.safetensors"
+        outside = repository / "outside.safetensors"
+        outside.write_bytes(model.read_bytes())
+        model.unlink()
+        model.symlink_to(outside)
+        with pytest.raises(TrainingError, match="checkpoint file"):
+            status(repository, run_id)
+    finally:
+        _kill_if_running(session)
+
+
+def test_runner_rejects_stale_reused_process_identity(tmp_path: Path) -> None:
+    repository, config = _repository(tmp_path, train_steps=2)
+    run_id = f"stale-{uuid.uuid4().hex[:8]}"
+    session = f"ncm-{run_id}"
+    try:
+        start(run_id, [config])
+        _wait(repository, run_id, "complete")
+        root = repository / "data" / "runs" / run_id
+        identity = _process_identity(os.getpid())
+        assert identity is not None
+        (root / "runner.process.json").write_text(
+            json.dumps(
+                {
+                    "process_group": os.getpid(),
+                    "started": identity["started"],
+                    "metadata": str((root / "runner.json").resolve()),
+                }
+            ),
+            encoding="utf-8",
+        )
+        with pytest.raises(TrainingError, match="identity mismatch"):
+            _runner_process_group(root)
+    finally:
+        _kill_if_running(session)
+
+
 def test_bounded_stop_kills_stubborn_process_group() -> None:
     code = """
 import os, signal, time
@@ -231,4 +296,24 @@ time.sleep(60)
     finally:
         if _process_group_alive(process.pid):
             os.killpg(process.pid, signal.SIGKILL)
-        process.wait(timeout=5)
+        process.wait(timeout=1)
+
+
+def test_group_sentinel_waits_after_child_leader_exits() -> None:
+    code = """
+import os, subprocess, time
+from ncm_stage_dialogue.runner import _wait_for_group_descendants
+started = time.monotonic()
+subprocess.run(["sh", "-c", "sleep 1 &"], check=True)
+_wait_for_group_descendants(os.getpid(), os.getpid())
+print(time.monotonic() - started)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=5,
+        start_new_session=True,
+    )
+    assert float(result.stdout.strip()) >= 0.8

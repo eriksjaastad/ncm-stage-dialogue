@@ -103,7 +103,9 @@ def _repository_for_configs(configs: list[Path]) -> Path:
     return repositories.pop()
 
 
-def _latest_checkpoint(run_dir: Path) -> tuple[Path, dict[str, Any]] | None:
+def _latest_checkpoint(run_dir: Path, run_root: Path) -> tuple[Path, dict[str, Any]] | None:
+    if run_dir.is_symlink() or run_dir.resolve().parent != run_root.resolve():
+        raise TrainingError(f"invalid experiment run directory: {run_dir}")
     latest_path = run_dir / "latest"
     if not latest_path.exists():
         if latest_path.is_symlink():
@@ -119,20 +121,29 @@ def _latest_checkpoint(run_dir: Path) -> tuple[Path, dict[str, Any]] | None:
         raise TrainingError(f"invalid checkpoint directory: {checkpoint}")
     if checkpoint.resolve().parent != run_dir.resolve():
         raise TrainingError(f"checkpoint escapes run directory: {checkpoint}")
-    state_path = checkpoint / "trainer_state.json"
-    complete_path = checkpoint / "COMPLETE"
-    for path in (state_path, complete_path):
+    required = (
+        "trainer_state.json",
+        "COMPLETE",
+        "model.safetensors",
+        "optimizer.safetensors",
+        "config.json",
+        "dataset_manifest.json",
+    )
+    for name in required:
+        path = checkpoint / name
         if path.is_symlink() or not path.is_file() or path.resolve().parent != checkpoint.resolve():
             raise TrainingError(f"invalid checkpoint file: {path}")
+    state_path = checkpoint / "trainer_state.json"
     return checkpoint, json.loads(state_path.read_text(encoding="utf-8"))
 
 
 def _training_command(metadata: dict[str, Any], *, resume: bool) -> str:
     commands: list[str] = ["set -euo pipefail"]
+    run_root = Path(metadata["log"]).parent
     for item in metadata["experiments"]:
         run_dir = Path(item["run_dir"])
         train_steps = item["train_steps"]
-        latest = _latest_checkpoint(run_dir) if resume else None
+        latest = _latest_checkpoint(run_dir, run_root) if resume else None
         if latest is not None:
             checkpoint, state = latest
             if state["global_step"] >= train_steps:
@@ -168,7 +179,7 @@ def _launch(metadata_path: Path, metadata: dict[str, Any], *, resume: bool) -> N
     session = metadata["session"]
     if _tmux_exists(session):
         raise TrainingError(f"tmux session already exists: {session}")
-    for state_name in ("runner.pgid", "runner.exit"):
+    for state_name in ("runner.process.json", "runner.exit"):
         state_path = metadata_path.parent / state_name
         if state_path.is_symlink():
             raise TrainingError(f"invalid runner state file: {state_path}")
@@ -196,57 +207,124 @@ def _launch(metadata_path: Path, metadata: dict[str, Any], *, resume: bool) -> N
         raise TrainingError(result.stderr.strip() or "failed to start tmux session")
 
 
+def _process_identity(pid: int) -> dict[str, str] | None:
+    started = _run(["ps", "-p", str(pid), "-o", "lstart="], check=False, timeout=2)
+    command = _run(["ps", "-p", str(pid), "-o", "command="], check=False, timeout=2)
+    if started.returncode != 0 or command.returncode != 0:
+        return None
+    return {"started": started.stdout.strip(), "command": command.stdout.strip()}
+
+
 def _worker(metadata_path: Path, *, resume: bool) -> int:
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     root = metadata_path.parent
     log_path = Path(metadata["log"])
-    command = _training_command(metadata, resume=resume)
+    group_worker = [
+        sys.executable,
+        "-m",
+        "ncm_stage_dialogue.runner",
+        "_group_worker",
+        "--metadata",
+        str(metadata_path.resolve()),
+    ]
+    if resume:
+        group_worker.append("--resume")
     with log_path.open("ab", buffering=0) as log_handle:
         child = subprocess.Popen(
-            ["caffeinate", "-dimsu", "bash", "-lc", command],
+            group_worker,
             cwd=metadata["repository"],
             stdout=log_handle,
             stderr=subprocess.STDOUT,
             start_new_session=True,
         )
-        _atomic_text(root / "runner.pgid", f"{child.pid}\n")
-
-        def forward(signum: int, _frame: Any) -> None:
-            try:
-                os.killpg(child.pid, signum)
-            except ProcessLookupError:
-                pass
-
-        signal.signal(signal.SIGINT, forward)
-        signal.signal(signal.SIGTERM, forward)
+        identity = None
+        for _ in range(20):
+            identity = _process_identity(child.pid)
+            if identity is not None:
+                break
+            time.sleep(0.05)
+        if identity is None:
+            child.kill()
+            raise TrainingError("could not capture runner process identity")
+        _atomic_json(
+            root / "runner.process.json",
+            {
+                "process_group": child.pid,
+                "started": identity["started"],
+                "metadata": str(metadata_path.resolve()),
+            },
+        )
         return_code = child.wait()
     _atomic_text(root / "runner.exit", f"{return_code}\n")
     return return_code
 
 
+def _group_members(process_group: int) -> set[int]:
+    result = _run(["ps", "-axo", "pid=,pgid=,state="], timeout=2)
+    candidates: set[int] = set()
+    for line in result.stdout.splitlines():
+        fields = line.split()
+        if (
+            len(fields) == 3
+            and fields[0].isdigit()
+            and fields[1].isdigit()
+            and int(fields[1]) == process_group
+            and not fields[2].startswith("Z")
+        ):
+            candidates.add(int(fields[0]))
+    return {pid for pid in candidates if pid == os.getpid() or _process_identity(pid) is not None}
+
+
+def _wait_for_group_descendants(process_group: int, own_pid: int) -> None:
+    while _group_members(process_group) - {own_pid}:
+        time.sleep(0.05)
+
+
+def _group_worker(metadata_path: Path, *, resume: bool) -> int:
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    command = _training_command(metadata, resume=resume)
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    child = subprocess.Popen(
+        ["caffeinate", "-dimsu", "bash", "-lc", command],
+        cwd=metadata["repository"],
+    )
+    return_code = child.wait()
+    own_pid = os.getpid()
+    _wait_for_group_descendants(own_pid, own_pid)
+    return return_code
+
+
 def _process_group_alive(process_group: int) -> bool:
-    try:
-        os.killpg(process_group, 0)
-    except ProcessLookupError:
-        return False
-    return True
+    return bool(_group_members(process_group))
 
 
 def _runner_process_group(root: Path) -> int | None:
-    pgid_path = root / "runner.pgid"
-    exit_path = root / "runner.exit"
-    if exit_path.exists():
-        if exit_path.is_symlink() or not exit_path.is_file():
-            raise TrainingError(f"invalid runner exit file: {exit_path}")
+    state_path = root / "runner.process.json"
+    if not state_path.exists():
+        if state_path.is_symlink():
+            raise TrainingError(f"invalid runner process state: {state_path}")
         return None
-    if not pgid_path.exists():
+    if state_path.is_symlink() or not state_path.is_file():
+        raise TrainingError(f"invalid runner process state: {state_path}")
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    if set(state) != {"process_group", "started", "metadata"}:
+        raise TrainingError(f"invalid runner process state: {state_path}")
+    process_group = state["process_group"]
+    if isinstance(process_group, bool) or not isinstance(process_group, int) or process_group < 2:
+        raise TrainingError(f"invalid runner process group: {process_group!r}")
+    expected_metadata = str((root / "runner.json").resolve())
+    if state["metadata"] != expected_metadata or not isinstance(state["started"], str):
+        raise TrainingError(f"invalid runner process identity: {state_path}")
+    identity = _process_identity(process_group)
+    if identity is None:
         return None
-    if pgid_path.is_symlink() or not pgid_path.is_file():
-        raise TrainingError(f"invalid runner process group file: {pgid_path}")
-    raw_pgid = pgid_path.read_text(encoding="utf-8").strip()
-    if not raw_pgid.isascii() or not raw_pgid.isdigit() or int(raw_pgid) < 2:
-        raise TrainingError(f"invalid runner process group: {raw_pgid!r}")
-    return int(raw_pgid)
+    if identity["started"] != state["started"]:
+        raise TrainingError(f"stale runner process identity: {process_group}")
+    command = identity["command"]
+    if "ncm_stage_dialogue.runner _group_worker" not in command or expected_metadata not in command:
+        raise TrainingError(f"runner process identity mismatch: {process_group}")
+    return process_group
 
 
 def _wait_for_process_group(process_group: int, deadline: float) -> bool:
@@ -336,6 +414,8 @@ def resume(repository: Path, run_id: str) -> dict[str, Any]:
         stamp = f"{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}-{time.time_ns()}"
         for item in metadata["experiments"]:
             run_dir = Path(item["run_dir"])
+            if run_dir.is_symlink() or run_dir.resolve().parent != root.resolve():
+                raise TrainingError(f"invalid experiment run directory: {run_dir}")
             if run_dir.is_dir() and any(run_dir.iterdir()) and not (run_dir / "latest").exists():
                 archive = run_dir.with_name(f"{run_dir.name}-precheckpoint-{stamp}")
                 os.replace(run_dir, archive)
@@ -389,7 +469,7 @@ def status(repository: Path, run_id: str) -> dict[str, Any]:
     complete = True
     for item in metadata["experiments"]:
         run_dir = Path(item["run_dir"])
-        latest_info = _latest_checkpoint(run_dir)
+        latest_info = _latest_checkpoint(run_dir, metadata_path.parent)
         latest = None
         step = 0
         checkpoint_complete = False
@@ -488,6 +568,9 @@ def _parser() -> argparse.ArgumentParser:
     worker_parser = subparsers.add_parser("_worker", help=argparse.SUPPRESS)
     worker_parser.add_argument("--metadata", type=Path, required=True)
     worker_parser.add_argument("--resume", action="store_true")
+    group_parser = subparsers.add_parser("_group_worker", help=argparse.SUPPRESS)
+    group_parser.add_argument("--metadata", type=Path, required=True)
+    group_parser.add_argument("--resume", action="store_true")
     for name in ("status", "resume", "stop", "log"):
         child = subparsers.add_parser(name)
         child.add_argument("--run-id", required=True)
@@ -503,6 +586,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "_worker":
             return _worker(args.metadata, resume=args.resume)
+        if args.command == "_group_worker":
+            return _group_worker(args.metadata, resume=args.resume)
         if args.command == "start":
             result: Any = start(args.run_id, args.config)
         elif args.command == "resume":
