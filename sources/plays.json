@@ -565,16 +565,19 @@
       "strict_speaker_labels": true,
       "act_markers": [
         {
+          "act_number": 1,
           "scene_id": "act-1",
           "line": "ACT I",
           "occurrence": 1
         },
         {
+          "act_number": 2,
           "scene_id": "act-2",
           "line": "ACT II",
           "occurrence": 1
         },
         {
+          "act_number": 3,
           "scene_id": "act-3",
           "line": "ACT III",
           "occurrence": 1

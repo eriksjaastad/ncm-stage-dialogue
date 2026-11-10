@@ -17,6 +17,8 @@ ACT_RE = re.compile(r"^(FIRST|SECOND|THIRD|FOURTH|FIFTH) ACT$")
 DIRECTION_RE = re.compile(r"\[([^]]+)\]", re.DOTALL)
 VALID_SPLITS = {"train", "validation", "test"}
 ORDINALS = {"FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4, "FIFTH": 5}
+ACT_ROMANS = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V"}
+ACT_CARDINALS = {1: "ONE", 2: "TWO", 3: "THREE", 4: "FOUR", 5: "FIVE"}
 SOURCE_ID_RE = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
 SUSPICIOUS_SPEAKER_RE = re.compile(r"^[A-Z][A-Z .’'&-]+$")
 PARSER_ALLOWED_HOSTS = {
@@ -114,11 +116,19 @@ def _validate_act_markers(
         raise CorpusError(f"act_markers must be a non-empty list: {source_id}")
     seen_scene_ids: set[str] = set()
     seen_boundaries: set[tuple[str, int]] = set()
+    act_numbers: list[int] = []
     for marker in value:
-        if not isinstance(marker, dict) or set(marker) != {"scene_id", "line", "occurrence"}:
-            raise CorpusError("act marker requires scene_id, line, and occurrence")
+        if not isinstance(marker, dict) or set(marker) != {
+            "act_number",
+            "scene_id",
+            "line",
+            "occurrence",
+        }:
+            raise CorpusError("act marker requires act_number, scene_id, line, and occurrence")
         if (
-            not isinstance(marker["scene_id"], str)
+            type(marker["act_number"]) is not int
+            or marker["act_number"] not in ACT_ROMANS
+            or not isinstance(marker["scene_id"], str)
             or SOURCE_ID_RE.fullmatch(marker["scene_id"]) is None
             or not isinstance(marker["line"], str)
             or not marker["line"]
@@ -126,11 +136,23 @@ def _validate_act_markers(
             or marker["occurrence"] < 1
         ):
             raise CorpusError(f"invalid act marker for {source_id}")
+        act_number = marker["act_number"]
+        ordinal = next(name for name, number in ORDINALS.items() if number == act_number)
+        valid_headings = {
+            f"{ordinal} ACT",
+            f"ACT {ACT_ROMANS[act_number]}",
+            f"ACT {ACT_CARDINALS[act_number]}",
+        }
+        if marker["scene_id"] != f"act-{act_number}" or marker["line"] not in valid_headings:
+            raise CorpusError(f"act marker identity mismatch for {source_id}")
         boundary = (marker["line"], marker["occurrence"])
         if marker["scene_id"] in seen_scene_ids or boundary in seen_boundaries:
             raise CorpusError(f"duplicate act marker for {source_id}")
         seen_scene_ids.add(marker["scene_id"])
         seen_boundaries.add(boundary)
+        act_numbers.append(act_number)
+    if act_numbers != list(range(1, len(value) + 1)):
+        raise CorpusError(f"act markers must be sequential for {source_id}")
     if seen_scene_ids != set(scene_splits):
         raise CorpusError(
             f"act marker scene set changed for {source_id}: "
@@ -494,7 +516,8 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
     if act_markers is not None:
         markers = _validate_act_markers(act_markers, source.scene_splits, source.id)
         positions: list[int] = []
-        for act_number, marker in enumerate(markers, start=1):
+        for marker in markers:
+            act_number = marker["act_number"]
             occurrences = [
                 index for index, line in enumerate(body_lines) if line.strip() == marker["line"]
             ]

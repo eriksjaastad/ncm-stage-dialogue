@@ -254,8 +254,8 @@ def test_declared_act_markers_skip_toc_and_enforce_complete_play_split() -> None
         metadata={
             **source.metadata,
             "act_markers": [
-                {"scene_id": "act-1", "line": "ACT I", "occurrence": 1},
-                {"scene_id": "act-2", "line": "ACT II", "occurrence": 1},
+                {"act_number": 1, "scene_id": "act-1", "line": "ACT I", "occurrence": 1},
+                {"act_number": 2, "scene_id": "act-2", "line": "ACT II", "occurrence": 1},
             ],
             "complete_play_split": True,
             "strict_speaker_labels": True,
@@ -272,11 +272,24 @@ def test_declared_act_markers_skip_toc_and_enforce_complete_play_split() -> None
 
     bad_metadata = dict(source.metadata)
     bad_metadata["act_markers"] = [
-        {"scene_id": "act-1", "line": "ACT I", "occurrence": 2},
-        {"scene_id": "act-2", "line": "ACT II", "occurrence": 1},
+        {"act_number": 1, "scene_id": "act-1", "line": "ACT I", "occurrence": 2},
+        {"act_number": 2, "scene_id": "act-2", "line": "ACT II", "occurrence": 1},
     ]
     with pytest.raises(CorpusError, match="act marker occurrence changed"):
         parse_gutenberg_stage_play(replace(source, metadata=bad_metadata), content.decode())
+
+    bogus_metadata = dict(source.metadata)
+    bogus_metadata["act_markers"] = [
+        {"act_number": 1, "scene_id": "act-1", "line": "BOGUS MARKER", "occurrence": 1},
+        {"act_number": 2, "scene_id": "act-2", "line": "ACT II", "occurrence": 1},
+    ]
+    with pytest.raises(CorpusError, match="act marker identity mismatch"):
+        parse_gutenberg_stage_play(replace(source, metadata=bogus_metadata), content.decode())
+
+    reordered_metadata = dict(source.metadata)
+    reordered_metadata["act_markers"] = list(reversed(source.metadata["act_markers"]))
+    with pytest.raises(CorpusError, match="act markers must be sequential"):
+        parse_gutenberg_stage_play(replace(source, metadata=reordered_metadata), content.decode())
 
     with pytest.raises(CorpusError, match="suspicious undeclared speaker label"):
         parse_gutenberg_stage_play(source, content.decode().replace("BOB.", "INTRUDER."))
@@ -287,8 +300,8 @@ def test_manifest_rejects_mixed_complete_play_splits(tmp_path: Path) -> None:
     raw_source = complete_manifest_source(content)
     raw_source["scene_splits"] = {"act-1": "train", "act-2": "validation"}
     raw_source["act_markers"] = [
-        {"scene_id": "act-1", "line": "ACT I", "occurrence": 1},
-        {"scene_id": "act-2", "line": "ACT II", "occurrence": 1},
+        {"act_number": 1, "scene_id": "act-1", "line": "ACT I", "occurrence": 1},
+        {"act_number": 2, "scene_id": "act-2", "line": "ACT II", "occurrence": 1},
     ]
     raw_source["complete_play_split"] = True
     manifest = tmp_path / "plays.json"
