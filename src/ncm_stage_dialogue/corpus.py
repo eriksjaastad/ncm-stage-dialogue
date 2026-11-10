@@ -138,7 +138,7 @@ def _validate_collection_works(value: Any, source_id: str) -> None:
         seen_work_ids.add(work["id"])
         if type(work["heading_occurrence"]) is not int or work["heading_occurrence"] < 1:
             raise CorpusError("collection heading_occurrence must be a positive integer")
-        if work["split"] not in VALID_SPLITS:
+        if not isinstance(work["split"], str) or work["split"] not in VALID_SPLITS:
             raise CorpusError(f"invalid work split for {source_id}/{work['id']}")
 
         _validate_speaker_labels(work["speaker_labels"], f"work {work['id']}")

@@ -194,6 +194,17 @@ def test_collection_parser_requires_every_declared_speaker() -> None:
         parse_gutenberg_stage_collection(replace(source, metadata=metadata), text)
 
 
+@pytest.mark.parametrize("invalid_split", [["train"], {"split": "train"}])
+def test_collection_parser_rejects_non_string_split(invalid_split: object) -> None:
+    text = fixture_text()
+    source = collection_source(text)
+    metadata = deepcopy(source.metadata)
+    metadata["works"][0]["split"] = invalid_split
+
+    with pytest.raises(CorpusError, match="invalid work split"):
+        parse_gutenberg_stage_collection(replace(source, metadata=metadata), text)
+
+
 def test_collection_parser_rejects_duplicate_work_ids() -> None:
     text = fixture_text()
     source = collection_source(text)
