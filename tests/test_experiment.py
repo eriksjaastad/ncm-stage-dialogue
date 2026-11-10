@@ -4,10 +4,12 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import mlx.core as mx
 import pytest
 
+import ncm_stage_dialogue.training as training_module
 from ncm_stage_dialogue.corpus import load_sources
 from ncm_stage_dialogue.experiment_cli import load_experiment_config
 from ncm_stage_dialogue.experiment_data import (
@@ -291,7 +293,67 @@ def test_config_paths_resolve_from_repository_not_caller(tmp_path: Path) -> None
     assert json.loads(result.stdout)["model"] == "transformer"
 
 
-def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
+def train_metric(step: int, *, seen_tokens: int | None = None) -> dict[str, object]:
+    return {
+        "step": step,
+        "split": "train",
+        "loss": 1.0,
+        "tokens": 7,
+        "gradient_norm": 0.5,
+        "seen_tokens": seen_tokens if seen_tokens is not None else step * 7,
+    }
+
+
+@pytest.mark.parametrize(
+    "events",
+    [
+        [{**train_metric(1), "step": True}],
+        [train_metric(1), train_metric(1, seen_tokens=14)],
+        [train_metric(1), train_metric(3, seen_tokens=14)],
+        [{**train_metric(1), "split": "unknown"}],
+        [{**train_metric(1), "loss": "bad"}],
+        [train_metric(1), train_metric(2, seen_tokens=7)],
+    ],
+)
+def test_metrics_reconciliation_rejects_semantic_corruption(
+    tmp_path: Path, events: list[dict[str, object]]
+) -> None:
+    metrics = tmp_path / "metrics.jsonl"
+    metrics.write_text("".join(json.dumps(event) + "\n" for event in events), encoding="utf-8")
+
+    with pytest.raises(TrainingError):
+        training_module._reconcile_metrics(metrics, 1)
+
+
+def test_metrics_reconciliation_accepts_valid_mixed_events(tmp_path: Path) -> None:
+    metrics = tmp_path / "metrics.jsonl"
+    evaluation = {
+        "step": 1,
+        "split": "validation",
+        "loss": 1.0,
+        "perplexity": 2.0,
+        "tokens": 7,
+        "elapsed_seconds": 0.1,
+        "tokens_per_second": 70.0,
+    }
+    test_event = {**evaluation, "split": "test"}
+    events = [train_metric(1), evaluation, test_event]
+    metrics.write_text("".join(json.dumps(event) + "\n" for event in events), encoding="utf-8")
+
+    assert training_module._reconcile_metrics(metrics, 1) == events
+
+
+def test_metrics_reconciliation_requires_checkpoint_coverage(tmp_path: Path) -> None:
+    metrics = tmp_path / "metrics.jsonl"
+    metrics.write_text(json.dumps(train_metric(1)) + "\n", encoding="utf-8")
+
+    with pytest.raises(TrainingError, match="durable checkpoint"):
+        training_module._reconcile_metrics(metrics, 2)
+
+
+def test_tiny_training_writes_resumable_checkpoint(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     corpus = tmp_path / "scenes.jsonl"
     write_fixture_corpus(corpus)
     dataset = build_experiment_dataset(corpus, block_length=8)
@@ -313,6 +375,25 @@ def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
         checkpoint_interval=1,
     )
     run_dir = tmp_path / "run"
+    metrics_syncs = 0
+    checkpoint_saves = 0
+    original_sync = training_module._fsync_existing
+    original_save = training_module.save_checkpoint
+
+    def tracking_sync(path: Path) -> None:
+        nonlocal metrics_syncs
+        if path.name == "metrics.jsonl":
+            metrics_syncs += 1
+        original_sync(path)
+
+    def checked_save(*args: Any, **kwargs: Any) -> Path:
+        nonlocal checkpoint_saves
+        assert metrics_syncs > checkpoint_saves
+        checkpoint_saves += 1
+        return original_save(*args, **kwargs)
+
+    monkeypatch.setattr(training_module, "_fsync_existing", tracking_sync)
+    monkeypatch.setattr(training_module, "save_checkpoint", checked_save)
 
     mismatched_config = ModelConfig(
         model_type="transformer",
@@ -342,12 +423,13 @@ def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
 
     checkpoint = Path(result["checkpoint"])
     assert result["global_step"] == 2
+    assert metrics_syncs == checkpoint_saves == 2
     assert (checkpoint / "COMPLETE").is_file()
     assert (checkpoint / "model.safetensors").is_file()
     assert (checkpoint / "optimizer.safetensors").is_file()
     assert (run_dir / "latest").read_text(encoding="utf-8").strip() == checkpoint.name
     with (run_dir / "metrics.jsonl").open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps({"step": 3, "split": "train", "loss": 99.0}) + "\n")
+        handle.write(json.dumps(train_metric(3)) + "\n")
     train(
         dataset,
         model_config,

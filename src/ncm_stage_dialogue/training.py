@@ -114,28 +114,100 @@ def _fsync_directory(path: Path) -> None:
         os.close(directory_fd)
 
 
-def _reconcile_metrics(metrics_path: Path, checkpoint_step: int) -> None:
-    """Discard events newer than the durable checkpoint before resuming."""
+def _metric_number(event: dict[str, Any], field: str, line_number: int) -> float:
+    value = event.get(field)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TrainingError(f"invalid metrics {field} at line {line_number}")
+    numeric = float(value)
+    if not math.isfinite(numeric) or numeric < 0:
+        raise TrainingError(f"invalid metrics {field} at line {line_number}")
+    return numeric
+
+
+def _validate_metric_event(event: Any, line_number: int) -> tuple[str, int]:
+    if not isinstance(event, dict):
+        raise TrainingError(f"invalid metrics event at line {line_number}")
+    split = event.get("split")
+    if split not in {"train", "validation", "test"}:
+        raise TrainingError(f"invalid metrics split at line {line_number}")
+    step = event.get("step")
+    if isinstance(step, bool) or not isinstance(step, int) or step < 1:
+        raise TrainingError(f"invalid metrics step at line {line_number}")
+    if split == "train":
+        required = {"step", "split", "loss", "tokens", "gradient_norm", "seen_tokens"}
+        if set(event) != required:
+            raise TrainingError(f"invalid train metrics schema at line {line_number}")
+        _metric_number(event, "loss", line_number)
+        _metric_number(event, "gradient_norm", line_number)
+        for field in ("tokens", "seen_tokens"):
+            value = event[field]
+            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+                raise TrainingError(f"invalid metrics {field} at line {line_number}")
+    else:
+        required = {
+            "step",
+            "split",
+            "loss",
+            "perplexity",
+            "tokens",
+            "elapsed_seconds",
+            "tokens_per_second",
+        }
+        if set(event) != required:
+            raise TrainingError(f"invalid evaluation metrics schema at line {line_number}")
+        for field in ("loss", "perplexity", "elapsed_seconds", "tokens_per_second"):
+            _metric_number(event, field, line_number)
+        tokens = event["tokens"]
+        if isinstance(tokens, bool) or not isinstance(tokens, int) or tokens < 1:
+            raise TrainingError(f"invalid metrics tokens at line {line_number}")
+    return split, step
+
+
+def _reconcile_metrics(metrics_path: Path, checkpoint_step: int) -> list[dict[str, Any]]:
+    """Validate metrics and discard events newer than the durable checkpoint."""
     if not metrics_path.exists():
-        return
-    retained: list[str] = []
+        return []
+    retained: list[dict[str, Any]] = []
+    expected_train_step = 1
+    previous_seen_tokens = 0
+    seen_evaluations: set[tuple[str, int]] = set()
     for line_number, line in enumerate(
         metrics_path.read_text(encoding="utf-8").splitlines(), start=1
     ):
         try:
             event = json.loads(line)
-            step = event["step"]
-        except (json.JSONDecodeError, KeyError, TypeError) as error:
+        except json.JSONDecodeError as error:
             raise TrainingError(f"invalid metrics event at line {line_number}") from error
-        if not isinstance(step, int):
-            raise TrainingError(f"invalid metrics step at line {line_number}")
+        split, step = _validate_metric_event(event, line_number)
+        if split == "train":
+            if step != expected_train_step:
+                raise TrainingError(f"non-contiguous train metrics at line {line_number}")
+            if event["seen_tokens"] <= previous_seen_tokens:
+                raise TrainingError(f"non-monotonic train metrics at line {line_number}")
+            previous_seen_tokens = event["seen_tokens"]
+            expected_train_step += 1
+        else:
+            if step >= expected_train_step:
+                raise TrainingError(f"evaluation precedes train step at line {line_number}")
+            identity = (split, step)
+            if identity in seen_evaluations:
+                raise TrainingError(f"duplicate evaluation metrics at line {line_number}")
+            seen_evaluations.add(identity)
         if step <= checkpoint_step:
-            retained.append(json.dumps(event, sort_keys=True))
+            retained.append(event)
+    retained_train_steps = [event["step"] for event in retained if event["split"] == "train"]
+    if retained_train_steps != list(range(1, checkpoint_step + 1)):
+        raise TrainingError("metrics do not cover the durable checkpoint")
     temporary = metrics_path.with_name(f".{metrics_path.name}.tmp-{uuid.uuid4().hex}")
-    content = (("\n".join(retained) + "\n") if retained else "").encode("utf-8")
+    content = (
+        ("\n".join(json.dumps(event, sort_keys=True) for event in retained) + "\n")
+        if retained
+        else ""
+    ).encode("utf-8")
     _write_file_synced(temporary, content)
     os.replace(temporary, metrics_path)
     _fsync_directory(metrics_path.parent)
+    return retained
 
 
 def build_optimizer(model_config: ModelConfig, training_config: TrainingConfig) -> optim.AdamW:
@@ -488,6 +560,7 @@ def train(
     optimizer = build_optimizer(model_config, training_config)
     state = TrainerState()
     metrics_path = run_dir / "metrics.jsonl"
+    resumed_events: list[dict[str, Any]] = []
     if resume_checkpoint is not None:
         state = load_checkpoint(
             resume_checkpoint,
@@ -497,7 +570,7 @@ def train(
             training_config,
             dataset.manifest,
         )
-        _reconcile_metrics(metrics_path, state.global_step)
+        resumed_events = _reconcile_metrics(metrics_path, state.global_step)
     loss_and_grad = nn.value_and_grad(model, language_model_loss)
     started = time.perf_counter()
     last_checkpoint: Path | None = resume_checkpoint
@@ -534,6 +607,7 @@ def train(
             with metrics_path.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(validation, sort_keys=True) + "\n")
         if state.global_step % training_config.checkpoint_interval == 0:
+            _fsync_existing(metrics_path)
             last_checkpoint = save_checkpoint(
                 run_dir,
                 model,
@@ -546,6 +620,7 @@ def train(
             )
 
     if last_checkpoint is None or last_checkpoint.name != f"checkpoint-{state.global_step:08d}":
+        _fsync_existing(metrics_path)
         last_checkpoint = save_checkpoint(
             run_dir,
             model,
@@ -556,10 +631,21 @@ def train(
             dataset.manifest,
             repository,
         )
-    test_metrics = evaluate(model, dataset.blocks["test"], training_config.batch_size)
-    test_metrics.update({"step": state.global_step, "split": "test"})
-    with metrics_path.open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps(test_metrics, sort_keys=True) + "\n")
+    existing_test = next(
+        (
+            event
+            for event in reversed(resumed_events)
+            if event["split"] == "test" and event["step"] == state.global_step
+        ),
+        None,
+    )
+    if existing_test is None:
+        test_metrics = evaluate(model, dataset.blocks["test"], training_config.batch_size)
+        test_metrics.update({"step": state.global_step, "split": "test"})
+        with metrics_path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(test_metrics, sort_keys=True) + "\n")
+    else:
+        test_metrics = dict(existing_test)
     elapsed = time.perf_counter() - started
     return {
         "checkpoint": str(last_checkpoint),
