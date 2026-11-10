@@ -62,8 +62,19 @@
           "heading": "TRIFLES",
           "heading_occurrence": 2,
           "split": "train",
-          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
-          "speaker_labels": ["COUNTY ATTORNEY", "MRS. PETERS", "SHERIFF", "HALE", "MRS. HALE"]
+          "scene_markers": [
+            {
+              "prefix": "SCENE:",
+              "scene_id": "scene-1"
+            }
+          ],
+          "speaker_labels": [
+            "COUNTY ATTORNEY",
+            "MRS. PETERS",
+            "SHERIFF",
+            "HALE",
+            "MRS. HALE"
+          ]
         },
         {
           "id": "the-people",
@@ -72,8 +83,26 @@
           "heading": "THE PEOPLE",
           "heading_occurrence": 2,
           "split": "train",
-          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
-          "speaker_labels": ["TOM", "OSCAR", "THE WOMAN", "SARA", "ARTIST", "ED", "EARNEST APPROACH", "LIGHT TOUCH", "FIREBRAND", "PHILOSOPHER", "THE BOY", "THE MAN"]
+          "scene_markers": [
+            {
+              "prefix": "SCENE:",
+              "scene_id": "scene-1"
+            }
+          ],
+          "speaker_labels": [
+            "TOM",
+            "OSCAR",
+            "THE WOMAN",
+            "SARA",
+            "ARTIST",
+            "ED",
+            "EARNEST APPROACH",
+            "LIGHT TOUCH",
+            "FIREBRAND",
+            "PHILOSOPHER",
+            "THE BOY",
+            "THE MAN"
+          ]
         },
         {
           "id": "close-the-book",
@@ -82,8 +111,22 @@
           "heading": "CLOSE THE BOOK",
           "heading_occurrence": 2,
           "split": "train",
-          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
-          "speaker_labels": ["MRS. ROOT", "JHANSI", "PEYTON", "GRANDMOTHER", "UNCLE GEORGE", "BESSIE", "SENATOR BYRD", "MRS. BYRD"]
+          "scene_markers": [
+            {
+              "prefix": "SCENE:",
+              "scene_id": "scene-1"
+            }
+          ],
+          "speaker_labels": [
+            "MRS. ROOT",
+            "JHANSI",
+            "PEYTON",
+            "GRANDMOTHER",
+            "UNCLE GEORGE",
+            "BESSIE",
+            "SENATOR BYRD",
+            "MRS. BYRD"
+          ]
         },
         {
           "id": "the-outside",
@@ -92,8 +135,19 @@
           "heading": "THE OUTSIDE",
           "heading_occurrence": 2,
           "split": "train",
-          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
-          "speaker_labels": ["CAPTAIN", "BRADFORD", "TONY", "MRS. PATRICK", "ALLIE MAYO"]
+          "scene_markers": [
+            {
+              "prefix": "SCENE:",
+              "scene_id": "scene-1"
+            }
+          ],
+          "speaker_labels": [
+            "CAPTAIN",
+            "BRADFORD",
+            "TONY",
+            "MRS. PATRICK",
+            "ALLIE MAYO"
+          ]
         },
         {
           "id": "womans-honor",
@@ -102,8 +156,23 @@
           "heading": "WOMAN’S HONOR",
           "heading_occurrence": 2,
           "split": "validation",
-          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
-          "speaker_labels": ["LAWYER", "PRISONER", "SHIELDED ONE", "MOTHERLY ONE", "SCORNFUL ONE", "SILLY ONE", "BOY", "MERCENARY ONE", "CHEATED ONE"]
+          "scene_markers": [
+            {
+              "prefix": "SCENE:",
+              "scene_id": "scene-1"
+            }
+          ],
+          "speaker_labels": [
+            "LAWYER",
+            "PRISONER",
+            "SHIELDED ONE",
+            "MOTHERLY ONE",
+            "SCORNFUL ONE",
+            "SILLY ONE",
+            "BOY",
+            "MERCENARY ONE",
+            "CHEATED ONE"
+          ]
         },
         {
           "id": "bernice",
@@ -113,11 +182,26 @@
           "heading_occurrence": 2,
           "split": "train",
           "scene_markers": [
-            {"prefix": "ACT ONE", "scene_id": "act-1"},
-            {"prefix": "ACT TWO", "scene_id": "act-2"},
-            {"prefix": "ACT THREE", "scene_id": "act-3"}
+            {
+              "prefix": "ACT ONE",
+              "scene_id": "act-1"
+            },
+            {
+              "prefix": "ACT TWO",
+              "scene_id": "act-2"
+            },
+            {
+              "prefix": "ACT THREE",
+              "scene_id": "act-3"
+            }
           ],
-          "speaker_labels": ["FATHER", "ABBIE", "LAURA", "CRAIG", "MARGARET"]
+          "speaker_labels": [
+            "FATHER",
+            "ABBIE",
+            "LAURA",
+            "CRAIG",
+            "MARGARET"
+          ]
         },
         {
           "id": "suppressed-desires",
@@ -127,10 +211,20 @@
           "heading_occurrence": 2,
           "split": "train",
           "scene_markers": [
-            {"prefix": "SCENE I:", "scene_id": "scene-1"},
-            {"prefix": "SCENE II:", "scene_id": "scene-2"}
+            {
+              "prefix": "SCENE I:",
+              "scene_id": "scene-1"
+            },
+            {
+              "prefix": "SCENE II:",
+              "scene_id": "scene-2"
+            }
           ],
-          "speaker_labels": ["HENRIETTA", "STEVE", "MABEL"]
+          "speaker_labels": [
+            "HENRIETTA",
+            "STEVE",
+            "MABEL"
+          ]
         },
         {
           "id": "tickless-time",
@@ -139,8 +233,314 @@
           "heading": "TICKLESS TIME",
           "heading_occurrence": 2,
           "split": "test",
-          "scene_markers": [{"prefix": "SCENE:", "scene_id": "scene-1"}],
-          "speaker_labels": ["IAN", "ELOISE", "MRS. STUBBS", "EDDY", "ALICE", "ANNIE"]
+          "scene_markers": [
+            {
+              "prefix": "SCENE:",
+              "scene_id": "scene-1"
+            }
+          ],
+          "speaker_labels": [
+            "IAN",
+            "ELOISE",
+            "MRS. STUBBS",
+            "EDDY",
+            "ALICE",
+            "ANNIE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gutenberg-7986-chekhov-second-series",
+      "title": "Plays by Anton Chekhov, Second Series",
+      "author": "Anton Pavlovich Chekhov",
+      "translator": "Julius West (1891–1918)",
+      "original_publication_year": 1915,
+      "edition": "Julius West’s English translation was first published by Duckworth in London in 1915; the Project Gutenberg text does not identify the exact scanned print copy.",
+      "language": "en",
+      "source_landing_page": "https://www.gutenberg.org/ebooks/7986",
+      "source_url": "https://www.gutenberg.org/cache/epub/7986/pg7986.txt",
+      "source_sha256": "4c08d7117dcd946cdcfd42c3d56ac79a114f4b55d2e186b19978ede25947351a",
+      "source_bytes": 419036,
+      "retrieved_on": "2026-11-09",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 7986 as public domain in the United States. The text is an English translation by Julius West, first published in 1915. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_collection_v1",
+      "works": [
+        {
+          "id": "on-the-high-road",
+          "title": "On the High Road",
+          "author": "Anton Chekhov",
+          "heading": "ON THE HIGH ROAD",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {
+              "prefix": "The action takes place in one of the provinces of Southern Russia",
+              "scene_id": "scene-1",
+              "include_marker": true,
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "EFIMOVNA",
+            "NAZAROVNA",
+            "SAVVA",
+            "SAWA",
+            "FEDYA",
+            "TIHON",
+            "BORTSOV",
+            "MERIK",
+            "MERIN",
+            "KUSMA",
+            "COACHMAN",
+            "MARIA EGOROVNA",
+            "MARIA",
+            "A VOICE FROM THE CORNER",
+            "THE VOICE FROM THE CORNER",
+            "A VOICE",
+            "THE VOICE"
+          ],
+          "ignored_lines": [
+            "HIGH ROAD"
+          ]
+        },
+        {
+          "id": "the-proposal",
+          "title": "The Proposal",
+          "author": "Anton Chekhov",
+          "heading": "THE PROPOSAL",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {
+              "prefix": "The scene is laid at CHUBUKOV’s country-house",
+              "scene_id": "scene-1",
+              "include_marker": true,
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "CHUBUKOV",
+            "LOMOV",
+            "NATALYA STEPANOVNA"
+          ]
+        },
+        {
+          "id": "the-wedding",
+          "title": "The Wedding",
+          "author": "Anton Chekhov",
+          "heading": "THE WEDDING",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {
+              "prefix": "The scene is laid in one of the rooms of Andronov’s Restaurant",
+              "scene_id": "scene-1",
+              "include_marker": true,
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "ZMEYUKINA",
+            "YATS",
+            "GROOMSMAN",
+            "A GROOMSMAN",
+            "NASTASYA TIMOFEYEVNA",
+            "APLOMBOV",
+            "A WAITER",
+            "ZHIGALOV",
+            "DIMBA",
+            "MOZGOVOY",
+            "DASHENKA",
+            "NUNIN",
+            "REVUNOV",
+            "ALL",
+            "THE GENTLEMEN",
+            "VARIOUS GENTLEMEN",
+            "THE GROOMSMAN"
+          ]
+        },
+        {
+          "id": "the-bear",
+          "title": "The Bear",
+          "author": "Anton Chekhov",
+          "heading": "THE BEAR",
+          "heading_occurrence": 2,
+          "split": "validation",
+          "scene_markers": [
+            {
+              "prefix": "[A drawing-room in POPOVA’S house.]",
+              "scene_id": "scene-1",
+              "include_marker": true,
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "LUKA",
+            "POPOVA",
+            "SMIRNOV"
+          ]
+        },
+        {
+          "id": "a-tragedian-in-spite-of-himself",
+          "title": "A Tragedian in Spite of Himself",
+          "author": "Anton Chekhov",
+          "heading": "A TRAGEDIAN IN SPITE OF HIMSELF",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {
+              "prefix": "The scene is laid in St. Petersburg, in MURASHKIN’S flat",
+              "scene_id": "scene-1",
+              "include_marker": true,
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "MURASHKIN",
+            "TOLKACHOV"
+          ]
+        },
+        {
+          "id": "the-anniversary",
+          "title": "The Anniversary",
+          "author": "Anton Chekhov",
+          "heading": "THE ANNIVERSARY",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {
+              "prefix": "The action takes place at the Bank",
+              "scene_id": "scene-1",
+              "include_marker": true,
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "KHIRIN",
+            "SHIPUCHIN",
+            "TATIANA ALEXEYEVNA",
+            "MERCHUTKINA",
+            "ONE OF THE DEPUTATION",
+            "THE MEMBER OF THE DEPUTATION"
+          ]
+        },
+        {
+          "id": "the-three-sisters",
+          "title": "The Three Sisters",
+          "author": "Anton Chekhov",
+          "heading": "THE THREE SISTERS",
+          "heading_occurrence": 2,
+          "split": "train",
+          "scene_markers": [
+            {
+              "prefix": "ACT I",
+              "scene_id": "act-1",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            },
+            {
+              "prefix": "ACT II",
+              "scene_id": "act-2",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            },
+            {
+              "prefix": "ACT III",
+              "scene_id": "act-3",
+              "end_marker": "Curtain",
+              "match_mode": "exact"
+            },
+            {
+              "prefix": "ACT IV",
+              "scene_id": "act-4",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "OLGA",
+            "IRINA",
+            "CHEBUTIKIN",
+            "TUZENBACH",
+            "SOLENI",
+            "MASHA",
+            "ANFISA",
+            "FERAPONT",
+            "VERSHININ",
+            "ANDREY",
+            "KULIGIN",
+            "NATASHA",
+            "FEDOTIK",
+            "RODE",
+            "ANDREY’S VOICE",
+            "VERSHININ’S VOICE"
+          ]
+        },
+        {
+          "id": "the-cherry-orchard",
+          "title": "The Cherry Orchard",
+          "author": "Anton Chekhov",
+          "heading": "THE CHERRY ORCHARD",
+          "heading_occurrence": 2,
+          "split": "test",
+          "scene_markers": [
+            {
+              "prefix": "ACT ONE",
+              "scene_id": "act-1",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            },
+            {
+              "prefix": "ACT TWO",
+              "scene_id": "act-2",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            },
+            {
+              "prefix": "ACT THREE",
+              "scene_id": "act-3",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            },
+            {
+              "prefix": "ACT FOUR",
+              "scene_id": "act-4",
+              "end_marker": "Curtain.",
+              "match_mode": "exact"
+            }
+          ],
+          "speaker_labels": [
+            "LOPAKHIN",
+            "DUNYASHA",
+            "EPIKHODOV",
+            "ANYA",
+            "LUBOV",
+            "LUBOV ANDREYEVNA",
+            "VARYA",
+            "GAEV",
+            "CHARLOTTA",
+            "CHARLOTTA IVANOVNA",
+            "PISCHIN",
+            "YASHA",
+            "FIERS",
+            "TROFIMOV",
+            "STATION-MASTER",
+            "TRAMP",
+            "THE VOICE OF VARYA",
+            "VOICES FROM THE DRAWING-ROOM",
+            "VOICE AT THE DOOR",
+            "ANYA’S VOICE",
+            "TROFIMOV’S VOICE"
+          ]
         }
       ]
     }

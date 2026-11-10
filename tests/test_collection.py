@@ -125,6 +125,79 @@ def test_collection_parser_emits_independent_works_and_complete_work_splits() ->
     assert all("CURTAIN" not in scene["turns"][-1]["text"] for scene in scenes)
 
 
+def test_collection_parser_supports_included_start_and_exact_end_markers() -> None:
+    text = wrapped(
+        "CONTENTS\nWORK ONE\nWORK ONE\nThe action starts here.\n[A room.]\n"
+        "ALICE. Hello.\nHIGH ROAD\nA VOICE FROM THE CORNER. Reply.\nCurtain."
+    )
+    source = collection_source(text)
+    work = {
+        "id": "work-one",
+        "title": "WORK ONE",
+        "author": "Author One",
+        "heading": "WORK ONE",
+        "heading_occurrence": 2,
+        "split": "train",
+        "scene_markers": [
+            {
+                "prefix": "The action starts here.",
+                "scene_id": "scene-1",
+                "include_marker": True,
+                "end_marker": "Curtain.",
+            }
+        ],
+        "speaker_labels": ["ALICE", "A VOICE FROM THE CORNER"],
+        "ignored_lines": ["HIGH ROAD"],
+    }
+    source = replace(source, metadata={"works": [work]})
+
+    scenes = parse_gutenberg_stage_collection(source, text)
+
+    assert scenes[0]["stage_directions"] == ["The action starts here.", "A room."]
+    assert [turn["speaker"] for turn in scenes[0]["turns"]] == [
+        "ALICE",
+        "A VOICE FROM THE CORNER",
+    ]
+    assert "HIGH ROAD" not in scenes[0]["turns"][0]["text"]
+
+    with pytest.raises(CorpusError, match="scene end marker changed"):
+        parse_gutenberg_stage_collection(source, text.replace("Curtain.", "Curtain"))
+    with pytest.raises(CorpusError, match="ignored line occurrence changed"):
+        parse_gutenberg_stage_collection(source, text.replace("HIGH ROAD\n", ""))
+
+
+def test_collection_parser_validates_optional_marker_fields() -> None:
+    text = fixture_text()
+    source = collection_source(text)
+    metadata = deepcopy(source.metadata)
+    metadata["works"][0]["scene_markers"][0]["include_marker"] = "yes"
+
+    with pytest.raises(CorpusError, match="include_marker must be a boolean"):
+        parse_gutenberg_stage_collection(replace(source, metadata=metadata), text)
+
+
+def test_chekhov_manifest_declares_complete_play_splits() -> None:
+    manifest_path = Path(__file__).parents[1] / "sources" / "plays.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    source = next(
+        item for item in manifest["sources"] if item["id"] == "gutenberg-7986-chekhov-second-series"
+    )
+
+    assert source["translator"] == "Julius West (1891–1918)"
+    assert len(source["works"]) == 8
+    assert {work["split"] for work in source["works"]} == {
+        "train",
+        "validation",
+        "test",
+    }
+    assert sum(len(work["scene_markers"]) for work in source["works"]) == 14
+    assert all(
+        marker["match_mode"] == "exact"
+        for work in source["works"]
+        for marker in work["scene_markers"]
+    )
+
+
 def test_build_corpus_dispatches_collection_parser(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

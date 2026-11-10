@@ -10,7 +10,7 @@ A local, reproducible research project comparing a small **Neural Cellular Model
 
 ## Current milestone
 
-The corpus pipeline currently downloads and parses two pinned Project Gutenberg ebooks: Oscar Wilde's *The Importance of Being Earnest* and Susan Glaspell's eight-play collection *Plays*:
+The corpus pipeline currently downloads and parses three pinned Project Gutenberg ebooks: Oscar Wilde's *The Importance of Being Earnest*, Susan Glaspell's eight-play collection *Plays*, and Julius West's English translation of Anton Chekhov's eight-play *Second Series*:
 
 ```bash
 uv sync
@@ -24,10 +24,11 @@ uv run ruff check .
 ```text
 data/raw/gutenberg-844-importance-of-being-earnest.txt
 data/raw/gutenberg-59432-glaspell-plays.txt
+data/raw/gutenberg-7986-chekhov-second-series.txt
 data/processed/scenes.jsonl
 ```
 
-The current manifest produces 9 independent plays, 14 scenes, and 2,775 speaker turns. Generated data is intentionally gitignored. A clean checkout rebuilds it from `sources/plays.json`.
+The current manifest produces 17 independent plays, 28 scenes, and 5,100 speaker turns. Generated data is intentionally gitignored. A clean checkout rebuilds it from `sources/plays.json`.
 
 ## Dataset record
 
@@ -41,11 +42,11 @@ Every source must declare:
 - collection boundaries and per-work authorship where an ebook contains multiple plays;
 - explicit complete-play train/validation/test assignments for collections.
 
-The Wilde parser fixture uses complete acts as scene units: Act I is training, Act II is validation, and Act III is test. The Glaspell collection is split only at complete-play boundaries: six plays are training data, *Woman's Honor* is validation data, and *Tickless Time* is test data. Future corpus releases will continue to hold out complete plays and, where scale permits, complete authors or translators.
+The Wilde parser fixture uses complete acts as scene units: Act I is training, Act II is validation, and Act III is test. Both collections are split only at complete-play boundaries. The Glaspell collection uses six training plays, *Woman's Honor* for validation, and *Tickless Time* for testing. The Chekhov collection uses six training plays, *The Bear* for validation, and *The Cherry Orchard* for testing. Future corpus releases will continue to hold out complete plays and, where scale permits, complete authors or translators.
 
 ## Legal and provenance scope
 
-Project Gutenberg ebooks 844 and 59432 are cataloged as public-domain material in the United States. Ebook 59432 was transcribed from images of the 1920 Small, Maynard & Company edition; *Suppressed Desires* and *Tickless Time* are attributed to Susan Glaspell in collaboration with George Cram Cook. The downloaded files include Project Gutenberg's license and trademark language. This repository does not commit or relicense the source text; it stores source URLs, hashes, provenance statements, and reproducible transformations. Anyone using the corpus outside the United States must verify the law in their jurisdiction.
+Project Gutenberg ebooks 844, 59432, and 7986 are cataloged as public-domain material in the United States. Ebook 59432 was transcribed from images of the 1920 Small, Maynard & Company edition; *Suppressed Desires* and *Tickless Time* are attributed to Susan Glaspell in collaboration with George Cram Cook. Ebook 7986 is Julius West's English translation of Chekhov's second series, first published in 1915; the Gutenberg text does not identify the exact scanned print copy. The downloaded files include Project Gutenberg's license and trademark language. This repository does not commit or relicense the source text; it stores source URLs, hashes, provenance statements, and reproducible transformations. Anyone using the corpus outside the United States must verify the law in their jurisdiction.
 
 The repository's MIT license covers code and original documentation only.
 

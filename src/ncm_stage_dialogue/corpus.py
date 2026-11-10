@@ -140,6 +140,13 @@ def _validate_collection_works(value: Any, source_id: str) -> None:
             raise CorpusError("collection heading_occurrence must be a positive integer")
         if not isinstance(work["split"], str) or work["split"] not in VALID_SPLITS:
             raise CorpusError(f"invalid work split for {source_id}/{work['id']}")
+        ignored_lines = work.get("ignored_lines", [])
+        if (
+            not isinstance(ignored_lines, list)
+            or not all(isinstance(line, str) and line for line in ignored_lines)
+            or len(set(ignored_lines)) != len(ignored_lines)
+        ):
+            raise CorpusError(f"ignored_lines must be unique non-empty strings: {work['id']}")
 
         _validate_speaker_labels(work["speaker_labels"], f"work {work['id']}")
         markers = work["scene_markers"]
@@ -150,10 +157,29 @@ def _validate_collection_works(value: Any, source_id: str) -> None:
         for marker in markers:
             if not isinstance(marker, dict):
                 raise CorpusError("collection scene marker must be an object")
-            if set(marker) != {"prefix", "scene_id"}:
-                raise CorpusError("collection scene marker requires prefix and scene_id")
-            if not all(isinstance(marker[field], str) and marker[field] for field in marker):
-                raise CorpusError("collection scene marker values must be strings")
+            required_marker_fields = {"prefix", "scene_id"}
+            allowed_marker_fields = required_marker_fields | {
+                "end_marker",
+                "include_marker",
+                "match_mode",
+            }
+            if not required_marker_fields <= marker.keys() or marker.keys() - allowed_marker_fields:
+                raise CorpusError(
+                    "collection scene marker requires prefix and scene_id with only "
+                    "optional end_marker/include_marker/match_mode"
+                )
+            if not all(
+                isinstance(marker[field], str) and marker[field] for field in required_marker_fields
+            ):
+                raise CorpusError("collection scene marker prefix and scene_id must be strings")
+            if "end_marker" in marker and (
+                not isinstance(marker["end_marker"], str) or not marker["end_marker"]
+            ):
+                raise CorpusError("collection scene end_marker must be a non-empty string")
+            if "include_marker" in marker and not isinstance(marker["include_marker"], bool):
+                raise CorpusError("collection scene include_marker must be a boolean")
+            if marker.get("match_mode", "prefix") not in {"exact", "prefix"}:
+                raise CorpusError("collection scene match_mode must be exact or prefix")
             if not SOURCE_ID_RE.fullmatch(marker["scene_id"]):
                 raise CorpusError(f"unsafe scene id: {marker['scene_id']}")
             if marker["scene_id"] in seen_scene_ids:
@@ -486,22 +512,25 @@ def parse_gutenberg_stage_collection(source: Source, text: str) -> list[dict[str
         start = work_starts[work_index]
         end = work_starts[work_index + 1] if work_index + 1 < len(works) else len(body_lines)
         section = body_lines[start:end]
-        curtain_positions = [
-            index for index, line in enumerate(section) if line.strip() == "(CURTAIN)"
-        ]
-        expected_curtains = len(work["scene_markers"])
-        if len(curtain_positions) != expected_curtains:
-            raise CorpusError(
-                f"curtain occurrence changed for {work['id']}: "
-                f"expected {expected_curtains}, got {len(curtain_positions)}"
-            )
+        for ignored_line in work.get("ignored_lines", []):
+            occurrences = [line for line in section if line.strip() == ignored_line]
+            if len(occurrences) != 1:
+                raise CorpusError(
+                    f"ignored line occurrence changed for {work['id']}: "
+                    f"expected 1 {ignored_line!r}, got {len(occurrences)}"
+                )
 
         marker_positions: list[int] = []
         for marker in work["scene_markers"]:
+            match_mode = marker.get("match_mode", "prefix")
             occurrences = [
                 index
                 for index, line in enumerate(section)
-                if line.strip().startswith(marker["prefix"])
+                if (
+                    line.strip() == marker["prefix"]
+                    if match_mode == "exact"
+                    else line.strip().startswith(marker["prefix"])
+                )
             ]
             if len(occurrences) != 1:
                 raise CorpusError(
@@ -523,15 +552,25 @@ def parse_gutenberg_stage_collection(source: Source, text: str) -> list[dict[str
                 if scene_index + 1 < len(marker_positions)
                 else len(section)
             )
-            scene_curtains = [
-                index for index in curtain_positions if marker_position < index < scene_end
+            end_marker = marker.get("end_marker", "(CURTAIN)")
+            end_positions = [
+                index
+                for index in range(marker_position + 1, scene_end)
+                if section[index].strip() == end_marker
             ]
-            if len(scene_curtains) != 1:
-                raise CorpusError(f"scene curtain changed for {work['id']}/{marker['scene_id']}")
-            scene_end = scene_curtains[0]
+            if len(end_positions) != 1:
+                raise CorpusError(
+                    f"scene end marker changed for {work['id']}/{marker['scene_id']}: "
+                    f"expected 1 {end_marker!r}, got {len(end_positions)}"
+                )
+            scene_end = end_positions[0]
             marker_line = section[marker_position].strip()
             remainder = marker_line[len(marker["prefix"]) :].strip()
-            segment = section[marker_position + 1 : scene_end]
+            include_marker = marker.get("include_marker", False)
+            segment_start = marker_position if include_marker else marker_position + 1
+            segment = section[segment_start:scene_end]
+            ignored_lines = set(work.get("ignored_lines", []))
+            segment = [line for line in segment if line.strip() not in ignored_lines]
             if segment and segment[0].strip().startswith("SCENE:"):
                 scene_line = segment[0].strip()
                 segment[0] = scene_line[len("SCENE:") :].strip()
@@ -544,7 +583,7 @@ def parse_gutenberg_stage_collection(source: Source, text: str) -> list[dict[str
                         f"suspicious undeclared speaker label in {work['id']}: {candidate}"
                     )
             normalized_lines.append(f"{ordinal_names[scene_index]} ACT")
-            if remainder:
+            if remainder and not include_marker:
                 normalized_lines.append(remainder)
             normalized_lines.extend(segment)
 
