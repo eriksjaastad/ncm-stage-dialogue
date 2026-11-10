@@ -4,10 +4,13 @@ version = "0.1.0"
 description = "Reproducible public-domain stage-play corpus and MLX NCM benchmark"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "mlx==0.32.4",
+]
 
 [project.scripts]
 build-corpus = "ncm_stage_dialogue.cli:main"
+ncm-experiment = "ncm_stage_dialogue.experiment_cli:main"
 
 [dependency-groups]
 dev = [

@@ -44,7 +44,7 @@ Every source must declare:
 - collection boundaries and per-work authorship where an ebook contains multiple plays;
 - explicit complete-play train/validation/test assignments for collections.
 
-The Wilde parser fixture uses complete acts as scene units: Act I is training, Act II is validation, and Act III is test. Both collections are split only at complete-play boundaries. The Glaspell collection uses six training plays, *Woman's Honor* for validation, and *Tickless Time* for testing. The Chekhov collection uses six training plays, *The Bear* for validation, and *The Cherry Orchard* for testing. All acts of *A Doll's House* and *Pygmalion* remain together in training. Future corpus releases will continue to hold out complete plays and, where scale permits, complete authors or translators.
+Every work now stays in exactly one partition. All three acts of Wilde's *The Importance of Being Earnest* are held out for testing. The Glaspell collection uses six training plays, *Woman's Honor* for validation, and *Tickless Time* for testing. The Chekhov collection uses six training plays, *The Bear* for validation, and *The Cherry Orchard* for testing. All acts of *A Doll's House* and *Pygmalion* remain together in training. The current scene counts are 26 train, 2 validation, and 8 test.
 
 ## Legal and provenance scope
 
@@ -52,15 +52,27 @@ Project Gutenberg ebooks 844, 59432, 7986, 2542, and 3825 are cataloged as publi
 
 The repository's MIT license covers code and original documentation only.
 
-## Planned experiment
+## Experiment
 
-1. Expand the manifest with verified comedy, drama, farce, mystery, and domestic plays.
-2. Audit parser output and deduplicate editions.
-3. Freeze play-level train/validation/test splits and a tokenizer.
-4. Train an approximately 27M-parameter MLX NCM.
-5. Train an autoregressive Transformer with a matched parameter and token budget.
-6. Compare validation loss, generation throughput, repetition, speaker consistency, and multi-speaker structure.
-7. Publish configurations, checkpoints where licensing permits, samples, limitations, and negative findings.
+The first comparison reproduces the core architecture from *TextNCA: Neural Cellular Automata for Language Modeling via Hierarchical Local Attention* (Findings of EMNLP 2026): three causal local-attention stages with windows 4, 16, and 64; four shared cellular updates per stage; learned update embeddings; and GRU state updates.
+
+The deterministic tokenizer uses UTF-8 bytes plus fixed structural tokens for works, scenes, speakers, dialogue, and stage directions. Complete works cannot cross train, validation, and test streams. Inspect the captured configurations with:
+
+```bash
+uv run ncm-experiment inspect --config configs/v1-textnca.json
+uv run ncm-experiment inspect --config configs/v1-transformer.json
+```
+
+The primary models contain 27.35M and 27.18M trainable parameters respectively, a difference below 1%. They use the same 512-token context, byte vocabulary, corpus streams, batch size, optimizer settings, seed, and token budget. Small parameter-matched configurations are provided for correctness and checkpoint-resume calibration:
+
+```bash
+uv run ncm-experiment train --config configs/smoke-textnca.json
+uv run ncm-experiment train --config configs/smoke-transformer.json
+uv run ncm-experiment evaluate --config configs/smoke-textnca.json
+uv run ncm-experiment generate --config configs/smoke-textnca.json --prompt 'ALICE: '
+```
+
+The long-term sequence is: complete and review the V1 harness, run both equal-budget models under a supervised detached runner, publish the V1 comparison, expand to a bounded V2 corpus of at least 30 plays based on measured V1 limitations, and repeat the locked comparison. Each phase ends with a verified artifact before the next begins.
 
 ## Non-goals
 

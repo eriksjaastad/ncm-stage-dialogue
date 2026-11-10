@@ -18,6 +18,7 @@
       "public_domain_basis": "Project Gutenberg distributes ebook 844 as a public-domain work in the United States; the play was first performed and published in 1895. Reusers outside the United States must verify local copyright law.",
       "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
       "parser": "gutenberg_stage_play_v1",
+      "complete_play_split": true,
       "speaker_labels": [
         "ALGERNON",
         "LANE",
@@ -32,8 +33,8 @@
         "JACK AND ALGERNON"
       ],
       "scene_splits": {
-        "act-1": "train",
-        "act-2": "validation",
+        "act-1": "test",
+        "act-2": "test",
         "act-3": "test"
       }
     },

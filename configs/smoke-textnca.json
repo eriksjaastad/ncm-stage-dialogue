@@ -1,0 +1,26 @@
+{
+  "model": {
+    "model_type": "textnca",
+    "context_length": 32,
+    "hidden_size": 64,
+    "num_heads": 4,
+    "ffn_size": 128,
+    "vocab_size": 271,
+    "windows": [4, 16, 64],
+    "iterations_per_stage": 4,
+    "num_layers": 5
+  },
+  "training": {
+    "seed": 123,
+    "batch_size": 2,
+    "train_steps": 8,
+    "learning_rate": 0.001,
+    "warmup_steps": 1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "eval_interval": 4,
+    "checkpoint_interval": 4
+  },
+  "corpus": "data/processed/scenes.jsonl",
+  "run_dir": "data/runs/smoke-textnca"
+}
