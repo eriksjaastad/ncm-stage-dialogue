@@ -1,14 +1,25 @@
 from __future__ import annotations
 
 import json
+import os
+import signal
 import subprocess
+import sys
+import threading
 import time
 import uuid
 from pathlib import Path
 
 import pytest
 
-from ncm_stage_dialogue.runner import resume, start, status, stop
+from ncm_stage_dialogue.runner import (
+    _process_group_alive,
+    _terminate_process_group,
+    resume,
+    start,
+    status,
+    stop,
+)
 from ncm_stage_dialogue.training import TrainingError
 
 
@@ -144,15 +155,25 @@ def test_runner_stops_at_checkpoint_and_resumes_exactly(tmp_path: Path) -> None:
     session = f"ncm-{run_id}"
     try:
         start(run_id, [config])
+        run_dir = repository / "data" / "runs" / run_id / "tiny"
+        with pytest.raises(TrainingError, match="session already exists"):
+            resume(repository, run_id)
+        assert not list(run_dir.parent.glob("tiny-precheckpoint-*"))
         deadline = time.monotonic() + 30
         current = status(repository, run_id)
         while current["experiments"][0]["step"] == 0 and time.monotonic() < deadline:
             time.sleep(0.05)
             current = status(repository, run_id)
         assert current["experiments"][0]["checkpoint_complete"] is True
+        process_group = current["process_group"]
+        assert process_group is not None
+        subprocess.run(["tmux", "kill-session", "-t", session], check=True)
+        assert _process_group_alive(process_group)
+        assert status(repository, run_id)["state"] == "running"
 
         stopped = stop(repository, run_id, timeout=5)
         assert stopped["state"] in {"stopped", "complete"}
+        assert stopped["process_group"] is None
         stopped_step = stopped["experiments"][0]["step"]
         assert stopped_step >= 1
         if stopped["state"] != "complete":
@@ -172,3 +193,42 @@ def test_runner_stops_at_checkpoint_and_resumes_exactly(tmp_path: Path) -> None:
         assert len([event for event in events if event["split"] == "test"]) == 1
     finally:
         _kill_if_running(session)
+
+
+def test_runner_rejects_checkpoint_pointer_escape(tmp_path: Path) -> None:
+    repository, config = _repository(tmp_path, train_steps=2)
+    run_id = f"escape-{uuid.uuid4().hex[:8]}"
+    session = f"ncm-{run_id}"
+    try:
+        start(run_id, [config])
+        _wait(repository, run_id, "complete")
+        run_dir = repository / "data" / "runs" / run_id / "tiny"
+        (run_dir / "latest").write_text("../outside\n", encoding="utf-8")
+        with pytest.raises(TrainingError, match="invalid checkpoint name"):
+            status(repository, run_id)
+    finally:
+        _kill_if_running(session)
+
+
+def test_bounded_stop_kills_stubborn_process_group() -> None:
+    code = """
+import os, signal, time
+signal.signal(signal.SIGINT, signal.SIG_IGN)
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
+if os.fork() == 0:
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    time.sleep(60)
+time.sleep(60)
+"""
+    process = subprocess.Popen([sys.executable, "-c", code], start_new_session=True)
+    waiter = threading.Thread(target=process.wait, daemon=True)
+    waiter.start()
+    try:
+        _terminate_process_group(process.pid, timeout=2)
+        waiter.join(timeout=1)
+        assert not _process_group_alive(process.pid)
+    finally:
+        if _process_group_alive(process.pid):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.wait(timeout=5)
