@@ -106,6 +106,14 @@ def _fsync_existing(path: Path) -> None:
         os.fsync(handle.fileno())
 
 
+def _fsync_directory(path: Path) -> None:
+    directory_fd = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(directory_fd)
+    finally:
+        os.close(directory_fd)
+
+
 def build_optimizer(model_config: ModelConfig, training_config: TrainingConfig) -> optim.AdamW:
     del model_config
     decay_steps = max(1, training_config.train_steps - training_config.warmup_steps)
@@ -201,25 +209,96 @@ def repeated_trigram_rate(tokens: Iterable[int]) -> float:
 
 
 def structure_metrics(tokens: Iterable[int], declared_speakers: set[str]) -> dict[str, Any]:
-    """Measure structural completion and declared-speaker consistency in token output."""
+    """Parse the serialized grammar and report structural and speaker validity."""
     from ncm_stage_dialogue.experiment_data import RAW_BYTE_VOCAB, SPECIAL_TOKENS
 
     values = list(tokens)
     speaker_names: list[str | None] = []
-    index = 0
-    while index < len(values):
-        if values[index] != SPECIAL_TOKENS["SPEAKER"]:
-            index += 1
+    scan_index = 0
+    while scan_index < len(values):
+        if values[scan_index] != SPECIAL_TOKENS["SPEAKER"]:
+            scan_index += 1
             continue
-        index += 1
+        scan_index += 1
         raw = bytearray()
-        while index < len(values) and values[index] < RAW_BYTE_VOCAB:
-            raw.append(values[index])
-            index += 1
+        while scan_index < len(values) and values[scan_index] < RAW_BYTE_VOCAB:
+            raw.append(values[scan_index])
+            scan_index += 1
         try:
             speaker_names.append(raw.decode("utf-8") if raw else None)
         except UnicodeDecodeError:
             speaker_names.append(None)
+
+    index = 0
+
+    def consume(token: int) -> None:
+        nonlocal index
+        if index >= len(values) or values[index] != token:
+            raise TrainingError("generated structure is out of order")
+        index += 1
+
+    def consume_text() -> str:
+        nonlocal index
+        raw = bytearray()
+        while index < len(values) and values[index] < RAW_BYTE_VOCAB:
+            raw.append(values[index])
+            index += 1
+        if not raw:
+            raise TrainingError("generated structure has an empty required field")
+        try:
+            return raw.decode("utf-8")
+        except UnicodeDecodeError as error:
+            raise TrainingError("generated structure contains invalid UTF-8") from error
+
+    try:
+        if any(token < 0 or token >= VOCAB_SIZE for token in values):
+            raise TrainingError("generated structure contains an unknown token")
+        consume(SPECIAL_TOKENS["BOS"])
+        consume(SPECIAL_TOKENS["WORK"])
+        consume_text()
+        consume(SPECIAL_TOKENS["FIELD"])
+        consume_text()
+        consume(SPECIAL_TOKENS["FIELD"])
+        consume_text()
+        parsed_scenes = 0
+        while index < len(values) and values[index] == SPECIAL_TOKENS["SCENE"]:
+            consume(SPECIAL_TOKENS["SCENE"])
+            consume_text()
+            consume(SPECIAL_TOKENS["FIELD"])
+            act = consume_text()
+            if not act.isascii() or not act.isdigit() or int(act) < 1:
+                raise TrainingError("generated structure has an invalid act")
+            while index < len(values) and values[index] == SPECIAL_TOKENS["STAGE"]:
+                consume(SPECIAL_TOKENS["STAGE"])
+                consume_text()
+                consume(SPECIAL_TOKENS["ITEM_END"])
+            parsed_turns = 0
+            while index < len(values) and values[index] == SPECIAL_TOKENS["TURN"]:
+                consume(SPECIAL_TOKENS["TURN"])
+                consume(SPECIAL_TOKENS["SPEAKER"])
+                consume_text()
+                while index < len(values) and values[index] == SPECIAL_TOKENS["DIRECTION"]:
+                    consume(SPECIAL_TOKENS["DIRECTION"])
+                    consume_text()
+                    consume(SPECIAL_TOKENS["ITEM_END"])
+                consume(SPECIAL_TOKENS["TEXT"])
+                consume_text()
+                consume(SPECIAL_TOKENS["TURN_END"])
+                parsed_turns += 1
+            if parsed_turns == 0:
+                raise TrainingError("generated scene has no complete turns")
+            consume(SPECIAL_TOKENS["SCENE_END"])
+            parsed_scenes += 1
+        if parsed_scenes == 0:
+            raise TrainingError("generated work has no complete scenes")
+        consume(SPECIAL_TOKENS["WORK_END"])
+        consume(SPECIAL_TOKENS["EOS"])
+        if index != len(values):
+            raise TrainingError("generated structure has trailing tokens")
+        fully_valid = True
+    except TrainingError:
+        fully_valid = False
+
     valid_speakers = sum(name in declared_speakers for name in speaker_names)
     turn_count = values.count(SPECIAL_TOKENS["TURN"])
     turn_end_count = values.count(SPECIAL_TOKENS["TURN_END"])
@@ -227,17 +306,6 @@ def structure_metrics(tokens: Iterable[int], declared_speakers: set[str]) -> dic
     scene_end_count = values.count(SPECIAL_TOKENS["SCENE_END"])
     work_count = values.count(SPECIAL_TOKENS["WORK"])
     work_end_count = values.count(SPECIAL_TOKENS["WORK_END"])
-    unknown_tokens = any(token < 0 or token >= VOCAB_SIZE for token in values)
-    fully_valid = bool(
-        values
-        and values[0] == SPECIAL_TOKENS["BOS"]
-        and values[-1] == SPECIAL_TOKENS["EOS"]
-        and work_count == work_end_count == 1
-        and scene_count == scene_end_count
-        and turn_count == turn_end_count
-        and all(name is not None for name in speaker_names)
-        and not unknown_tokens
-    )
     return {
         "structure_valid": fully_valid,
         "speaker_consistency": (valid_speakers / len(speaker_names) if speaker_names else None),
@@ -320,15 +388,13 @@ def save_checkpoint(
     _write_file_synced(temporary / "dataset_manifest.json", _json_bytes(dataset_manifest))
     _write_file_synced(temporary / "trainer_state.json", _json_bytes(trainer_payload))
     _write_file_synced(temporary / "COMPLETE", b"complete\n")
-    directory_fd = os.open(temporary, os.O_RDONLY)
-    try:
-        os.fsync(directory_fd)
-    finally:
-        os.close(directory_fd)
+    _fsync_directory(temporary)
     os.replace(temporary, destination)
+    _fsync_directory(run_dir)
     latest_temporary = run_dir / f".latest.tmp-{uuid.uuid4().hex}"
     _write_file_synced(latest_temporary, (checkpoint_name + "\n").encode("utf-8"))
     os.replace(latest_temporary, run_dir / "latest")
+    _fsync_directory(run_dir)
     return destination
 
 
@@ -341,6 +407,8 @@ def load_checkpoint(
     dataset_manifest: dict[str, Any],
 ) -> TrainerState:
     """Restore a complete checkpoint after validating dataset and config identity."""
+    if dataset_manifest.get("vocab_size") != model_config.vocab_size:
+        raise TrainingError("dataset and model vocabulary sizes do not match")
     if not checkpoint.is_dir() or not (checkpoint / "COMPLETE").is_file():
         raise TrainingError(f"checkpoint is incomplete: {checkpoint}")
     config_payload = json.loads((checkpoint / "config.json").read_text(encoding="utf-8"))
@@ -383,6 +451,8 @@ def train(
     model_config.validate()
     if dataset.manifest["block_length"] != model_config.context_length:
         raise TrainingError("dataset block length must match model context length")
+    if dataset.manifest["vocab_size"] != model_config.vocab_size:
+        raise TrainingError("dataset and model vocabulary sizes do not match")
     train_blocks = dataset.blocks["train"]
     if not train_blocks:
         raise TrainingError("training split has no blocks")

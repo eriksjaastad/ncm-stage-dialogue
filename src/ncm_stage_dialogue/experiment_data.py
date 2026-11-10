@@ -263,7 +263,7 @@ def build_experiment_dataset(corpus_path: Path, block_length: int) -> Experiment
     blocks = {split: pack_stream(stream, block_length) for split, stream in streams.items()}
     manifest = {
         "schema_version": 1,
-        "corpus_path": str(corpus_path),
+        "corpus_path": corpus_path.name,
         "corpus_sha256": hashlib.sha256(raw_bytes).hexdigest(),
         "corpus_bytes": len(raw_bytes),
         "record_count": len(rows),

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import mlx.core as mx
 import pytest
 
 from ncm_stage_dialogue.corpus import load_sources
+from ncm_stage_dialogue.experiment_cli import load_experiment_config
 from ncm_stage_dialogue.experiment_data import (
     SPECIAL_TOKENS,
     ByteTokenizer,
@@ -167,6 +170,9 @@ def test_smoke_configs_are_parameter_matched() -> None:
 
     difference = abs(configs[0] - configs[1]) / max(configs)
     assert difference < 0.01
+    primary = json.loads((repository / "configs" / "v1-textnca.json").read_text(encoding="utf-8"))
+    assert primary["model"]["windows"] == [8, 32, 128]
+    assert primary["model"]["iterations_per_stage"] == 4
 
 
 def test_frozen_manifest_has_nineteen_complete_work_splits() -> None:
@@ -193,7 +199,15 @@ def test_structure_metrics_validate_declared_speakers_and_completion() -> None:
     tokens = [
         SPECIAL_TOKENS["BOS"],
         SPECIAL_TOKENS["WORK"],
+        *ByteTokenizer.encode_text("fixture"),
+        SPECIAL_TOKENS["FIELD"],
+        *ByteTokenizer.encode_text("Fixture"),
+        SPECIAL_TOKENS["FIELD"],
+        *ByteTokenizer.encode_text("Test Author"),
         SPECIAL_TOKENS["SCENE"],
+        *ByteTokenizer.encode_text("act-1"),
+        SPECIAL_TOKENS["FIELD"],
+        *ByteTokenizer.encode_text("1"),
         SPECIAL_TOKENS["TURN"],
         SPECIAL_TOKENS["SPEAKER"],
         *ByteTokenizer.encode_text("ALICE"),
@@ -210,6 +224,71 @@ def test_structure_metrics_validate_declared_speakers_and_completion() -> None:
     assert metrics["structure_valid"] is True
     assert metrics["speaker_consistency"] == 1.0
     assert metrics["turn_completion_rate"] == 1.0
+
+    without_text_marker = list(tokens)
+    without_text_marker.remove(SPECIAL_TOKENS["TEXT"])
+    out_of_order = list(tokens)
+    turn_end = out_of_order.index(SPECIAL_TOKENS["TURN_END"])
+    scene_end = out_of_order.index(SPECIAL_TOKENS["SCENE_END"])
+    out_of_order[turn_end], out_of_order[scene_end] = (
+        out_of_order[scene_end],
+        out_of_order[turn_end],
+    )
+    assert structure_metrics(without_text_marker, {"ALICE"})["structure_valid"] is False
+    assert structure_metrics(out_of_order, {"ALICE"})["structure_valid"] is False
+
+
+def test_config_paths_resolve_from_repository_not_caller(tmp_path: Path) -> None:
+    repository = tmp_path / "repo"
+    repository.mkdir()
+    (repository / ".git").mkdir()
+    (repository / "pyproject.toml").write_text("[project]\nname='fixture'\n", encoding="utf-8")
+    config = repository / "configs" / "experiment.json"
+    config.parent.mkdir()
+    payload = {
+        "model": {
+            "model_type": "transformer",
+            "context_length": 8,
+            "hidden_size": 16,
+            "num_heads": 4,
+            "ffn_size": 24,
+        },
+        "training": {
+            "train_steps": 1,
+            "warmup_steps": 0,
+            "eval_interval": 1,
+            "checkpoint_interval": 1,
+        },
+        "corpus": "data/scenes.jsonl",
+        "run_dir": "data/runs/test",
+    }
+    config.write_text(json.dumps(payload), encoding="utf-8")
+
+    _, _, corpus, run_dir, found_repository = load_experiment_config(config)
+
+    assert found_repository == repository
+    assert corpus == repository / "data" / "scenes.jsonl"
+    assert run_dir == repository / "data" / "runs" / "test"
+    corpus.parent.mkdir()
+    write_fixture_corpus(corpus)
+    caller = tmp_path / "caller"
+    caller.mkdir()
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "ncm_stage_dialogue.experiment_cli",
+            "inspect",
+            "--config",
+            str(config),
+        ],
+        cwd=caller,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert json.loads(result.stdout)["model"] == "transformer"
 
 
 def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
@@ -235,6 +314,24 @@ def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
     )
     run_dir = tmp_path / "run"
 
+    mismatched_config = ModelConfig(
+        model_type="transformer",
+        context_length=8,
+        hidden_size=16,
+        num_heads=4,
+        ffn_size=24,
+        vocab_size=270,
+        num_layers=1,
+    )
+    with pytest.raises(TrainingError, match="vocabulary sizes"):
+        train(
+            dataset,
+            mismatched_config,
+            training_config,
+            tmp_path / "mismatch",
+            Path(__file__).parents[1],
+        )
+
     result = train(
         dataset,
         model_config,
@@ -249,5 +346,9 @@ def test_tiny_training_writes_resumable_checkpoint(tmp_path: Path) -> None:
     assert (checkpoint / "model.safetensors").is_file()
     assert (checkpoint / "optimizer.safetensors").is_file()
     assert (run_dir / "latest").read_text(encoding="utf-8").strip() == checkpoint.name
+    interrupted = run_dir / ".checkpoint-00000003.tmp-interrupted"
+    interrupted.mkdir()
+    assert (run_dir / "latest").read_text(encoding="utf-8").strip() == checkpoint.name
+    assert (checkpoint / "COMPLETE").is_file()
     with pytest.raises(TrainingError, match="run directory is not empty"):
         train(dataset, model_config, training_config, run_dir, Path(__file__).parents[1])

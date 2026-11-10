@@ -26,7 +26,7 @@ class ModelConfig:
     num_heads: int
     ffn_size: int
     vocab_size: int = VOCAB_SIZE
-    windows: tuple[int, ...] = (4, 16, 64)
+    windows: tuple[int, ...] = (8, 32, 128)
     iterations_per_stage: int = 4
     num_layers: int = 5
 

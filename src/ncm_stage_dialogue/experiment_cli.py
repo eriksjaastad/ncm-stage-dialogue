@@ -24,8 +24,22 @@ from ncm_stage_dialogue.training import (
 )
 
 
-def _load_config(path: Path) -> tuple[ModelConfig, TrainingConfig, Path, Path]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
+def load_experiment_config(
+    path: Path,
+) -> tuple[ModelConfig, TrainingConfig, Path, Path, Path]:
+    """Load a config and resolve its paths from the containing repository."""
+    resolved_path = path.resolve()
+    repository = next(
+        (
+            candidate
+            for candidate in resolved_path.parents
+            if (candidate / "pyproject.toml").is_file() and (candidate / ".git").exists()
+        ),
+        None,
+    )
+    if repository is None:
+        raise TrainingError(f"config is not inside a Git repository: {resolved_path}")
+    raw = json.loads(resolved_path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or set(raw) != {"model", "training", "corpus", "run_dir"}:
         raise TrainingError("config requires model, training, corpus, and run_dir")
     model_config = ModelConfig.from_dict(raw["model"])
@@ -33,7 +47,11 @@ def _load_config(path: Path) -> tuple[ModelConfig, TrainingConfig, Path, Path]:
     training_config.validate()
     corpus = Path(raw["corpus"])
     run_dir = Path(raw["run_dir"])
-    return model_config, training_config, corpus, run_dir
+    if not corpus.is_absolute():
+        corpus = repository / corpus
+    if not run_dir.is_absolute():
+        run_dir = repository / run_dir
+    return model_config, training_config, corpus, run_dir, repository
 
 
 def _latest_checkpoint(run_dir: Path) -> Path:
@@ -49,11 +67,15 @@ def _latest_checkpoint(run_dir: Path) -> Path:
 def _load_model_for_checkpoint(
     config_path: Path, checkpoint: Path | None
 ) -> tuple[Any, ModelConfig, TrainingConfig, Any, Path]:
-    model_config, training_config, corpus, run_dir = _load_config(config_path)
+    model_config, training_config, corpus, run_dir, repository = load_experiment_config(config_path)
     dataset = build_experiment_dataset(corpus, model_config.context_length)
+    if dataset.manifest["vocab_size"] != model_config.vocab_size:
+        raise TrainingError("dataset and model vocabulary sizes do not match")
     model = build_model(model_config)
     optimizer = build_optimizer(model_config, training_config)
     selected = checkpoint or _latest_checkpoint(run_dir)
+    if not selected.is_absolute():
+        selected = repository / selected
     load_checkpoint(
         selected,
         model,
@@ -84,8 +106,12 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        model_config, training_config, corpus, run_dir = _load_config(args.config)
+        model_config, training_config, corpus, run_dir, repository = load_experiment_config(
+            args.config
+        )
         dataset = build_experiment_dataset(corpus, model_config.context_length)
+        if dataset.manifest["vocab_size"] != model_config.vocab_size:
+            raise TrainingError("dataset and model vocabulary sizes do not match")
         if args.command == "inspect":
             mx.random.seed(training_config.seed)
             model = build_model(model_config)
@@ -103,13 +129,16 @@ def main() -> int:
             )
             return 0
         if args.command == "train":
+            resume_checkpoint = args.checkpoint
+            if resume_checkpoint is not None and not resume_checkpoint.is_absolute():
+                resume_checkpoint = repository / resume_checkpoint
             result = train(
                 dataset,
                 model_config,
                 training_config,
                 run_dir,
-                Path.cwd(),
-                args.checkpoint,
+                repository,
+                resume_checkpoint,
             )
             print(json.dumps(result, sort_keys=True))
             return 0

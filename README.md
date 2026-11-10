@@ -54,7 +54,7 @@ The repository's MIT license covers code and original documentation only.
 
 ## Experiment
 
-The first comparison reproduces the core architecture from *TextNCA: Neural Cellular Automata for Language Modeling via Hierarchical Local Attention* (Findings of EMNLP 2026): three causal local-attention stages with windows 4, 16, and 64; four shared cellular updates per stage; learned update embeddings; and GRU state updates.
+The first comparison reproduces the core architecture from *TextNCA: Neural Cellular Automata for Language Modeling via Hierarchical Local Attention* (Findings of EMNLP 2026): three causal local-attention stages with windows 8, 32, and 128; four shared cellular updates per stage; learned update embeddings; and GRU state updates.
 
 The deterministic tokenizer uses UTF-8 bytes plus fixed structural tokens for works, scenes, speakers, dialogue, and stage directions. Complete works cannot cross train, validation, and test streams. Inspect the captured configurations with:
 
