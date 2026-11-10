@@ -166,6 +166,8 @@ def _validate_metric_event(event: Any, line_number: int) -> tuple[str, int]:
 def _reconcile_metrics(metrics_path: Path, checkpoint_step: int) -> list[dict[str, Any]]:
     """Validate metrics and discard events newer than the durable checkpoint."""
     if not metrics_path.exists():
+        if checkpoint_step > 0:
+            raise TrainingError("metrics do not cover the durable checkpoint")
         return []
     retained: list[dict[str, Any]] = []
     expected_train_step = 1

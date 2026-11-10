@@ -63,6 +63,21 @@ uv run ncm-experiment inspect --config configs/v1-textnca.json
 uv run ncm-experiment inspect --config configs/v1-transformer.json
 ```
 
+Long runs use the manual `tmux` + `caffeinate` wrapper (no cron or restart daemon):
+
+```bash
+uv run ncm-runner start --run-id v1-$(git rev-parse --short HEAD) \
+  --config configs/v1-textnca.json --config configs/v1-transformer.json
+uv run ncm-runner status --run-id v1-$(git rev-parse --short HEAD)
+uv run ncm-runner log --run-id v1-$(git rev-parse --short HEAD) --lines 50
+uv run ncm-runner stop --run-id v1-$(git rev-parse --short HEAD)
+uv run ncm-runner resume --run-id v1-$(git rev-parse --short HEAD)
+```
+
+Each run ID creates new config copies, model directories, logs, and runner metadata under
+`data/runs/<run-id>/`. Duplicate IDs are refused. `stop` sends `Ctrl-C`, waits up to ten
+seconds, and leaves the last atomically completed checkpoint for explicit `resume`.
+
 The primary models contain 27.35M and 27.18M trainable parameters respectively, a difference below 1%. They use the same 512-token context, byte vocabulary, corpus streams, batch size, optimizer settings, seed, and token budget. Small parameter-matched configurations are provided for correctness and checkpoint-resume calibration:
 
 ```bash

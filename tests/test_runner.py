@@ -1,0 +1,174 @@
+from __future__ import annotations
+
+import json
+import subprocess
+import time
+import uuid
+from pathlib import Path
+
+import pytest
+
+from ncm_stage_dialogue.runner import resume, start, status, stop
+from ncm_stage_dialogue.training import TrainingError
+
+
+def _scene(split: str, scene_id: str) -> dict[str, object]:
+    return {
+        "source_id": f"fixture-{scene_id}",
+        "title": f"Fixture {scene_id}",
+        "author": "Test Author",
+        "scene_id": scene_id,
+        "act": 1,
+        "split": split,
+        "stage_directions": ["A room."],
+        "turns": [
+            {"speaker": "ALICE", "text": "Hello.", "stage_directions": ["quietly"]},
+            {"speaker": "BOB", "text": "Goodbye.", "stage_directions": ["firmly"]},
+        ],
+        "provenance": {"synthetic": True},
+    }
+
+
+def _repository(tmp_path: Path, train_steps: int) -> tuple[Path, Path]:
+    repository = tmp_path / "repo"
+    repository.mkdir()
+    subprocess.run(["git", "init", "-q", str(repository)], check=True)
+    (repository / "pyproject.toml").write_text(
+        "[project]\nname='runner-fixture'\nversion='0.0.0'\n", encoding="utf-8"
+    )
+    data = repository / "data"
+    data.mkdir()
+    corpus = data / "scenes.jsonl"
+    corpus.write_text(
+        "".join(
+            json.dumps(_scene(split, scene_id)) + "\n"
+            for split, scene_id in (
+                ("train", "train-1"),
+                ("validation", "validation-1"),
+                ("test", "test-1"),
+            )
+        ),
+        encoding="utf-8",
+    )
+    configs = repository / "configs"
+    configs.mkdir()
+    config = configs / "tiny.json"
+    config.write_text(
+        json.dumps(
+            {
+                "model": {
+                    "model_type": "transformer",
+                    "context_length": 8,
+                    "hidden_size": 16,
+                    "num_heads": 4,
+                    "ffn_size": 24,
+                    "num_layers": 1,
+                },
+                "training": {
+                    "seed": 3,
+                    "batch_size": 1,
+                    "train_steps": train_steps,
+                    "learning_rate": 0.001,
+                    "warmup_steps": 0,
+                    "weight_decay": 0.0,
+                    "max_grad_norm": 1.0,
+                    "eval_interval": max(1, train_steps // 2),
+                    "checkpoint_interval": 1,
+                },
+                "corpus": "data/scenes.jsonl",
+                "run_dir": "unused",
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    subprocess.run(["git", "-C", str(repository), "add", "."], check=True)
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repository),
+            "-c",
+            "user.name=Runner Test",
+            "-c",
+            "user.email=runner@example.invalid",
+            "commit",
+            "-qm",
+            "fixture",
+        ],
+        check=True,
+    )
+    return repository, config
+
+
+def _wait(repository: Path, run_id: str, expected: str, timeout: float = 30.0) -> dict:
+    deadline = time.monotonic() + timeout
+    current = status(repository, run_id)
+    while current["state"] != expected and time.monotonic() < deadline:
+        time.sleep(0.1)
+        current = status(repository, run_id)
+    assert current["state"] == expected, current
+    return current
+
+
+def _kill_if_running(session: str) -> None:
+    subprocess.run(["tmux", "kill-session", "-t", session], check=False, capture_output=True)
+
+
+def test_runner_refuses_duplicates_and_reports_clean_completion(tmp_path: Path) -> None:
+    repository, config = _repository(tmp_path, train_steps=2)
+    run_id = f"clean-{uuid.uuid4().hex[:8]}"
+    session = f"ncm-{run_id}"
+    try:
+        launched = start(run_id, [config])
+        assert launched["session"] == session
+        assert launched["commit"]
+        with pytest.raises(TrainingError, match="already exists"):
+            start(run_id, [config])
+
+        completed = _wait(repository, run_id, "complete")
+        experiment = completed["experiments"][0]
+        assert experiment["step"] == 2
+        assert experiment["checkpoint_complete"] is True
+        assert completed["last_error"] is None
+        assert Path(completed["log"]).is_file()
+        assert "[runner] completed tiny" in Path(completed["log"]).read_text(encoding="utf-8")
+    finally:
+        _kill_if_running(session)
+
+
+def test_runner_stops_at_checkpoint_and_resumes_exactly(tmp_path: Path) -> None:
+    repository, config = _repository(tmp_path, train_steps=200)
+    run_id = f"resume-{uuid.uuid4().hex[:8]}"
+    session = f"ncm-{run_id}"
+    try:
+        start(run_id, [config])
+        deadline = time.monotonic() + 30
+        current = status(repository, run_id)
+        while current["experiments"][0]["step"] == 0 and time.monotonic() < deadline:
+            time.sleep(0.05)
+            current = status(repository, run_id)
+        assert current["experiments"][0]["checkpoint_complete"] is True
+
+        stopped = stop(repository, run_id, timeout=5)
+        assert stopped["state"] in {"stopped", "complete"}
+        stopped_step = stopped["experiments"][0]["step"]
+        assert stopped_step >= 1
+        if stopped["state"] != "complete":
+            resumed = resume(repository, run_id)
+            assert resumed["state"] == "running"
+            completed = _wait(repository, run_id, "complete")
+        else:
+            completed = stopped
+
+        run_dir = Path(completed["experiments"][0]["run_dir"])
+        events = [
+            json.loads(line)
+            for line in (run_dir / "metrics.jsonl").read_text(encoding="utf-8").splitlines()
+        ]
+        train_steps = [event["step"] for event in events if event["split"] == "train"]
+        assert train_steps == list(range(1, 201))
+        assert len([event for event in events if event["split"] == "test"]) == 1
+    finally:
+        _kill_if_running(session)

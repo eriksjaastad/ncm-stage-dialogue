@@ -449,3 +449,14 @@ def test_tiny_training_writes_resumable_checkpoint(
     assert (checkpoint / "COMPLETE").is_file()
     with pytest.raises(TrainingError, match="run directory is not empty"):
         train(dataset, model_config, training_config, run_dir, Path(__file__).parents[1])
+
+    (run_dir / "metrics.jsonl").unlink()
+    with pytest.raises(TrainingError, match="durable checkpoint"):
+        train(
+            dataset,
+            model_config,
+            training_config,
+            run_dir,
+            Path(__file__).parents[1],
+            checkpoint,
+        )
