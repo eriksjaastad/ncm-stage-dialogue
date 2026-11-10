@@ -543,6 +543,62 @@
           ]
         }
       ]
+    },
+    {
+      "id": "gutenberg-2542-a-dolls-house",
+      "title": "A Doll’s House",
+      "author": "Henrik Ibsen",
+      "translator": "R. Farquharson Sharp (1864–1945)",
+      "original_publication_year": 1879,
+      "edition": "Project Gutenberg does not identify the exact underlying print edition. A matching 1910 Everyman’s Library witness exists, but this manifest does not claim it as Gutenberg’s source.",
+      "language": "en",
+      "source_landing_page": "https://www.gutenberg.org/ebooks/2542",
+      "source_url": "https://www.gutenberg.org/cache/epub/2542/pg2542.txt",
+      "source_sha256": "d72a481b08ca7ace73e8ca2087b2baec29fc00e0d6e493f5e877b12116bccf4f",
+      "source_bytes": 169080,
+      "retrieved_on": "2026-11-09",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 2542 as public domain in the United States. The play was first published in 1879 and this English translation is attributed to R. Farquharson Sharp. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_play_v1",
+      "complete_play_split": true,
+      "strict_speaker_labels": true,
+      "act_markers": [
+        {
+          "scene_id": "act-1",
+          "line": "ACT I",
+          "occurrence": 1
+        },
+        {
+          "scene_id": "act-2",
+          "line": "ACT II",
+          "occurrence": 1
+        },
+        {
+          "scene_id": "act-3",
+          "line": "ACT III",
+          "occurrence": 1
+        }
+      ],
+      "speaker_labels": [
+        "NORA",
+        "HELMER",
+        "MRS LINDE",
+        "KROGSTAD",
+        "RANK",
+        "NURSE",
+        "MAID",
+        "CHILDREN",
+        "DOCTOR RANK",
+        "PORTER",
+        "SERVANT",
+        "THE CHILDREN"
+      ],
+      "scene_splits": {
+        "act-1": "train",
+        "act-2": "train",
+        "act-3": "train"
+      }
     }
   ]
 }

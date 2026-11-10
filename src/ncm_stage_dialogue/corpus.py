@@ -107,6 +107,38 @@ def _validate_speaker_labels(value: Any, context: str) -> tuple[str, ...]:
     return tuple(value)
 
 
+def _validate_act_markers(
+    value: Any, scene_splits: dict[str, str], source_id: str
+) -> list[dict[str, Any]]:
+    if not isinstance(value, list) or not value:
+        raise CorpusError(f"act_markers must be a non-empty list: {source_id}")
+    seen_scene_ids: set[str] = set()
+    seen_boundaries: set[tuple[str, int]] = set()
+    for marker in value:
+        if not isinstance(marker, dict) or set(marker) != {"scene_id", "line", "occurrence"}:
+            raise CorpusError("act marker requires scene_id, line, and occurrence")
+        if (
+            not isinstance(marker["scene_id"], str)
+            or SOURCE_ID_RE.fullmatch(marker["scene_id"]) is None
+            or not isinstance(marker["line"], str)
+            or not marker["line"]
+            or type(marker["occurrence"]) is not int
+            or marker["occurrence"] < 1
+        ):
+            raise CorpusError(f"invalid act marker for {source_id}")
+        boundary = (marker["line"], marker["occurrence"])
+        if marker["scene_id"] in seen_scene_ids or boundary in seen_boundaries:
+            raise CorpusError(f"duplicate act marker for {source_id}")
+        seen_scene_ids.add(marker["scene_id"])
+        seen_boundaries.add(boundary)
+    if seen_scene_ids != set(scene_splits):
+        raise CorpusError(
+            f"act marker scene set changed for {source_id}: "
+            f"expected {sorted(scene_splits)}, got {sorted(seen_scene_ids)}"
+        )
+    return value
+
+
 def _validate_collection_works(value: Any, source_id: str) -> None:
     if not isinstance(value, list) or not value:
         raise CorpusError("collection works must be a non-empty list")
@@ -272,6 +304,13 @@ def load_sources(manifest_path: Path) -> list[Source]:
                 raise CorpusError(f"source is missing required fields: {', '.join(parser_missing)}")
             scene_splits = _validate_scene_splits(raw["scene_splits"], source_id)
             speaker_labels = _validate_speaker_labels(raw["speaker_labels"], f"source {source_id}")
+            if "act_markers" in raw:
+                _validate_act_markers(raw["act_markers"], scene_splits, source_id)
+            for flag in ("complete_play_split", "strict_speaker_labels"):
+                if flag in raw and not isinstance(raw[flag], bool):
+                    raise CorpusError(f"source {flag} must be a boolean")
+            if raw.get("complete_play_split", False) and len(set(scene_splits.values())) != 1:
+                raise CorpusError(f"complete play must use one split: {source_id}")
         else:
             _validate_collection_works(raw.get("works"), source_id)
             scene_splits = {}
@@ -429,33 +468,68 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
         current_scene = None
         prelude_lines = []
 
-    for raw_line in body.splitlines():
+    def start_scene(scene_id: str, act_number: int) -> None:
+        nonlocal current_scene
+        flush_scene()
+        if scene_id in seen_scene_ids:
+            raise CorpusError(f"duplicate scene id: {scene_id}")
+        seen_scene_ids.add(scene_id)
+        split = source.scene_splits.get(scene_id)
+        if split not in VALID_SPLITS:
+            raise CorpusError(f"missing valid split for {source.id}/{scene_id}")
+        current_scene = {
+            "source_id": source.id,
+            "title": source.title,
+            "author": source.author,
+            "scene_id": scene_id,
+            "act": act_number,
+            "split": split,
+            "stage_directions": [],
+            "turns": [],
+        }
+
+    body_lines = body.splitlines()
+    act_markers = source.metadata.get("act_markers")
+    marker_by_position: dict[int, tuple[str, int]] = {}
+    if act_markers is not None:
+        markers = _validate_act_markers(act_markers, source.scene_splits, source.id)
+        positions: list[int] = []
+        for act_number, marker in enumerate(markers, start=1):
+            occurrences = [
+                index for index, line in enumerate(body_lines) if line.strip() == marker["line"]
+            ]
+            expected_occurrences = marker["occurrence"]
+            if len(occurrences) != expected_occurrences:
+                raise CorpusError(
+                    f"act marker occurrence changed for {source.id}/{marker['scene_id']}: "
+                    f"expected {expected_occurrences}, got {len(occurrences)}"
+                )
+            position = occurrences[expected_occurrences - 1]
+            positions.append(position)
+            marker_by_position[position] = (marker["scene_id"], act_number)
+        if positions != sorted(positions) or len(set(positions)) != len(positions):
+            raise CorpusError(f"act markers are missing, duplicated, or out of order: {source.id}")
+
+    for line_index, raw_line in enumerate(body_lines):
         line = raw_line.strip()
-        act_match = ACT_RE.fullmatch(line)
-        if act_match:
-            flush_scene()
+        declared_marker = marker_by_position.get(line_index)
+        if declared_marker is not None:
+            start_scene(*declared_marker)
+            continue
+        act_match = ACT_RE.fullmatch(line) if act_markers is None else None
+        if act_match is not None:
             act_number = ORDINALS[act_match.group(1)]
-            scene_id = f"act-{act_number}"
-            if scene_id in seen_scene_ids:
-                raise CorpusError(f"duplicate scene id: {scene_id}")
-            seen_scene_ids.add(scene_id)
-            split = source.scene_splits.get(scene_id)
-            if split not in VALID_SPLITS:
-                raise CorpusError(f"missing valid split for {source.id}/{scene_id}")
-            current_scene = {
-                "source_id": source.id,
-                "title": source.title,
-                "author": source.author,
-                "scene_id": scene_id,
-                "act": act_number,
-                "split": split,
-                "stage_directions": [],
-                "turns": [],
-            }
+            start_scene(f"act-{act_number}", act_number)
             continue
         if current_scene is None:
             continue
         speaker_match = _match_speaker_line(line, source.speaker_labels)
+        if (
+            source.metadata.get("strict_speaker_labels", False)
+            and SUSPICIOUS_SPEAKER_RE.fullmatch(line)
+            and speaker_match is None
+        ):
+            raise CorpusError(f"suspicious undeclared speaker label in {source.id}: {line}")
         if speaker_match is not None:
             flush_turn()
             current_speaker, same_line_content = speaker_match
@@ -476,6 +550,13 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             f"scene set changed for {source.id}: expected {sorted(expected_scenes)}, "
             f"got {sorted(actual_scenes)}"
         )
+    if source.metadata.get("strict_speaker_labels", False):
+        observed_speakers = {turn["speaker"] for scene in scenes for turn in scene["turns"]}
+        missing_speakers = sorted(set(source.speaker_labels) - observed_speakers)
+        if missing_speakers:
+            raise CorpusError(
+                f"declared speakers missing from {source.id}: {', '.join(missing_speakers)}"
+            )
     return scenes
 
 
