@@ -4,6 +4,8 @@
 
 **TextNCA loses this V1 comparison.** At the fixed 10,000-step budget, the matched Transformer achieved lower validation and test loss and finished training about 3.28× faster. TextNCA produced a valid serialized prefix more often, but neither model completed a work or preserved held-out speaker identities, and TextNCA showed severe cross-prompt output collapse.
 
+**Next measured bottleneck:** held-out conditioning and corpus diversity. Corpus V2 will expand to at least 30 independent plays, then remeasure whether both models stop substituting training-play speakers and whether TextNCA's cross-prompt collapse improves.
+
 This is a result about this single-seed, 27M-parameter, 19-play experiment—not a claim that TextNCA is universally inferior.
 
 ![Validation loss curves](training-curves.svg)
@@ -42,7 +44,10 @@ The generation manifest was fixed before inspecting outputs: early, middle, and 
 | Complete serialized work rate | 0.000 | 0.000 |
 | Length-censored rate | 0.778 | 0.556 |
 | Turn completion rate | 0.417 | 0.509 |
+| Speaker-field format rate | 1.000 | 0.944 |
 | Allowed-speaker rate | 0.000 | 0.000 |
+| Multi-speaker sample rate | 0.778 | 0.778 |
+| Speaker transition rate | 1.000 | 0.852 |
 | Token repeated-trigram rate | 0.200 | 0.194 |
 | Character repeated-trigram rate | 0.140 | 0.081 |
 | Word repeated-trigram rate | 0.000 | 0.000 |

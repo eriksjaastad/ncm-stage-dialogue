@@ -3,7 +3,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ncm_stage_dialogue.v1_report import _curve_svg, _macro_generation_summary, _markdown
+import pytest
+
+from ncm_stage_dialogue.v1_report import (
+    _curve_svg,
+    _macro_generation_summary,
+    _markdown,
+    _shared_training_commit,
+)
 
 
 def sample(work: str, continuation: str, digest: str) -> dict[str, object]:
@@ -17,7 +24,10 @@ def sample(work: str, continuation: str, digest: str) -> dict[str, object]:
             "censored_by_length": True,
             "turn_completion_rate": 0.5,
             "scene_completion_rate": None,
+            "speaker_format_rate": 1.0,
             "speaker_consistency": 0.0,
+            "multi_speaker_generation": True,
+            "speaker_transition_rate": 1.0,
             "token_repeated_trigram_rate": 0.1,
             "character_repeated_trigram_rate": 0.2,
             "word_repeated_trigram_rate": 0.0,
@@ -41,6 +51,20 @@ def test_generation_summary_macro_averages_works_and_detects_cross_prompt_collap
     assert summary["macro_average_across_works"]["prefix_valid"] == 1.0
     assert summary["cross_prompt"]["unique_continuation_rate"] == 1 / 3
     assert summary["cross_prompt"]["mean_cross_work_character_trigram_jaccard"] == 1.0
+
+
+def test_shared_training_commit_rejects_mixed_checkpoint_sources(tmp_path: Path) -> None:
+    for model, commit in (("v1-textnca", "a" * 40), ("v1-transformer", "b" * 40)):
+        run_dir = tmp_path / model
+        checkpoint = run_dir / "checkpoint-00010000"
+        checkpoint.mkdir(parents=True)
+        (run_dir / "latest").write_text(checkpoint.name + "\n", encoding="utf-8")
+        (checkpoint / "trainer_state.json").write_text(
+            json.dumps({"git_commit": commit}), encoding="utf-8"
+        )
+
+    with pytest.raises(ValueError, match="different training commits"):
+        _shared_training_commit(tmp_path)
 
 
 def test_committed_v1_report_is_self_consistent_and_portable() -> None:

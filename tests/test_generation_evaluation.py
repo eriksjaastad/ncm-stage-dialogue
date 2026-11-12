@@ -90,7 +90,9 @@ def test_generation_metrics_accept_complete_structured_continuation() -> None:
     assert metrics["generated_turns_started"] == 1
     assert metrics["generated_turns_completed"] == 1
     assert metrics["speaker_fields"] == 1
+    assert metrics["speaker_format_rate"] == 1.0
     assert metrics["speaker_consistency"] == 1.0
+    assert metrics["multi_speaker_generation"] is False
     assert metrics["completed_text_fields"] == 1
 
 
@@ -137,8 +139,29 @@ def test_generation_metrics_scopes_speakers_to_prompted_work() -> None:
 
     assert metrics["structure_valid"] is True
     assert metrics["speaker_fields"] == 1
+    assert metrics["speaker_format_rate"] == 1.0
     assert metrics["speaker_consistency"] == 0.0
     assert metrics["unknown_speakers"] == ["CAROL"]
+
+
+def test_generation_metrics_compare_multi_speaker_format_and_transitions() -> None:
+    continuation = [
+        *second_turn("BOB"),
+        *second_turn("Carol"),
+        SPECIAL_TOKENS["SCENE_END"],
+        SPECIAL_TOKENS["WORK_END"],
+        SPECIAL_TOKENS["EOS"],
+    ]
+
+    metrics = generation_metrics(
+        completed_first_turn(), continuation, {"ALICE", "BOB"}, max_new_tokens=100
+    )
+
+    assert metrics["structure_valid"] is True
+    assert metrics["distinct_speakers"] == 2
+    assert metrics["multi_speaker_generation"] is True
+    assert metrics["speaker_transition_rate"] == 1.0
+    assert metrics["speaker_format_rate"] == 0.5
 
 
 def test_turn_boundary_selection_is_predeclared_early_middle_late() -> None:

@@ -87,9 +87,9 @@ uv run ncm-experiment evaluate --config configs/smoke-textnca.json
 uv run ncm-experiment generate --config configs/smoke-textnca.json --prompt 'ALICE: '
 ```
 
-The free-form `generate` command is an informal raw-byte probe and does not report
-serialized dialogue structure. The V1 report uses canonical token prompts taken from
-predeclared completed-turn boundaries in the held-out works:
+The V1 report does not use the informal free-form generation example above. It uses
+canonical token prompts taken from predeclared completed-turn boundaries in the held-out
+works:
 
 ```bash
 uv run ncm-v1-report --run-root data/runs/v1-7e4ecad --output-dir reports/v1

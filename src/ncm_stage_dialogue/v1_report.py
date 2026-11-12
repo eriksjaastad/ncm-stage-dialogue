@@ -31,7 +31,10 @@ SUMMARY_METRICS = (
     "censored_by_length",
     "turn_completion_rate",
     "scene_completion_rate",
+    "speaker_format_rate",
     "speaker_consistency",
+    "multi_speaker_generation",
+    "speaker_transition_rate",
     "token_repeated_trigram_rate",
     "character_repeated_trigram_rate",
     "word_repeated_trigram_rate",
@@ -306,6 +309,20 @@ def _artifact_hashes(run_root: Path) -> dict[str, Any]:
     return hashes
 
 
+def _shared_training_commit(run_root: Path) -> str:
+    """Require both final checkpoints to come from one source revision."""
+    commits: dict[str, str] = {}
+    for name in MODEL_NAMES:
+        checkpoint_name = (run_root / name / "latest").read_text(encoding="utf-8").strip()
+        trainer_state = json.loads(
+            (run_root / name / checkpoint_name / "trainer_state.json").read_text(encoding="utf-8")
+        )
+        commits[name] = trainer_state["git_commit"]
+    if len(set(commits.values())) != 1:
+        raise ValueError(f"model checkpoints use different training commits: {commits}")
+    return next(iter(commits.values()))
+
+
 def _curve_svg(training: dict[str, Any]) -> str:
     width, height = 800, 420
     left, right, top, bottom = 70, 30, 30, 55
@@ -392,6 +409,8 @@ def _markdown(results: dict[str, Any]) -> str:
 
 **TextNCA loses this V1 comparison.** At the fixed 10,000-step budget, the matched Transformer achieved lower validation and test loss and finished training about {comparison["transformer_training_speedup"]:.2f}× faster. TextNCA produced a valid serialized prefix more often, but neither model completed a work or preserved held-out speaker identities, and TextNCA showed severe cross-prompt output collapse.
 
+**Next measured bottleneck:** held-out conditioning and corpus diversity. Corpus V2 will expand to at least 30 independent plays, then remeasure whether both models stop substituting training-play speakers and whether TextNCA's cross-prompt collapse improves.
+
 This is a result about this single-seed, 27M-parameter, 19-play experiment—not a claim that TextNCA is universally inferior.
 
 ![Validation loss curves](training-curves.svg)
@@ -430,7 +449,10 @@ The generation manifest was fixed before inspecting outputs: early, middle, and 
 | Complete serialized work rate | {_fmt(tn_gen["structure_valid"])} | {_fmt(tr_gen["structure_valid"])} |
 | Length-censored rate | {_fmt(tn_gen["censored_by_length"])} | {_fmt(tr_gen["censored_by_length"])} |
 | Turn completion rate | {_fmt(tn_gen["turn_completion_rate"])} | {_fmt(tr_gen["turn_completion_rate"])} |
+| Speaker-field format rate | {_fmt(tn_gen["speaker_format_rate"])} | {_fmt(tr_gen["speaker_format_rate"])} |
 | Allowed-speaker rate | {_fmt(tn_gen["speaker_consistency"])} | {_fmt(tr_gen["speaker_consistency"])} |
+| Multi-speaker sample rate | {_fmt(tn_gen["multi_speaker_generation"])} | {_fmt(tr_gen["multi_speaker_generation"])} |
+| Speaker transition rate | {_fmt(tn_gen["speaker_transition_rate"])} | {_fmt(tr_gen["speaker_transition_rate"])} |
 | Token repeated-trigram rate | {_fmt(tn_gen["token_repeated_trigram_rate"])} | {_fmt(tr_gen["token_repeated_trigram_rate"])} |
 | Character repeated-trigram rate | {_fmt(tn_gen["character_repeated_trigram_rate"])} | {_fmt(tr_gen["character_repeated_trigram_rate"])} |
 | Word repeated-trigram rate | {_fmt(tn_gen["word_repeated_trigram_rate"])} | {_fmt(tr_gen["word_repeated_trigram_rate"])} |
@@ -487,14 +509,7 @@ def build_report(
         max_new_tokens=max_new_tokens,
     )
     dataset = prompt_data["dataset"]
-    training_commit = json.loads(
-        (
-            run_root
-            / "v1-textnca"
-            / (run_root / "v1-textnca" / "latest").read_text(encoding="utf-8").strip()
-            / "trainer_state.json"
-        ).read_text(encoding="utf-8")
-    )["git_commit"]
+    training_commit = _shared_training_commit(run_root)
     results = {
         "schema_version": 1,
         "identity": {

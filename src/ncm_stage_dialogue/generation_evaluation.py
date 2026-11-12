@@ -281,6 +281,14 @@ def generation_metrics(
     unknown_speakers = sorted(
         {speaker for speaker in parser.generated_speakers if speaker not in allowed_speakers}
     )
+    formatted_speakers = sum(
+        speaker == speaker.strip()
+        and any(character.isalpha() for character in speaker)
+        and not any(character.islower() for character in speaker)
+        and not any(character.isspace() and character != " " for character in speaker)
+        for speaker in parser.generated_speakers
+    )
+    speaker_transitions = list(zip(parser.generated_speakers, parser.generated_speakers[1:]))
     hit_length_cap = len(continuation) >= max_new_tokens
     return {
         "prefix_valid": prefix_valid,
@@ -307,10 +315,22 @@ def generation_metrics(
         ),
         "generated_work_completed": parser.generated_work_completed,
         "speaker_fields": len(parser.generated_speakers),
+        "speaker_format_rate": (
+            formatted_speakers / len(parser.generated_speakers)
+            if parser.generated_speakers
+            else None
+        ),
         "speaker_consistency": (
             sum(speaker in allowed_speakers for speaker in parser.generated_speakers)
             / len(parser.generated_speakers)
             if parser.generated_speakers
+            else None
+        ),
+        "distinct_speakers": len(set(parser.generated_speakers)),
+        "multi_speaker_generation": len(set(parser.generated_speakers)) >= 2,
+        "speaker_transition_rate": (
+            sum(first != second for first, second in speaker_transitions) / len(speaker_transitions)
+            if speaker_transitions
             else None
         ),
         "unknown_speakers": unknown_speakers,
