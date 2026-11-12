@@ -8,10 +8,13 @@ from pathlib import Path
 import pytest
 
 from ncm_stage_dialogue.corpus import (
+    VALID_SPLITS,
     CorpusError,
     Source,
     build_corpus,
+    load_sources,
     parse_gutenberg_stage_collection,
+    parse_gutenberg_stage_explicit,
     sha256_bytes,
 )
 
@@ -190,11 +193,7 @@ def test_chekhov_manifest_declares_complete_play_splits() -> None:
 
     assert source["translator"] == "Julius West (1891–1918)"
     assert len(source["works"]) == 8
-    assert {work["split"] for work in source["works"]} == {
-        "train",
-        "validation",
-        "test",
-    }
+    assert {work["split"] for work in source["works"]} == {"train"}
     assert sum(len(work["scene_markers"]) for work in source["works"]) == 14
     assert all(
         marker["match_mode"] == "exact"
@@ -303,3 +302,188 @@ def test_collection_parser_rejects_duplicate_work_ids() -> None:
 
     with pytest.raises(CorpusError, match="duplicate work id"):
         parse_gutenberg_stage_collection(duplicate_source, text)
+
+
+def test_explicit_parser_uses_pinned_source_line_ranges() -> None:
+    text = wrapped(
+        "FRONT MATTER\n"
+        "ACT I\n"
+        "A room.\n"
+        "ALICE. Hello.\n"
+        "BOB. Goodbye.\n"
+        "ACT II\n"
+        "A garden.\n"
+        "ALICE. [Quietly.] Again.\n"
+        "CURTAIN\n"
+        "POSTMATTER"
+    )
+    lines = text.splitlines()
+    content = text.encode()
+    source = Source(
+        id="fixture-explicit",
+        title="Fixture Explicit Collection",
+        author="Fixture Author",
+        source_url="https://www.gutenberg.org/cache/epub/999998/pg999998.txt",
+        source_sha256=sha256_bytes(content),
+        source_bytes=len(content),
+        parser="gutenberg_stage_explicit_v2",
+        scene_splits={},
+        speaker_labels=(),
+        metadata={
+            "works": [
+                {
+                    "id": "work-one",
+                    "title": "Work One",
+                    "author": "Author One",
+                    "split": "train",
+                    "speaker_labels": ["ALICE", "BOB"],
+                    "ignored_line_numbers": [3, 7, 10],
+                    "scenes": [
+                        {
+                            "scene_id": "act-1",
+                            "act": 1,
+                            "start_line": 3,
+                            "end_line": 7,
+                            "start_text": "ACT I",
+                            "end_text": "BOB. Goodbye.",
+                        },
+                        {
+                            "scene_id": "act-2",
+                            "act": 2,
+                            "start_line": 7,
+                            "end_line": 11,
+                            "start_text": "ACT II",
+                            "end_text": "CURTAIN",
+                        },
+                    ],
+                }
+            ]
+        },
+    )
+
+    scenes = parse_gutenberg_stage_explicit(source, text)
+
+    assert [(scene["scene_id"], scene["act"], scene["split"]) for scene in scenes] == [
+        ("work-one-act-1", 1, "train"),
+        ("work-one-act-2", 2, "train"),
+    ]
+    assert scenes[0]["stage_directions"] == ["A room."]
+    assert [turn["speaker"] for turn in scenes[0]["turns"]] == ["ALICE", "BOB"]
+    assert scenes[1]["turns"][0] == {
+        "speaker": "ALICE",
+        "text": "Again.",
+        "stage_directions": ["Quietly."],
+    }
+    assert scenes[0]["source_line_start"] == 3
+    assert scenes[0]["source_line_end"] == 6
+    assert lines[scenes[1]["source_line_end"] - 1].strip() == "CURTAIN"
+
+
+def test_explicit_parser_rejects_boundary_drift() -> None:
+    text = wrapped("ACT I\nALICE. Hello.\nCURTAIN")
+    content = text.encode()
+    source = Source(
+        id="fixture-explicit",
+        title="Fixture Explicit Collection",
+        author="Fixture Author",
+        source_url="https://www.gutenberg.org/cache/epub/999998/pg999998.txt",
+        source_sha256=sha256_bytes(content),
+        source_bytes=len(content),
+        parser="gutenberg_stage_explicit_v2",
+        scene_splits={},
+        speaker_labels=(),
+        metadata={
+            "works": [
+                {
+                    "id": "work-one",
+                    "title": "Work One",
+                    "author": "Author One",
+                    "split": "train",
+                    "speaker_labels": ["ALICE"],
+                    "ignored_line_numbers": [2, 4],
+                    "scenes": [
+                        {
+                            "scene_id": "act-1",
+                            "act": 1,
+                            "start_line": 2,
+                            "end_line": 5,
+                            "start_text": "WRONG ACT",
+                            "end_text": "CURTAIN",
+                        }
+                    ],
+                }
+            ]
+        },
+    )
+
+    with pytest.raises(CorpusError, match="explicit scene start changed"):
+        parse_gutenberg_stage_explicit(source, text)
+
+
+def test_author_split_isolation_rejects_coauthor_overlap(tmp_path: Path) -> None:
+    text = fixture_text()
+    source = collection_manifest_record(text)
+    works = source["works"]
+    assert isinstance(works, list)
+    works[0]["author"] = "Author One"
+    works[0]["split"] = "train"
+    works[1]["author"] = "Author One and Author Two"
+    works[1]["split"] = "test"
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "author_split_isolation": True,
+                "sources": [source],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(CorpusError, match="author split leakage.*Author One"):
+        load_sources(manifest)
+
+
+def test_v2_manifest_freezes_30_author_isolated_works() -> None:
+    manifest_path = Path(__file__).parents[1] / "sources" / "plays.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert payload["author_split_isolation"] is True
+    sources = load_sources(manifest_path)
+    works: list[tuple[str, str]] = []
+    for source in sources:
+        if source.parser == "gutenberg_stage_play_v1":
+            split = next(iter(set(source.scene_splits.values())))
+            works.append((source.author, split))
+        else:
+            works.extend((work["author"], work["split"]) for work in source.metadata["works"])
+
+    assert len(works) == 30
+    assert {
+        split: sum(work_split == split for _, work_split in works) for split in VALID_SPLITS
+    } == {
+        "train": 23,
+        "validation": 3,
+        "test": 4,
+    }
+    author_splits: dict[str, set[str]] = {}
+    for author, split in works:
+        for author_part in author.split(" and "):
+            author_splits.setdefault(author_part, set()).add(split)
+    assert all(len(splits) == 1 for splits in author_splits.values())
+
+
+def test_corpus_v2_report_records_frozen_inventory() -> None:
+    report = json.loads(
+        (Path(__file__).parents[1] / "reports" / "corpus-v2" / "results.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert report["v2"]["work_count"] == 30
+    assert report["v2"]["scenes"] == 75
+    assert report["v2"]["turns"] == 14800
+    assert report["v2"]["tokens"] == 2094294
+    assert report["v2"]["author_leakage"] == {}
+    assert len(report["v2"]["works"]) == 30

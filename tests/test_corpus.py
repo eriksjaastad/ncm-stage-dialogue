@@ -243,6 +243,39 @@ def test_parser_recognizes_joint_speakers_with_inline_direction_and_text() -> No
     }
 
 
+def test_parser_separates_parenthesized_italic_stage_directions() -> None:
+    content = wrapped(
+        "FIRST ACT\nALICE. (_quietly_) Hello.\nBOB. (_crossing to the door_) Goodbye."
+    )
+
+    scenes = parse_gutenberg_stage_play(source_for(content), content.decode())
+
+    assert scenes[0]["turns"] == [
+        {"speaker": "ALICE", "text": "Hello.", "stage_directions": ["quietly"]},
+        {
+            "speaker": "BOB",
+            "text": "Goodbye.",
+            "stage_directions": ["crossing to the door"],
+        },
+    ]
+
+
+def test_strict_parser_accepts_uppercase_names_inside_multiline_directions() -> None:
+    content = wrapped(
+        "FIRST ACT\nALICE. Hello.\n[BOB crosses the room,\nCHARLIE. watches him.]\nBOB. Goodbye."
+    )
+    source = replace(
+        source_for(content),
+        metadata={"strict_speaker_labels": True},
+    )
+
+    scenes = parse_gutenberg_stage_play(source, content.decode())
+
+    assert scenes[0]["turns"][0]["stage_directions"] == [
+        "BOB crosses the room, CHARLIE. watches him."
+    ]
+
+
 def test_declared_act_markers_skip_toc_and_enforce_complete_play_split() -> None:
     content = wrapped("CONTENTS\nACT I.\nACT II.\nACT I\nALICE.\nHello.\nACT II\nBOB.\nGoodbye.")
     source = source_for(
@@ -368,7 +401,7 @@ def test_pygmalion_manifest_pins_five_act_complete_play() -> None:
         }
         for act_number, roman in enumerate(("I", "II", "III", "IV", "V"), start=1)
     ]
-    assert source.scene_splits == {f"act-{number}": "train" for number in range(1, 6)}
+    assert source.scene_splits == {f"act-{number}": "validation" for number in range(1, 6)}
     assert source.metadata["complete_play_split"] is True
     assert source.metadata["strict_speaker_labels"] is True
     assert source.metadata["play_end_marker"] == {
