@@ -87,6 +87,14 @@ uv run ncm-experiment evaluate --config configs/smoke-textnca.json
 uv run ncm-experiment generate --config configs/smoke-textnca.json --prompt 'ALICE: '
 ```
 
+The V1 report does not use the informal free-form generation example above. It uses
+canonical token prompts taken from predeclared completed-turn boundaries in the held-out
+works:
+
+```bash
+uv run ncm-v1-report --run-root data/runs/v1-7e4ecad --output-dir reports/v1
+```
+
 The long-term sequence is: complete and review the V1 harness, run both equal-budget models under a supervised detached runner, publish the V1 comparison, expand to a bounded V2 corpus of at least 30 plays based on measured V1 limitations, and repeat the locked comparison. Each phase ends with a verified artifact before the next begins.
 
 ## Non-goals

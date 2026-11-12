@@ -12,6 +12,7 @@ dependencies = [
 build-corpus = "ncm_stage_dialogue.cli:main"
 ncm-experiment = "ncm_stage_dialogue.experiment_cli:main"
 ncm-runner = "ncm_stage_dialogue.runner:main"
+ncm-v1-report = "ncm_stage_dialogue.v1_report:main"
 
 [dependency-groups]
 dev = [

@@ -1,0 +1,2176 @@
+{
+  "dataset": {
+    "block_length": 512,
+    "corpus_bytes": 1583252,
+    "corpus_path": "scenes.jsonl",
+    "corpus_sha256": "7fcb04f62766b4e7ef91fc49ce803a59e78dfcf56eb8a6e61c1c884ac7e98970",
+    "record_count": 36,
+    "schema_version": 1,
+    "serialization_version": 1,
+    "special_token_ids": {
+      "BOS": 257,
+      "DIRECTION": 267,
+      "EOS": 258,
+      "FIELD": 260,
+      "ITEM_END": 263,
+      "PAD": 256,
+      "SCENE": 261,
+      "SCENE_END": 269,
+      "SPEAKER": 265,
+      "STAGE": 262,
+      "TEXT": 266,
+      "TURN": 264,
+      "TURN_END": 268,
+      "WORK": 259,
+      "WORK_END": 270
+    },
+    "split_counts": {
+      "test": {
+        "scenes": 8,
+        "turns": 1810,
+        "works": 3
+      },
+      "train": {
+        "scenes": 26,
+        "turns": 5211,
+        "works": 14
+      },
+      "validation": {
+        "scenes": 2,
+        "turns": 395,
+        "works": 2
+      }
+    },
+    "split_token_counts": {
+      "test": 249402,
+      "train": 756015,
+      "validation": 56907
+    },
+    "split_token_sha256": {
+      "test": "1a4ca30db696dbb7ef14a587a3fcf3026a0b2c290c21d9658dcd853681678d89",
+      "train": "5f0c43644babda067f55364fd0426f80b3a6bc54047a5df93050ce5279c49ab8",
+      "validation": "0ad2ed609f101cd042efea089bc4eba204d8a3435cf1ebf91d302fd819ed19ed"
+    },
+    "tokenizer_version": 1,
+    "turn_count": 7416,
+    "vocab_size": 271,
+    "work_count": 19,
+    "works": [
+      {
+        "author": "Henrik Ibsen",
+        "scene_ids": [
+          "act-1",
+          "act-2",
+          "act-3"
+        ],
+        "source_id": "gutenberg-2542-a-dolls-house",
+        "speakers": [
+          "CHILDREN",
+          "DOCTOR RANK",
+          "HELMER",
+          "KROGSTAD",
+          "MAID",
+          "MRS LINDE",
+          "NORA",
+          "NURSE",
+          "PORTER",
+          "RANK",
+          "SERVANT",
+          "THE CHILDREN"
+        ],
+        "split": "train",
+        "title": "A Doll’s House",
+        "work_key": "gutenberg-2542-a-dolls-house::A Doll’s House"
+      },
+      {
+        "author": "George Bernard Shaw",
+        "scene_ids": [
+          "act-1",
+          "act-2",
+          "act-3",
+          "act-4",
+          "act-5"
+        ],
+        "source_id": "gutenberg-3825-pygmalion",
+        "speakers": [
+          "A BYSTANDER",
+          "A SARCASTIC BYSTANDER",
+          "CLARA",
+          "DOOLITTLE",
+          "FREDDY",
+          "HIGGINS",
+          "LIZA",
+          "MISS EYNSFORD HILL",
+          "MRS. EYNSFORD HILL",
+          "MRS. HIGGINS",
+          "MRS. PEARCE",
+          "PICKERING",
+          "SEVERAL BYSTANDERS",
+          "THE BYSTANDER",
+          "THE BYSTANDERS GENERALLY",
+          "THE DAUGHTER",
+          "THE FLOWER GIRL",
+          "THE GENTLEMAN",
+          "THE GENTLEMEN",
+          "THE JAPANESE LADY",
+          "THE MOTHER",
+          "THE NOTE TAKER",
+          "THE PARLOR-MAID",
+          "THE SARCASTIC BYSTANDER",
+          "THE SARCASTIC ONE"
+        ],
+        "split": "train",
+        "title": "Pygmalion",
+        "work_key": "gutenberg-3825-pygmalion::Pygmalion"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "bernice-act-1",
+          "bernice-act-2",
+          "bernice-act-3"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ABBIE",
+          "CRAIG",
+          "FATHER",
+          "LAURA",
+          "MARGARET"
+        ],
+        "split": "train",
+        "title": "Bernice",
+        "work_key": "gutenberg-59432-glaspell-plays::Bernice"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "close-the-book-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "BESSIE",
+          "GRANDMOTHER",
+          "JHANSI",
+          "MRS. BYRD",
+          "MRS. ROOT",
+          "PEYTON",
+          "SENATOR BYRD",
+          "UNCLE GEORGE"
+        ],
+        "split": "train",
+        "title": "Close the Book",
+        "work_key": "gutenberg-59432-glaspell-plays::Close the Book"
+      },
+      {
+        "author": "Susan Glaspell and George Cram Cook",
+        "scene_ids": [
+          "suppressed-desires-scene-1",
+          "suppressed-desires-scene-2"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "HENRIETTA",
+          "MABEL",
+          "STEVE"
+        ],
+        "split": "train",
+        "title": "Suppressed Desires",
+        "work_key": "gutenberg-59432-glaspell-plays::Suppressed Desires"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "the-outside-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ALLIE MAYO",
+          "BRADFORD",
+          "CAPTAIN",
+          "MRS. PATRICK",
+          "TONY"
+        ],
+        "split": "train",
+        "title": "The Outside",
+        "work_key": "gutenberg-59432-glaspell-plays::The Outside"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "the-people-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ARTIST",
+          "EARNEST APPROACH",
+          "ED",
+          "FIREBRAND",
+          "LIGHT TOUCH",
+          "OSCAR",
+          "PHILOSOPHER",
+          "SARA",
+          "THE BOY",
+          "THE MAN",
+          "THE WOMAN",
+          "TOM"
+        ],
+        "split": "train",
+        "title": "The People",
+        "work_key": "gutenberg-59432-glaspell-plays::The People"
+      },
+      {
+        "author": "Susan Glaspell and George Cram Cook",
+        "scene_ids": [
+          "tickless-time-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ALICE",
+          "ANNIE",
+          "EDDY",
+          "ELOISE",
+          "IAN",
+          "MRS. STUBBS"
+        ],
+        "split": "test",
+        "title": "Tickless Time",
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "trifles-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "COUNTY ATTORNEY",
+          "HALE",
+          "MRS. HALE",
+          "MRS. PETERS",
+          "SHERIFF"
+        ],
+        "split": "train",
+        "title": "Trifles",
+        "work_key": "gutenberg-59432-glaspell-plays::Trifles"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "womans-honor-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "BOY",
+          "CHEATED ONE",
+          "LAWYER",
+          "MERCENARY ONE",
+          "MOTHERLY ONE",
+          "PRISONER",
+          "SCORNFUL ONE",
+          "SHIELDED ONE",
+          "SILLY ONE"
+        ],
+        "split": "validation",
+        "title": "Woman’s Honor",
+        "work_key": "gutenberg-59432-glaspell-plays::Woman’s Honor"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "a-tragedian-in-spite-of-himself-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "MURASHKIN",
+          "TOLKACHOV"
+        ],
+        "split": "train",
+        "title": "A Tragedian in Spite of Himself",
+        "work_key": "gutenberg-7986-chekhov-second-series::A Tragedian in Spite of Himself"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "on-the-high-road-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "A VOICE",
+          "A VOICE FROM THE CORNER",
+          "BORTSOV",
+          "COACHMAN",
+          "EFIMOVNA",
+          "FEDYA",
+          "KUSMA",
+          "MARIA",
+          "MARIA EGOROVNA",
+          "MERIK",
+          "MERIN",
+          "NAZAROVNA",
+          "SAVVA",
+          "SAWA",
+          "THE VOICE",
+          "THE VOICE FROM THE CORNER",
+          "TIHON"
+        ],
+        "split": "train",
+        "title": "On the High Road",
+        "work_key": "gutenberg-7986-chekhov-second-series::On the High Road"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-anniversary-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "KHIRIN",
+          "MERCHUTKINA",
+          "ONE OF THE DEPUTATION",
+          "SHIPUCHIN",
+          "TATIANA ALEXEYEVNA",
+          "THE MEMBER OF THE DEPUTATION"
+        ],
+        "split": "train",
+        "title": "The Anniversary",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Anniversary"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-bear-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "LUKA",
+          "POPOVA",
+          "SMIRNOV"
+        ],
+        "split": "validation",
+        "title": "The Bear",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Bear"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-cherry-orchard-act-1",
+          "the-cherry-orchard-act-2",
+          "the-cherry-orchard-act-3",
+          "the-cherry-orchard-act-4"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "ANYA",
+          "ANYA’S VOICE",
+          "CHARLOTTA",
+          "CHARLOTTA IVANOVNA",
+          "DUNYASHA",
+          "EPIKHODOV",
+          "FIERS",
+          "GAEV",
+          "LOPAKHIN",
+          "LUBOV",
+          "LUBOV ANDREYEVNA",
+          "PISCHIN",
+          "STATION-MASTER",
+          "THE VOICE OF VARYA",
+          "TRAMP",
+          "TROFIMOV",
+          "TROFIMOV’S VOICE",
+          "VARYA",
+          "VOICE AT THE DOOR",
+          "VOICES FROM THE DRAWING-ROOM",
+          "YASHA"
+        ],
+        "split": "test",
+        "title": "The Cherry Orchard",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-proposal-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "CHUBUKOV",
+          "LOMOV",
+          "NATALYA STEPANOVNA"
+        ],
+        "split": "train",
+        "title": "The Proposal",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Proposal"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-three-sisters-act-1",
+          "the-three-sisters-act-2",
+          "the-three-sisters-act-3",
+          "the-three-sisters-act-4"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "ANDREY",
+          "ANDREY’S VOICE",
+          "ANFISA",
+          "CHEBUTIKIN",
+          "FEDOTIK",
+          "FERAPONT",
+          "IRINA",
+          "KULIGIN",
+          "MASHA",
+          "NATASHA",
+          "OLGA",
+          "RODE",
+          "SOLENI",
+          "TUZENBACH",
+          "VERSHININ",
+          "VERSHININ’S VOICE"
+        ],
+        "split": "train",
+        "title": "The Three Sisters",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Three Sisters"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-wedding-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "A GROOMSMAN",
+          "A WAITER",
+          "ALL",
+          "APLOMBOV",
+          "DASHENKA",
+          "DIMBA",
+          "GROOMSMAN",
+          "MOZGOVOY",
+          "NASTASYA TIMOFEYEVNA",
+          "NUNIN",
+          "REVUNOV",
+          "THE GENTLEMEN",
+          "THE GROOMSMAN",
+          "VARIOUS GENTLEMEN",
+          "YATS",
+          "ZHIGALOV",
+          "ZMEYUKINA"
+        ],
+        "split": "train",
+        "title": "The Wedding",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Wedding"
+      },
+      {
+        "author": "Oscar Wilde",
+        "scene_ids": [
+          "act-1",
+          "act-2",
+          "act-3"
+        ],
+        "source_id": "gutenberg-844-importance-of-being-earnest",
+        "speakers": [
+          "ALGERNON",
+          "CECILY",
+          "CHASUBLE",
+          "GWENDOLEN",
+          "GWENDOLEN AND CECILY",
+          "JACK",
+          "JACK AND ALGERNON",
+          "LADY BRACKNELL",
+          "LANE",
+          "MERRIMAN",
+          "MISS PRISM"
+        ],
+        "split": "test",
+        "title": "The Importance of Being Earnest",
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      }
+    ]
+  },
+  "environment": {
+    "mlx": "0.32.4",
+    "platform": "macOS-26.3.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.12"
+  },
+  "generation": {
+    "samples": [
+      {
+        "boundary": "early",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKNOI<TEXT>A noel tone’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "78dd15d68cc50d6517f66b45f005eec7865b4a8068ca9a84809155f1056d832a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.180327868852459,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 185,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MAKNOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::early",
+        "prompt_sha256": "532097d5fdbf840aa908576fd6f0b7767b8cc6d8a6787d092905676366d788ff",
+        "prompt_tokens": 1603,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Tickless Time",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKNOI<TEXT>A noel tone’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "78dd15d68cc50d6517f66b45f005eec7865b4a8068ca9a84809155f1056d832a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.180327868852459,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 185,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MAKNOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::middle",
+        "prompt_sha256": "6b8af664a07adf4b08e1ebf5283bde35a782688ed17929e7b9755dad8a832fb0",
+        "prompt_tokens": 19086,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Tickless Time",
+        "turn_ordinal": 144,
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKNOI<TEXT>A noel tone’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "78dd15d68cc50d6517f66b45f005eec7865b4a8068ca9a84809155f1056d832a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.180327868852459,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 185,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MAKNOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::late",
+        "prompt_sha256": "ddc8ea324139ad65219ef8b4a2ba94c1565fcf7276cc0736f13a68933da4477e",
+        "prompt_tokens": 35412,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Tickless Time",
+        "turn_ordinal": 286,
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MHONOID<TEXT>Nhoul ty listor t wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "d612fe5a1917e0be8d3f05600782344de63ddf901335bab9eb990a6a422f2364",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.17934782608695654,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 186,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20472440944881887,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MHONOID"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 476,
+        "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::early",
+        "prompt_sha256": "e701eb6a7bc6e9c07e5b2ae9c7bd1ec7b7768923a90062da642538892f4fcf64",
+        "prompt_tokens": 476,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Cherry Orchard",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKNOI<TEXT>A noel tone’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "78dd15d68cc50d6517f66b45f005eec7865b4a8068ca9a84809155f1056d832a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.180327868852459,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 185,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MAKNOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::middle",
+        "prompt_sha256": "dfb12c911f58578e239c6dd8b21d6fbbe9ff86727dcd3fc4bacae845f01d9a34",
+        "prompt_tokens": 46059,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Cherry Orchard",
+        "turn_ordinal": 323,
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKNOI<TEXT>A noel tone’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "78dd15d68cc50d6517f66b45f005eec7865b4a8068ca9a84809155f1056d832a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.180327868852459,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 185,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MAKNOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::late",
+        "prompt_sha256": "4090c0222929b43773119d0b580259c28c2080bccd7a2da95439f3f3f608f5ce",
+        "prompt_tokens": 97455,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Cherry Orchard",
+        "turn_ordinal": 645,
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MHONOI<TEXT>A ngel tone’s at wi antome..<ITEM_END><TEXT>Hond... ik’s iwor, s b sreradit, you in nok s he ner yhon the is amtthny yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "feac418bbd646ffa77eccf6e0661508e943622a04460eab90449ac5064fa8187",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": false,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": 39,
+          "syntax_error_state": "after_turn_text",
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MHONOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 402,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::early",
+        "prompt_sha256": "34a9084f183439ca08ec5c5c508b82334265c25e370acc5440ebcfa8ee0dec12",
+        "prompt_tokens": 402,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKSOI<TEXT>A noel tone’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "306a87f464d0f8be0fec90363f730fc3466d1fe7cfee00ddaad45a8540ef9fd4",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.180327868852459,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 185,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HAHDA",
+            "MAKSOI"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::middle",
+        "prompt_sha256": "9ed444b7a98dd3f95ad32842ec743f629038d8a1a84ab440c04eacf110da08c1",
+        "prompt_tokens": 58101,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 440,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "continuation": ". OA SOIDAN<TEXT>I lat le’s at wi antomesy, s I hhe ikl l tiwor, s b sreradit, you in nok s he ner yhon as in tomtt ty yothon m is thewi do e fe me as yanir at s te astherpe amatth m yothe tor gothe.<TURN_END><TURN><SPEAKER>HAHDA<DIRECTION>The sere you the in f and sa a fooouler s thetathon",
+        "continuation_sha256": "e73076cf4204e22b94403f24210e95ab4aa600ffd4fa7bca1b9d2a105c013faf",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 0,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 0,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": false,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": null,
+          "speaker_fields": 0,
+          "speaker_format_rate": null,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": 0,
+          "syntax_error_state": "after_turn",
+          "token_repeated_trigram_rate": 0.19291338582677164,
+          "turn_completion_rate": null,
+          "unknown_speakers": [],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::late",
+        "prompt_sha256": "8edec22531c8a87c00c80a1e7ffd546c53d7a02bb72b1ae1ecf5fa35429c261f",
+        "prompt_tokens": 116526,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 879,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MASHA<TEXT>Or not be this in then I thought door.<TURN_END><TURN><SPEAKER>HELMER<TEXT>Awn’t like a girl, or you or she shore all the come to signAPHALLIE Mrs own do wife dror hall! One so good to poor and the stair, are the gently characted out it with I amust, a from threally thing ",
+        "continuation_sha256": "22fff69557acd8f744759ab30324afabc46ad1351ff5373098eb3bd48f095a2b",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.05555555555555558,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 38,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.14566929133858264,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "HELMER",
+            "MASHA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::early",
+        "prompt_sha256": "532097d5fdbf840aa908576fd6f0b7767b8cc6d8a6787d092905676366d788ff",
+        "prompt_tokens": 1603,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Tickless Time",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MASHA<TEXT>Of no what little then I thought.<TURN_END><TURN><SPEAKER>BORTSOVVA<TEXT>No, no, so. I’ll happy PHILOV<TEXT>Inderstand don’t you may night.<TURN_END><TURN><SPEAKER>NATASYA<TEXT>I know when my apper it it?<TURN_END><TURN><SPEAKER>NATASYA<TEXT>The garen’t know, I go, the never ther see you never sinease make the used all that yo",
+        "continuation_sha256": "e2e808e72f72b4e72d6bc9d08aea407baf07204f93e20d189c77f95df479906b",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.032258064516129004,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 33,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": true,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": 85,
+          "syntax_error_state": "after_turn_text",
+          "token_repeated_trigram_rate": 0.23228346456692917,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "BORTSOVVA",
+            "MASHA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::middle",
+        "prompt_sha256": "6b8af664a07adf4b08e1ebf5283bde35a782688ed17929e7b9755dad8a832fb0",
+        "prompt_tokens": 19086,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Tickless Time",
+        "turn_ordinal": 144,
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MRS LINDE<TEXT>Yes, you’re the table be vasible... know what a bulate a dear, or now over tell you?<TURN_END><TURN><SPEAKER>MRS LINDE<TEXT>I sh! How you were you do night for it use you respected and making, you know. What a good per trugger out the knew and said to out of my own the",
+        "continuation_sha256": "b3eca4d0562add779d02a4090396848768e5ff77da06e22972c567af6ab1568a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.08536585365853655,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 84,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": false,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 0.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.2165354330708661,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MRS LINDE"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::late",
+        "prompt_sha256": "ddc8ea324139ad65219ef8b4a2ba94c1565fcf7276cc0736f13a68933da4477e",
+        "prompt_tokens": 35412,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Tickless Time",
+        "turn_ordinal": 286,
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MARGARET<TEXT>Oh, CRAIG ans, things?<TURN_END><TURN><SPEAKER>BESSIE<TEXT>I have know when the band a did, you know what where your be in the try were your now were drespected appy?<TURN_END><TURN><SPEAKER>BORTSOV-- has appearson. Then To tree’s been for the room the no me such at faight of law the to has ",
+        "continuation_sha256": "afd46bfc049067103d0fb82f127aed3005f1cc8f18d3c0e10269a87bde3a7293",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.234375,
+          "completed_before_cap": false,
+          "completed_text_fields": 2,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 130,
+          "generated_turns_completed": 2,
+          "generated_turns_started": 3,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "speaker",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.22047244094488194,
+          "turn_completion_rate": 0.6666666666666666,
+          "unknown_speakers": [
+            "BESSIE",
+            "MARGARET"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 476,
+        "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::early",
+        "prompt_sha256": "e701eb6a7bc6e9c07e5b2ae9c7bd1ec7b7768923a90062da642538892f4fcf64",
+        "prompt_tokens": 476,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Cherry Orchard",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MASHA<TEXT>Orthing to life! It will that you the could of your give. I was it, you never wishe from ther subjack the your countairn from drespected apparesult, and no ther older the man for through the couraturesses and it wher fearful of from the slate the w",
+        "continuation_sha256": "039055280583b7158d0181faa6149dc3c44750ebe5bcae0c55922d57697562af",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": false,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.2559055118110236,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MASHA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::middle",
+        "prompt_sha256": "dfb12c911f58578e239c6dd8b21d6fbbe9ff86727dcd3fc4bacae845f01d9a34",
+        "prompt_tokens": 46059,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Cherry Orchard",
+        "turn_ordinal": 323,
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MRS LINDE<TEXT>I have little the know.<TURN_END><TURN><SPEAKER>CHUTKIN<DIRECTION>In<DIRECTION>inter the goes basing histma<ITEM_END><TEXT>Pick of she strounder the diving without on man wife.<TURN_END><TURN><SPEAKER>MASHA<TEXT>I for? Olga and so now.<TURN_END><TURN><SPEAKER>MRS. HALEXE<TEXT>My dear, try things of pleasonse.<TURN_END><TURN><SPEAKER>IRINA<TEXT>Mindous think of coul what I think ",
+        "continuation_sha256": "b447560a91d569c48827c90a72bda42e74858d8552affedd1da978f5b3bfc73a",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 23,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": true,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": 48,
+          "syntax_error_state": "after_turn_direction",
+          "token_repeated_trigram_rate": 0.16535433070866146,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "CHUTKIN",
+            "MRS LINDE"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::late",
+        "prompt_sha256": "4090c0222929b43773119d0b580259c28c2080bccd7a2da95439f3f3f608f5ce",
+        "prompt_tokens": 97455,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Cherry Orchard",
+        "turn_ordinal": 645,
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MARGARET<TEXT>Oh, Craig.<TURN_END><TURN><SPEAKER>OLGA<TEXT>I didn’t leave you know the trift? I said tricold, thought the lays, no, it is, they’ll say now, and do simpleasand all of taking at tradied the from for Rangrant.<TURN_END><TURN><SPEAKER>HELMER<TEXT>All mone is traig? I am!<TURN_END><TURN><SPEAKER>HELMER<DIRECTION>T�IN sha conting",
+        "continuation_sha256": "211818517a4be8008733cc470b0c64acc220fb2c7b303d498cf327b6892010a5",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.15736040609137059,
+          "completed_before_cap": false,
+          "completed_text_fields": 3,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 199,
+          "generated_turns_completed": 3,
+          "generated_turns_started": 4,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": true,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 4,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 0.6666666666666666,
+          "structure_valid": false,
+          "syntax_error_index": 240,
+          "syntax_error_state": "turn_direction",
+          "token_repeated_trigram_rate": 0.16535433070866146,
+          "turn_completion_rate": 0.75,
+          "unknown_speakers": [
+            "HELMER",
+            "MARGARET",
+            "OLGA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 402,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::early",
+        "prompt_sha256": "34a9084f183439ca08ec5c5c508b82334265c25e370acc5440ebcfa8ee0dec12",
+        "prompt_tokens": 402,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MARIA<TEXT>Didn’t you.<TURN_END><TURN><SPEAKER>OLGA<TEXT>I am; I shan’t go in you two my untime thing you.<TURN_END><TURN><SPEAKER>NORA<DIRECTION>ween comptly.<ITEM_END><TEXT>Oh-- [But now, they with her feel wife, for a last be so go out and her table. And ther’s again the was see your breaks feeling of the stage mather. Th",
+        "continuation_sha256": "de498b25424c88e62d6f18c0d89718f968939abb4511f0292e10b267ba4da072",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.11864406779661019,
+          "completed_before_cap": false,
+          "completed_text_fields": 2,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 61,
+          "generated_turns_completed": 2,
+          "generated_turns_started": 3,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 3,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.16141732283464572,
+          "turn_completion_rate": 0.6666666666666666,
+          "unknown_speakers": [
+            "MARIA",
+            "NORA",
+            "OLGA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::middle",
+        "prompt_sha256": "9ed444b7a98dd3f95ad32842ec743f629038d8a1a84ab440c04eacf110da08c1",
+        "prompt_tokens": 58101,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 440,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MASHA<TEXT>Didn’t you’re the true.<TURN_END><TURN><SPEAKER>yes.<TURN_END><TURN><SPEAKER>SOLITTLE<DIRECTION>And goes up and shes, room, her and goes out inter is only.<ITEM_END><TEXT>You are me so dead hone free barOnguests, sily or throught off me.<TURN_END><TURN><SPEAKER>MASHA<DIRECTION>gottle<ITEM_END><DIRECTION>Across her her by the shuts table<ITEM_END><TEXT>In though won’t takin",
+        "continuation_sha256": "8687d3e60d688f1a1bd1b924daf7735a90ac8620642a5af6c564e7c7d89490c0",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.04761904761904767,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 23,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": true,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 0.5,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": 42,
+          "syntax_error_state": "after_speaker",
+          "token_repeated_trigram_rate": 0.18503937007874016,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MASHA",
+            "yes."
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v1-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::late",
+        "prompt_sha256": "8edec22531c8a87c00c80a1e7ffd546c53d7a02bb72b1ae1ecf5fa35429c261f",
+        "prompt_tokens": 116526,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 879,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      }
+    ],
+    "summary": {
+      "v1-textnca": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.8902064742738719,
+          "unique_continuation_rate": 0.5555555555555556
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.7777777777777778,
+          "character_repeated_trigram_rate": 0.1401461154668567,
+          "multi_speaker_generation": 0.7777777777777778,
+          "prefix_valid": 0.7777777777777778,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.20034995625546803,
+          "turn_completion_rate": 0.4166666666666667,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 7,
+          "completed_text_fields": 7,
+          "prefix_valid": 7,
+          "speaker_fields": 15,
+          "structure_valid": 0
+        },
+        "sample_count": 9,
+        "work_count": 3,
+        "work_means": {
+          "gutenberg-59432-glaspell-plays::Tickless Time": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.180327868852459,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.20078740157480313,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-7986-chekhov-second-series::The Cherry Orchard": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.18000118793062483,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.20209973753280838,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.3333333333333333,
+            "character_repeated_trigram_rate": 0.06010928961748633,
+            "multi_speaker_generation": 0.3333333333333333,
+            "prefix_valid": 0.3333333333333333,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19816272965879264,
+            "turn_completion_rate": 0.25,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      },
+      "v1-transformer": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.18654426298984342,
+          "unique_continuation_rate": 1.0
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.5555555555555555,
+          "character_repeated_trigram_rate": 0.0812419994708055,
+          "multi_speaker_generation": 0.7777777777777777,
+          "prefix_valid": 0.5555555555555555,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 0.9444444444444445,
+          "speaker_transition_rate": 0.8518518518518517,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.19422572178477693,
+          "turn_completion_rate": 0.5092592592592592,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 5,
+          "completed_text_fields": 12,
+          "prefix_valid": 5,
+          "speaker_fields": 20,
+          "structure_valid": 0
+        },
+        "sample_count": 9,
+        "work_count": 3,
+        "work_means": {
+          "gutenberg-59432-glaspell-plays::Tickless Time": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.05772649124340704,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 0.6666666666666666,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19816272965879264,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-7986-chekhov-second-series::The Cherry Orchard": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.078125,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.21391076115485566,
+            "turn_completion_rate": 0.38888888888888884,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.3333333333333333,
+            "character_repeated_trigram_rate": 0.10787450716900948,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 0.3333333333333333,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 0.8333333333333334,
+            "speaker_transition_rate": 0.8888888888888888,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.17060367454068245,
+            "turn_completion_rate": 0.6388888888888888,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "identity": {
+    "artifact_hashes": {
+      "v1-textnca": {
+        "checkpoint": "v1-textnca/checkpoint-00010000",
+        "config_sha256": "acb13e5b67e48f60fe463f3f8f7cece1f23175ae41b5f0fac0ee8066f6665733",
+        "dataset_manifest_sha256": "4d1ec7958d16f2ccda516eb297b79c74bc428822d6761649ed7ae2faa3a2d2e8",
+        "model_sha256": "ff9a5986295798e10fa19c4ffaa71a3192cffb7266948acd9aef34e19d8fcb83",
+        "trainer_state_sha256": "d7c90186a0142c20736dcc463fc348689bebfb27f6f7720c2a9ef4ae6e839881"
+      },
+      "v1-transformer": {
+        "checkpoint": "v1-transformer/checkpoint-00010000",
+        "config_sha256": "e22c8f21d0f533870493a9cd6c0a6698a6fda3d3c7883f8ac38eec4988ae4de5",
+        "dataset_manifest_sha256": "4d1ec7958d16f2ccda516eb297b79c74bc428822d6761649ed7ae2faa3a2d2e8",
+        "model_sha256": "6bdceaf37f9d3cf5b519c64d2a54414382b1d7795257527e451bf5616ab3374c",
+        "trainer_state_sha256": "69b90a6b0ff55ada81a7cbd7fda987bd1877252fca209a76016b1980186a611c"
+      }
+    },
+    "run_id": "v1-7e4ecad",
+    "training_commit": "7e4ecad7071f2ac4ea2bb99c520aac7291333713"
+  },
+  "prompt_manifest": [
+    {
+      "allowed_speakers": [
+        "ALICE",
+        "ANNIE",
+        "EDDY",
+        "ELOISE",
+        "IAN",
+        "MRS. STUBBS"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::early",
+      "prompt_sha256": "532097d5fdbf840aa908576fd6f0b7767b8cc6d8a6787d092905676366d788ff",
+      "prompt_tokens": 1603,
+      "title": "Tickless Time",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+    },
+    {
+      "allowed_speakers": [
+        "ALICE",
+        "ANNIE",
+        "EDDY",
+        "ELOISE",
+        "IAN",
+        "MRS. STUBBS"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::middle",
+      "prompt_sha256": "6b8af664a07adf4b08e1ebf5283bde35a782688ed17929e7b9755dad8a832fb0",
+      "prompt_tokens": 19086,
+      "title": "Tickless Time",
+      "turn_ordinal": 144,
+      "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+    },
+    {
+      "allowed_speakers": [
+        "ALICE",
+        "ANNIE",
+        "EDDY",
+        "ELOISE",
+        "IAN",
+        "MRS. STUBBS"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-59432-glaspell-plays::Tickless Time::late",
+      "prompt_sha256": "ddc8ea324139ad65219ef8b4a2ba94c1565fcf7276cc0736f13a68933da4477e",
+      "prompt_tokens": 35412,
+      "title": "Tickless Time",
+      "turn_ordinal": 286,
+      "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+    },
+    {
+      "allowed_speakers": [
+        "ANYA",
+        "ANYA’S VOICE",
+        "CHARLOTTA",
+        "CHARLOTTA IVANOVNA",
+        "DUNYASHA",
+        "EPIKHODOV",
+        "FIERS",
+        "GAEV",
+        "LOPAKHIN",
+        "LUBOV",
+        "LUBOV ANDREYEVNA",
+        "PISCHIN",
+        "STATION-MASTER",
+        "THE VOICE OF VARYA",
+        "TRAMP",
+        "TROFIMOV",
+        "TROFIMOV’S VOICE",
+        "VARYA",
+        "VOICE AT THE DOOR",
+        "VOICES FROM THE DRAWING-ROOM",
+        "YASHA"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::early",
+      "prompt_sha256": "e701eb6a7bc6e9c07e5b2ae9c7bd1ec7b7768923a90062da642538892f4fcf64",
+      "prompt_tokens": 476,
+      "title": "The Cherry Orchard",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+    },
+    {
+      "allowed_speakers": [
+        "ANYA",
+        "ANYA’S VOICE",
+        "CHARLOTTA",
+        "CHARLOTTA IVANOVNA",
+        "DUNYASHA",
+        "EPIKHODOV",
+        "FIERS",
+        "GAEV",
+        "LOPAKHIN",
+        "LUBOV",
+        "LUBOV ANDREYEVNA",
+        "PISCHIN",
+        "STATION-MASTER",
+        "THE VOICE OF VARYA",
+        "TRAMP",
+        "TROFIMOV",
+        "TROFIMOV’S VOICE",
+        "VARYA",
+        "VOICE AT THE DOOR",
+        "VOICES FROM THE DRAWING-ROOM",
+        "YASHA"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::middle",
+      "prompt_sha256": "dfb12c911f58578e239c6dd8b21d6fbbe9ff86727dcd3fc4bacae845f01d9a34",
+      "prompt_tokens": 46059,
+      "title": "The Cherry Orchard",
+      "turn_ordinal": 323,
+      "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+    },
+    {
+      "allowed_speakers": [
+        "ANYA",
+        "ANYA’S VOICE",
+        "CHARLOTTA",
+        "CHARLOTTA IVANOVNA",
+        "DUNYASHA",
+        "EPIKHODOV",
+        "FIERS",
+        "GAEV",
+        "LOPAKHIN",
+        "LUBOV",
+        "LUBOV ANDREYEVNA",
+        "PISCHIN",
+        "STATION-MASTER",
+        "THE VOICE OF VARYA",
+        "TRAMP",
+        "TROFIMOV",
+        "TROFIMOV’S VOICE",
+        "VARYA",
+        "VOICE AT THE DOOR",
+        "VOICES FROM THE DRAWING-ROOM",
+        "YASHA"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-7986-chekhov-second-series::The Cherry Orchard::late",
+      "prompt_sha256": "4090c0222929b43773119d0b580259c28c2080bccd7a2da95439f3f3f608f5ce",
+      "prompt_tokens": 97455,
+      "title": "The Cherry Orchard",
+      "turn_ordinal": 645,
+      "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+    },
+    {
+      "allowed_speakers": [
+        "ALGERNON",
+        "CECILY",
+        "CHASUBLE",
+        "GWENDOLEN",
+        "GWENDOLEN AND CECILY",
+        "JACK",
+        "JACK AND ALGERNON",
+        "LADY BRACKNELL",
+        "LANE",
+        "MERRIMAN",
+        "MISS PRISM"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::early",
+      "prompt_sha256": "34a9084f183439ca08ec5c5c508b82334265c25e370acc5440ebcfa8ee0dec12",
+      "prompt_tokens": 402,
+      "title": "The Importance of Being Earnest",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+    },
+    {
+      "allowed_speakers": [
+        "ALGERNON",
+        "CECILY",
+        "CHASUBLE",
+        "GWENDOLEN",
+        "GWENDOLEN AND CECILY",
+        "JACK",
+        "JACK AND ALGERNON",
+        "LADY BRACKNELL",
+        "LANE",
+        "MERRIMAN",
+        "MISS PRISM"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::middle",
+      "prompt_sha256": "9ed444b7a98dd3f95ad32842ec743f629038d8a1a84ab440c04eacf110da08c1",
+      "prompt_tokens": 58101,
+      "title": "The Importance of Being Earnest",
+      "turn_ordinal": 440,
+      "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+    },
+    {
+      "allowed_speakers": [
+        "ALGERNON",
+        "CECILY",
+        "CHASUBLE",
+        "GWENDOLEN",
+        "GWENDOLEN AND CECILY",
+        "JACK",
+        "JACK AND ALGERNON",
+        "LADY BRACKNELL",
+        "LANE",
+        "MERRIMAN",
+        "MISS PRISM"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::late",
+      "prompt_sha256": "8edec22531c8a87c00c80a1e7ffd546c53d7a02bb72b1ae1ecf5fa35429c261f",
+      "prompt_tokens": 116526,
+      "title": "The Importance of Being Earnest",
+      "turn_ordinal": 879,
+      "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+    }
+  ],
+  "protocol": {
+    "aggregation": "sample metrics, then work means, then macro-average across works",
+    "determinism_check": "first prompt replayed per model with exact token equality",
+    "generation_seed": 123,
+    "max_new_tokens": 256,
+    "prompt_selection": "early, middle, and late completed-turn boundary per test work",
+    "temperature": 0.8,
+    "training_seed": 123
+  },
+  "schema_version": 1,
+  "training": {
+    "comparison": {
+      "parameter_difference": 174720,
+      "parameter_difference_percent": 0.6428445281685995,
+      "textnca_test_loss_relative_percent": 8.103061908083284,
+      "textnca_test_perplexity_relative_percent": 20.5793717750663,
+      "transformer_test_throughput_speedup": 3.9563424997474477,
+      "transformer_training_speedup": 3.2808917316990285
+    },
+    "models": {
+      "v1-textnca": {
+        "best_validation": {
+          "elapsed_seconds": 3.095448000007309,
+          "loss": 2.450969255356421,
+          "perplexity": 11.599584231482774,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 56906,
+          "tokens_per_second": 18383.768682228107
+        },
+        "elapsed_seconds": 3494.1257525000256,
+        "final_train_loss": 2.364881753921509,
+        "final_validation": {
+          "elapsed_seconds": 3.095448000007309,
+          "loss": 2.450969255356421,
+          "perplexity": 11.599584231482774,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 56906,
+          "tokens_per_second": 18383.768682228107
+        },
+        "parameters": 27353920,
+        "seen_tokens": 20474330,
+        "test": {
+          "elapsed_seconds": 12.648888874915428,
+          "loss": 2.496611161593177,
+          "perplexity": 12.141279331580769,
+          "split": "test",
+          "step": 10000,
+          "tokens": 249401,
+          "tokens_per_second": 19717.225952913395
+        },
+        "validation_curve": [
+          {
+            "loss": 3.5019369078776843,
+            "step": 250
+          },
+          {
+            "loss": 3.519259840584143,
+            "step": 500
+          },
+          {
+            "loss": 3.3865768458894934,
+            "step": 750
+          },
+          {
+            "loss": 3.1826261026270295,
+            "step": 1000
+          },
+          {
+            "loss": 3.124137712439154,
+            "step": 1250
+          },
+          {
+            "loss": 3.0950556242147136,
+            "step": 1500
+          },
+          {
+            "loss": 3.0650345474472154,
+            "step": 1750
+          },
+          {
+            "loss": 3.1089563837320537,
+            "step": 2000
+          },
+          {
+            "loss": 3.0795467353782993,
+            "step": 2250
+          },
+          {
+            "loss": 3.075592082845504,
+            "step": 2500
+          },
+          {
+            "loss": 3.1190558326176063,
+            "step": 2750
+          },
+          {
+            "loss": 3.083339825902585,
+            "step": 3000
+          },
+          {
+            "loss": 3.0659079124180666,
+            "step": 3250
+          },
+          {
+            "loss": 3.075085525156069,
+            "step": 3500
+          },
+          {
+            "loss": 3.014451026212636,
+            "step": 3750
+          },
+          {
+            "loss": 3.3571944749070837,
+            "step": 4000
+          },
+          {
+            "loss": 3.136669626706213,
+            "step": 4250
+          },
+          {
+            "loss": 2.9886117274952335,
+            "step": 4500
+          },
+          {
+            "loss": 2.819882008336665,
+            "step": 4750
+          },
+          {
+            "loss": 2.7679031195634027,
+            "step": 5000
+          },
+          {
+            "loss": 2.736433725065788,
+            "step": 5250
+          },
+          {
+            "loss": 2.667811804294033,
+            "step": 5500
+          },
+          {
+            "loss": 2.6576217454552244,
+            "step": 5750
+          },
+          {
+            "loss": 2.6286181944374274,
+            "step": 6000
+          },
+          {
+            "loss": 2.57627022455343,
+            "step": 6250
+          },
+          {
+            "loss": 2.5540588076444046,
+            "step": 6500
+          },
+          {
+            "loss": 2.564460787375782,
+            "step": 6750
+          },
+          {
+            "loss": 2.5266245420765165,
+            "step": 7000
+          },
+          {
+            "loss": 2.5066086403729395,
+            "step": 7250
+          },
+          {
+            "loss": 2.5161903940956356,
+            "step": 7500
+          },
+          {
+            "loss": 2.48191036636899,
+            "step": 7750
+          },
+          {
+            "loss": 2.4843270865550204,
+            "step": 8000
+          },
+          {
+            "loss": 2.4890690374738056,
+            "step": 8250
+          },
+          {
+            "loss": 2.4657882557968405,
+            "step": 8500
+          },
+          {
+            "loss": 2.460825885012125,
+            "step": 8750
+          },
+          {
+            "loss": 2.4607873629112595,
+            "step": 9000
+          },
+          {
+            "loss": 2.452553342148126,
+            "step": 9250
+          },
+          {
+            "loss": 2.4529251003711163,
+            "step": 9500
+          },
+          {
+            "loss": 2.451207664215439,
+            "step": 9750
+          },
+          {
+            "loss": 2.450969255356421,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 5859.643141163635
+      },
+      "v1-transformer": {
+        "best_validation": {
+          "elapsed_seconds": 0.7300014579668641,
+          "loss": 1.8606769431853627,
+          "perplexity": 6.4280867484386475,
+          "split": "validation",
+          "step": 4000,
+          "tokens": 56906,
+          "tokens_per_second": 77953.26896810533
+        },
+        "elapsed_seconds": 1064.9927026670193,
+        "final_train_loss": 0.9445761442184448,
+        "final_validation": {
+          "elapsed_seconds": 0.7316570420516655,
+          "loss": 2.196279924280282,
+          "perplexity": 8.991502136894677,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 56906,
+          "tokens_per_second": 77776.87732004584
+        },
+        "parameters": 27179200,
+        "seen_tokens": 20474330,
+        "test": {
+          "elapsed_seconds": 3.1971167500596493,
+          "loss": 2.30947312455957,
+          "perplexity": 10.069118086159554,
+          "split": "test",
+          "step": 10000,
+          "tokens": 249401,
+          "tokens_per_second": 78008.09901463463
+        },
+        "validation_curve": [
+          {
+            "loss": 2.6454180091126154,
+            "step": 250
+          },
+          {
+            "loss": 2.6567426916208308,
+            "step": 500
+          },
+          {
+            "loss": 2.5439591442466525,
+            "step": 750
+          },
+          {
+            "loss": 2.2086967656228036,
+            "step": 1000
+          },
+          {
+            "loss": 2.316202454829565,
+            "step": 1250
+          },
+          {
+            "loss": 2.2165499542968887,
+            "step": 1500
+          },
+          {
+            "loss": 2.05559577468627,
+            "step": 1750
+          },
+          {
+            "loss": 2.0996031326949818,
+            "step": 2000
+          },
+          {
+            "loss": 2.0797405686021686,
+            "step": 2250
+          },
+          {
+            "loss": 1.8955554599498514,
+            "step": 2500
+          },
+          {
+            "loss": 2.048332370144954,
+            "step": 2750
+          },
+          {
+            "loss": 2.02572726757586,
+            "step": 3000
+          },
+          {
+            "loss": 1.8685371120864342,
+            "step": 3250
+          },
+          {
+            "loss": 2.0199633590853225,
+            "step": 3500
+          },
+          {
+            "loss": 2.012779658697018,
+            "step": 3750
+          },
+          {
+            "loss": 1.8606769431853627,
+            "step": 4000
+          },
+          {
+            "loss": 2.0113288011424544,
+            "step": 4250
+          },
+          {
+            "loss": 2.047420229948841,
+            "step": 4500
+          },
+          {
+            "loss": 1.8885615256341048,
+            "step": 4750
+          },
+          {
+            "loss": 2.003726282844735,
+            "step": 5000
+          },
+          {
+            "loss": 1.9996968084565996,
+            "step": 5250
+          },
+          {
+            "loss": 1.9584716951323784,
+            "step": 5500
+          },
+          {
+            "loss": 2.038356905020725,
+            "step": 5750
+          },
+          {
+            "loss": 2.020382704694749,
+            "step": 6000
+          },
+          {
+            "loss": 2.038494480275037,
+            "step": 6250
+          },
+          {
+            "loss": 2.0668676829030552,
+            "step": 6500
+          },
+          {
+            "loss": 2.0903173843569878,
+            "step": 6750
+          },
+          {
+            "loss": 2.1031862157755223,
+            "step": 7000
+          },
+          {
+            "loss": 2.119849622142766,
+            "step": 7250
+          },
+          {
+            "loss": 2.169394277953994,
+            "step": 7500
+          },
+          {
+            "loss": 2.165839132942374,
+            "step": 7750
+          },
+          {
+            "loss": 2.171120114407422,
+            "step": 8000
+          },
+          {
+            "loss": 2.2135795137691434,
+            "step": 8250
+          },
+          {
+            "loss": 2.197268924197635,
+            "step": 8500
+          },
+          {
+            "loss": 2.1715369416436205,
+            "step": 8750
+          },
+          {
+            "loss": 2.2212589432710304,
+            "step": 9000
+          },
+          {
+            "loss": 2.177501092982561,
+            "step": 9250
+          },
+          {
+            "loss": 2.2012297675525208,
+            "step": 9500
+          },
+          {
+            "loss": 2.19495357389681,
+            "step": 9750
+          },
+          {
+            "loss": 2.196279924280282,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 19224.85473255069
+      }
+    }
+  }
+}
