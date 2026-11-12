@@ -14,7 +14,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 ACT_RE = re.compile(r"^(FIRST|SECOND|THIRD|FOURTH|FIFTH) ACT$")
-DIRECTION_RE = re.compile(r"\[([^]]+)\]", re.DOTALL)
+DIRECTION_RE = re.compile(r"\[([^]]+)\]|\(_(.*?)_\)", re.DOTALL)
 VALID_SPLITS = {"train", "validation", "test"}
 ORDINALS = {"FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4, "FIFTH": 5}
 ACT_ROMANS = {1: "I", 2: "II", 3: "III", 4: "IV", 5: "V"}
@@ -25,6 +25,7 @@ INLINE_SPEAKER_RE = re.compile(r"^([A-Z](?:[A-Z .’'&-]*[A-Z])?)(?:\.(?:\s|$)|\
 PARSER_ALLOWED_HOSTS = {
     "gutenberg_stage_play_v1": {"gutenberg.org", "www.gutenberg.org"},
     "gutenberg_stage_collection_v1": {"gutenberg.org", "www.gutenberg.org"},
+    "gutenberg_stage_explicit_v2": {"gutenberg.org", "www.gutenberg.org"},
 }
 
 
@@ -286,6 +287,134 @@ def _validate_collection_works(value: Any, source_id: str) -> None:
             seen_prefixes.add(marker["prefix"])
 
 
+def _validate_explicit_works(value: Any, source_id: str) -> None:
+    """Validate exact source-line ranges for a hash-pinned Gutenberg text."""
+    if not isinstance(value, list) or not value:
+        raise CorpusError("explicit works must be a non-empty list")
+    seen_work_ids: set[str] = set()
+    previous_end = 0
+    required_work_fields = {"id", "title", "author", "split", "speaker_labels", "scenes"}
+    required_scene_fields = {
+        "scene_id",
+        "act",
+        "start_line",
+        "end_line",
+        "start_text",
+        "end_text",
+    }
+    for work in value:
+        if not isinstance(work, dict):
+            raise CorpusError("explicit work must be an object")
+        missing = sorted(required_work_fields - work.keys())
+        if missing:
+            raise CorpusError(f"explicit work is missing fields: {', '.join(missing)}")
+        for field in ("id", "title", "author"):
+            if not isinstance(work[field], str) or not work[field].strip():
+                raise CorpusError(f"explicit work {field} must be a non-empty string")
+        if SOURCE_ID_RE.fullmatch(work["id"]) is None:
+            raise CorpusError(f"unsafe work id: {work['id']}")
+        if work["id"] in seen_work_ids:
+            raise CorpusError(f"duplicate work id: {work['id']}")
+        seen_work_ids.add(work["id"])
+        if not isinstance(work["split"], str) or work["split"] not in VALID_SPLITS:
+            raise CorpusError(f"invalid work split for {source_id}/{work['id']}")
+        _validate_speaker_labels(work["speaker_labels"], f"work {work['id']}")
+
+        scenes = work["scenes"]
+        if not isinstance(scenes, list) or not scenes:
+            raise CorpusError("explicit work scenes must be a non-empty list")
+        seen_scene_ids: set[str] = set()
+        for scene in scenes:
+            if not isinstance(scene, dict) or set(scene) != required_scene_fields:
+                raise CorpusError(
+                    "explicit scene requires scene_id, act, start_line, end_line, "
+                    "start_text, and end_text"
+                )
+            if (
+                not isinstance(scene["scene_id"], str)
+                or SOURCE_ID_RE.fullmatch(scene["scene_id"]) is None
+                or type(scene["act"]) is not int
+                or scene["act"] < 1
+                or type(scene["start_line"]) is not int
+                or type(scene["end_line"]) is not int
+                or scene["start_line"] < 1
+                or scene["end_line"] <= scene["start_line"]
+                or not isinstance(scene["start_text"], str)
+                or not scene["start_text"]
+                or not isinstance(scene["end_text"], str)
+            ):
+                raise CorpusError(f"invalid explicit scene for {source_id}/{work['id']}")
+            if scene["scene_id"] in seen_scene_ids:
+                raise CorpusError(f"duplicate scene id in work {work['id']}")
+            if scene["start_line"] < previous_end:
+                raise CorpusError(
+                    f"explicit scene ranges overlap or are out of order: {work['id']}"
+                )
+            seen_scene_ids.add(scene["scene_id"])
+            previous_end = scene["end_line"]
+
+        ignored = work.get("ignored_line_numbers", [])
+        if (
+            not isinstance(ignored, list)
+            or any(type(line_number) is not int or line_number < 1 for line_number in ignored)
+            or len(set(ignored)) != len(ignored)
+        ):
+            raise CorpusError(f"invalid ignored_line_numbers for {work['id']}")
+        scene_ranges = [range(scene["start_line"], scene["end_line"]) for scene in scenes]
+        if any(
+            not any(line_number in scene_range for scene_range in scene_ranges)
+            for line_number in ignored
+        ):
+            raise CorpusError(f"ignored line outside scene ranges for {work['id']}")
+        replacements = work.get("line_replacements", [])
+        if not isinstance(replacements, list):
+            raise CorpusError(f"line_replacements must be a list: {work['id']}")
+        replacement_lines: set[int] = set()
+        for replacement in replacements:
+            if (
+                not isinstance(replacement, dict)
+                or set(replacement) != {"line_number", "source", "replacement"}
+                or type(replacement["line_number"]) is not int
+                or replacement["line_number"] < 1
+                or not isinstance(replacement["source"], str)
+                or not replacement["source"]
+                or not isinstance(replacement["replacement"], str)
+                or not replacement["replacement"]
+                or replacement["line_number"] in replacement_lines
+            ):
+                raise CorpusError(f"invalid explicit line replacement for {work['id']}")
+            if not any(replacement["line_number"] in scene_range for scene_range in scene_ranges):
+                raise CorpusError(f"replacement line outside scene ranges for {work['id']}")
+            replacement_lines.add(replacement["line_number"])
+
+
+def _author_parts(author: str) -> set[str]:
+    return {part.strip() for part in re.split(r"\s+and\s+", author) if part.strip()}
+
+
+def _validate_author_split_isolation(sources: list[Source]) -> None:
+    author_splits: dict[str, set[str]] = {}
+    for source in sources:
+        works = source.metadata.get("works")
+        if source.parser in {"gutenberg_stage_collection_v1", "gutenberg_stage_explicit_v2"}:
+            if not isinstance(works, list):
+                raise CorpusError(f"works missing for author split validation: {source.id}")
+            authored_splits = [(work["author"], work["split"]) for work in works]
+        else:
+            authored_splits = [
+                (source.author, split) for split in sorted(set(source.scene_splits.values()))
+            ]
+        for author, split in authored_splits:
+            for part in _author_parts(author):
+                author_splits.setdefault(part, set()).add(split)
+    leaking = sorted(
+        (author, splits) for author, splits in author_splits.items() if len(splits) > 1
+    )
+    if leaking:
+        author, splits = leaking[0]
+        raise CorpusError(f"author split leakage for {author}: {', '.join(sorted(splits))}")
+
+
 def load_sources(manifest_path: Path) -> list[Source]:
     """Load and validate corpus sources from a JSON manifest."""
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -341,8 +470,11 @@ def load_sources(manifest_path: Path) -> list[Source]:
         for field in sorted(string_fields):
             if not isinstance(raw[field], str) or not raw[field].strip():
                 raise CorpusError(f"source {field} must be a non-empty string")
-        if type(raw["original_publication_year"]) is not int:
-            raise CorpusError("source original_publication_year must be an integer")
+        if (
+            raw["original_publication_year"] is not None
+            and type(raw["original_publication_year"]) is not int
+        ):
+            raise CorpusError("source original_publication_year must be an integer or null")
         if type(raw["source_bytes"]) is not int:
             raise CorpusError("source source_bytes must be an integer")
         if raw["source_bytes"] < 0:
@@ -378,8 +510,12 @@ def load_sources(manifest_path: Path) -> list[Source]:
                     raise CorpusError(f"source {flag} must be a boolean")
             if raw.get("complete_play_split", False) and len(set(scene_splits.values())) != 1:
                 raise CorpusError(f"complete play must use one split: {source_id}")
-        else:
+        elif raw["parser"] == "gutenberg_stage_collection_v1":
             _validate_collection_works(raw.get("works"), source_id)
+            scene_splits = {}
+            speaker_labels = ()
+        else:
+            _validate_explicit_works(raw.get("works"), source_id)
             scene_splits = {}
             speaker_labels = ()
         sources.append(
@@ -396,6 +532,10 @@ def load_sources(manifest_path: Path) -> list[Source]:
                 metadata=dict(raw),
             )
         )
+    if "author_split_isolation" in payload:
+        if payload["author_split_isolation"] is not True:
+            raise CorpusError("author_split_isolation must be true when present")
+        _validate_author_split_isolation(sources)
     return sources
 
 
@@ -462,10 +602,13 @@ def strip_gutenberg_wrapper(text: str) -> str:
 
 def _normalize_passage(lines: list[str]) -> tuple[str, list[str]]:
     raw = " ".join(line.strip() for line in lines if line.strip())
-    raw = raw.replace("_", "")
     raw = re.sub(r"\s+", " ", raw).strip()
-    directions = [re.sub(r"\s+", " ", item).strip() for item in DIRECTION_RE.findall(raw)]
+    directions = [
+        re.sub(r"\s+", " ", next(group for group in match.groups() if group is not None)).strip()
+        for match in DIRECTION_RE.finditer(raw)
+    ]
     spoken = DIRECTION_RE.sub(" ", raw)
+    spoken = spoken.replace("_", "")
     spoken = re.sub(r"(?<!\S)[.;:](?!\S)", " ", spoken)
     spoken = re.sub(r"\s+", " ", spoken).strip()
     return spoken, directions
@@ -502,6 +645,7 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
     turn_lines: list[str] = []
     prelude_lines: list[str] = []
     paragraph_break = True
+    direction_depth = 0
     seen_scene_ids: set[str] = set()
 
     def flush_turn() -> None:
@@ -627,8 +771,12 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             continue
         if not line:
             paragraph_break = True
+            direction_depth = 0
             continue
-        speaker_match = _match_speaker_line(line, source.speaker_labels)
+        inside_direction = direction_depth > 0
+        speaker_match = (
+            None if inside_direction else _match_speaker_line(line, source.speaker_labels)
+        )
         if (
             source.metadata.get("strict_speaker_labels", False)
             and current_speaker is not None
@@ -640,6 +788,8 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
         inline_speaker_match = INLINE_SPEAKER_RE.match(line)
         if (
             source.metadata.get("strict_speaker_labels", False)
+            and not inside_direction
+            and paragraph_break
             and speaker_match is None
             and (
                 SUSPICIOUS_SPEAKER_RE.fullmatch(line)
@@ -655,6 +805,14 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             current_speaker, same_line_content = speaker_match
             if same_line_content:
                 turn_lines.append(same_line_content)
+                direction_depth = max(
+                    0,
+                    direction_depth
+                    + same_line_content.count("[")
+                    - same_line_content.count("]")
+                    + same_line_content.count("(_")
+                    - same_line_content.count("_)"),
+                )
             paragraph_break = False
             continue
         if current_speaker is None:
@@ -662,6 +820,14 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
                 prelude_lines.append(line)
         else:
             turn_lines.append(line)
+        direction_depth = max(
+            0,
+            direction_depth
+            + line.count("[")
+            - line.count("]")
+            + line.count("(_")
+            - line.count("_)"),
+        )
         paragraph_break = False
 
     flush_scene()
@@ -672,7 +838,9 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             f"scene set changed for {source.id}: expected {sorted(expected_scenes)}, "
             f"got {sorted(actual_scenes)}"
         )
-    if source.metadata.get("strict_speaker_labels", False):
+    if source.metadata.get("strict_speaker_labels", False) and source.metadata.get(
+        "require_all_speakers", True
+    ):
         observed_speakers = {turn["speaker"] for scene in scenes for turn in scene["turns"]}
         missing_speakers = sorted(set(source.speaker_labels) - observed_speakers)
         if missing_speakers:
@@ -827,6 +995,106 @@ def parse_gutenberg_stage_collection(source: Source, text: str) -> list[dict[str
     return output
 
 
+def parse_gutenberg_stage_explicit(source: Source, text: str) -> list[dict[str, Any]]:
+    """Parse hash-pinned works from explicit 1-indexed source-line ranges."""
+    lines = text.splitlines()
+    works = source.metadata.get("works")
+    _validate_explicit_works(works, source.id)
+    if not isinstance(works, list):
+        raise CorpusError("explicit works must be a non-empty list")
+
+    output: list[dict[str, Any]] = []
+    for work in works:
+        work_output: list[dict[str, Any]] = []
+        work_lines = list(lines)
+        for replacement in work.get("line_replacements", []):
+            line_number = replacement["line_number"]
+            if (
+                line_number > len(work_lines)
+                or work_lines[line_number - 1] != replacement["source"]
+            ):
+                raise CorpusError(
+                    f"explicit line replacement changed for {source.id}/{work['id']}: "
+                    f"line {line_number}"
+                )
+            work_lines[line_number - 1] = replacement["replacement"]
+        ignored = set(work.get("ignored_line_numbers", []))
+
+        for scene in work["scenes"]:
+            start_line = scene["start_line"]
+            end_line = scene["end_line"]
+            if end_line - 1 > len(lines):
+                raise CorpusError(
+                    f"explicit scene range exceeds source for {source.id}/{work['id']}/"
+                    f"{scene['scene_id']}"
+                )
+            if lines[start_line - 1].strip() != scene["start_text"]:
+                raise CorpusError(
+                    f"explicit scene start changed for {source.id}/{work['id']}/{scene['scene_id']}"
+                )
+            if lines[end_line - 2].strip() != scene["end_text"]:
+                raise CorpusError(
+                    f"explicit scene end changed for {source.id}/{work['id']}/{scene['scene_id']}"
+                )
+            segment = [
+                work_lines[index - 1]
+                for index in range(start_line, end_line)
+                if index not in ignored
+            ]
+            normalized = (
+                "*** START OF THE PROJECT GUTENBERG EBOOK NORMALIZED WORK ***\n"
+                "FIRST ACT\n"
+                + "\n".join(segment)
+                + "\n*** END OF THE PROJECT GUTENBERG EBOOK NORMALIZED WORK ***"
+            )
+            scene_source = Source(
+                id=f"{source.id}-{work['id']}",
+                title=work["title"],
+                author=work["author"],
+                source_url=source.source_url,
+                source_sha256=source.source_sha256,
+                source_bytes=source.source_bytes,
+                parser="gutenberg_stage_play_v1",
+                scene_splits={"act-1": work["split"]},
+                speaker_labels=tuple(work["speaker_labels"]),
+                metadata={
+                    "act_markers": [
+                        {
+                            "act_number": 1,
+                            "scene_id": "act-1",
+                            "line": "FIRST ACT",
+                            "occurrence": 1,
+                        }
+                    ],
+                    "strict_speaker_labels": True,
+                    "require_all_speakers": False,
+                },
+            )
+            parsed = parse_gutenberg_stage_play(scene_source, normalized)
+            if len(parsed) != 1:
+                raise CorpusError(
+                    f"explicit scene did not parse exactly once: {source.id}/{work['id']}/"
+                    f"{scene['scene_id']}"
+                )
+            record = parsed[0]
+            record["source_id"] = source.id
+            record["work_id"] = work["id"]
+            record["scene_id"] = f"{work['id']}-{scene['scene_id']}"
+            record["act"] = scene["act"]
+            record["source_line_start"] = start_line
+            record["source_line_end"] = end_line - 1
+            work_output.append(record)
+        observed_speakers = {turn["speaker"] for record in work_output for turn in record["turns"]}
+        missing_speakers = sorted(set(work["speaker_labels"]) - observed_speakers)
+        if missing_speakers:
+            raise CorpusError(
+                f"declared speakers missing from {source.id}/{work['id']}: "
+                f"{', '.join(missing_speakers)}"
+            )
+        output.extend(work_output)
+    return output
+
+
 def build_corpus(manifest_path: Path, data_root: Path) -> dict[str, int]:
     """Download all manifest sources and emit validated scene-level JSONL."""
     sources = load_sources(manifest_path)
@@ -842,6 +1110,8 @@ def build_corpus(manifest_path: Path, data_root: Path) -> dict[str, int]:
             scenes = parse_gutenberg_stage_play(source, text)
         elif source.parser == "gutenberg_stage_collection_v1":
             scenes = parse_gutenberg_stage_collection(source, text)
+        elif source.parser == "gutenberg_stage_explicit_v2":
+            scenes = parse_gutenberg_stage_explicit(source, text)
         else:
             raise CorpusError(f"unsupported parser: {source.parser}")
         for scene in scenes:

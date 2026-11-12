@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "author_split_isolation": true,
   "sources": [
     {
       "id": "gutenberg-844-importance-of-being-earnest",
@@ -156,7 +157,7 @@
           "author": "Susan Glaspell",
           "heading": "WOMAN’S HONOR",
           "heading_occurrence": 2,
-          "split": "validation",
+          "split": "train",
           "scene_markers": [
             {
               "prefix": "SCENE:",
@@ -233,7 +234,7 @@
           "author": "Susan Glaspell and George Cram Cook",
           "heading": "TICKLESS TIME",
           "heading_occurrence": 2,
-          "split": "test",
+          "split": "train",
           "scene_markers": [
             {
               "prefix": "SCENE:",
@@ -372,7 +373,7 @@
           "author": "Anton Chekhov",
           "heading": "THE BEAR",
           "heading_occurrence": 2,
-          "split": "validation",
+          "split": "train",
           "scene_markers": [
             {
               "prefix": "[A drawing-room in POPOVA’S house.]",
@@ -492,7 +493,7 @@
           "author": "Anton Chekhov",
           "heading": "THE CHERRY ORCHARD",
           "heading_occurrence": 2,
-          "split": "test",
+          "split": "train",
           "scene_markers": [
             {
               "prefix": "ACT ONE",
@@ -529,7 +530,6 @@
             "VARYA",
             "GAEV",
             "CHARLOTTA",
-            "CHARLOTTA IVANOVNA",
             "PISCHIN",
             "YASHA",
             "FIERS",
@@ -599,9 +599,9 @@
         "THE CHILDREN"
       ],
       "scene_splits": {
-        "act-1": "train",
-        "act-2": "train",
-        "act-3": "train"
+        "act-1": "validation",
+        "act-2": "validation",
+        "act-3": "validation"
       }
     },
     {
@@ -703,12 +703,908 @@
         "THE SARCASTIC ONE"
       ],
       "scene_splits": {
-        "act-1": "train",
-        "act-2": "train",
-        "act-3": "train",
-        "act-4": "train",
-        "act-5": "train"
+        "act-1": "validation",
+        "act-2": "validation",
+        "act-3": "validation",
+        "act-4": "validation",
+        "act-5": "validation"
       }
+    },
+    {
+      "id": "gutenberg-4269-galsworthy-complete-plays",
+      "title": "Complete Plays of John Galsworthy",
+      "author": "John Galsworthy",
+      "language": "en",
+      "original_publication_year": null,
+      "edition": "Project Gutenberg collected ebook; individual selected plays have distinct publication dates and the source states no single collection publication year.",
+      "source_landing_page": "https://www.gutenberg.org/ebooks/4269",
+      "source_url": "https://www.gutenberg.org/cache/epub/4269/pg4269.txt",
+      "source_sha256": "c4a0dcdbd328a0baa2aaedaf3b9bbdf0d68235f42a2f2ab4722812bc736416e4",
+      "source_bytes": 1823748,
+      "retrieved_on": "2026-11-12",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 4269 as public domain in the United States. John Galsworthy died in 1933. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_explicit_v2",
+      "works": [
+        {
+          "id": "the-silver-box",
+          "title": "The Silver Box",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "BALD CONSTABLE",
+            "BARTHWICK",
+            "CLERK",
+            "JACK",
+            "JONES",
+            "LEVINS",
+            "LIVENS",
+            "MAGISTRATE",
+            "MARLOW",
+            "MRS. BARTHWICK",
+            "MRS. JONES",
+            "MRS. SEDDON",
+            "RELIEVING OFFICER",
+            "ROPER",
+            "SNOW",
+            "SWEARING CLERK",
+            "UNKNOWN",
+            "UNKNOWN LADY",
+            "USHER",
+            "WHEELER"
+          ],
+          "ignored_line_numbers": [
+            134,
+            136,
+            238,
+            446,
+            1205,
+            1543,
+            2243
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1-scene-1",
+              "act": 1,
+              "start_line": 134,
+              "end_line": 238,
+              "start_text": "ACT I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-1-scene-2",
+              "act": 1,
+              "start_line": 238,
+              "end_line": 446,
+              "start_text": "SCENE II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-1-scene-3",
+              "act": 1,
+              "start_line": 446,
+              "end_line": 1203,
+              "start_text": "SCENE III",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2-scene-1",
+              "act": 2,
+              "start_line": 1205,
+              "end_line": 1543,
+              "start_text": "SCENE I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2-scene-2",
+              "act": 2,
+              "start_line": 1543,
+              "end_line": 2243,
+              "start_text": "SCENE II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3",
+              "act": 3,
+              "start_line": 2243,
+              "end_line": 3074,
+              "start_text": "ACT III",
+              "end_text": ""
+            }
+          ],
+          "line_replacements": [
+            {
+              "line_number": 1026,
+              "source": "MRS. JONES, Yes, sir, they all three go to school every day.",
+              "replacement": "MRS. JONES. Yes, sir, they all three go to school every day."
+            },
+            {
+              "line_number": 1108,
+              "source": "MRS.  JONES.  Yes, sir, and my dinner; but sometimes it's only half",
+              "replacement": "MRS. JONES.  Yes, sir, and my dinner; but sometimes it's only half"
+            },
+            {
+              "line_number": 1374,
+              "source": "MRS.  JONES. [Impassively.] You have, treated me very badly, James,",
+              "replacement": "MRS. JONES. [Impassively.] You have, treated me very badly, James,"
+            }
+          ]
+        },
+        {
+          "id": "joy",
+          "title": "Joy",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "COLONEL",
+            "DICK",
+            "ERNEST",
+            "GWYN",
+            "JOY",
+            "LETTY",
+            "LEVER",
+            "MISS BEECH",
+            "MRS. GWYN",
+            "MRS. HOPE",
+            "NEVER",
+            "ROSE"
+          ],
+          "ignored_line_numbers": [
+            3102,
+            4322,
+            5454
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1",
+              "act": 1,
+              "start_line": 3102,
+              "end_line": 4322,
+              "start_text": "ACT I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2",
+              "act": 2,
+              "start_line": 4322,
+              "end_line": 5454,
+              "start_text": "ACT II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3",
+              "act": 3,
+              "start_line": 5454,
+              "end_line": 6504,
+              "start_text": "ACT III",
+              "end_text": ""
+            }
+          ],
+          "line_replacements": [
+            {
+              "line_number": 3379,
+              "source": "MRS. HOPE, [After a pause.]  Well, it would be a mercy if you would",
+              "replacement": "MRS. HOPE. [After a pause.]  Well, it would be a mercy if you would"
+            },
+            {
+              "line_number": 3433,
+              "source": "MISS.  BEECH.  Secret little creature!",
+              "replacement": "MISS BEECH.  Secret little creature!"
+            },
+            {
+              "line_number": 4137,
+              "source": "MRS. HOPE, [Peremptorily.]  Tom!",
+              "replacement": "MRS. HOPE. [Peremptorily.]  Tom!"
+            },
+            {
+              "line_number": 4178,
+              "source": "MRS.  GWYN.  [Shaking him gently by the coat.]  No, please, Uncle",
+              "replacement": "MRS. GWYN.  [Shaking him gently by the coat.]  No, please, Uncle"
+            },
+            {
+              "line_number": 4285,
+              "source": "MRS.  HOPE.  [Shaking hands with him.]  So you 've got here!  Are n't",
+              "replacement": "MRS. HOPE.  [Shaking hands with him.]  So you 've got here!  Are n't"
+            },
+            {
+              "line_number": 4579,
+              "source": "MRS. BEECH.  [Sitting beside the COLONEL.]  Poor creature!",
+              "replacement": "MISS BEECH.  [Sitting beside the COLONEL.]  Poor creature!"
+            },
+            {
+              "line_number": 4596,
+              "source": "MRS. BEECH.  Don't let him get in a temper again.  That 's three",
+              "replacement": "MISS BEECH.  Don't let him get in a temper again.  That 's three"
+            },
+            {
+              "line_number": 4961,
+              "source": "MRS. GWYN, [With an effort.]  Oh!  Peachey's a character!",
+              "replacement": "MRS. GWYN. [With an effort.]  Oh!  Peachey's a character!"
+            },
+            {
+              "line_number": 5506,
+              "source": "MISS. BEECH.  D' you think they'll do her any good?",
+              "replacement": "MISS BEECH.  D' you think they'll do her any good?"
+            },
+            {
+              "line_number": 5585,
+              "source": "MISS BEACH. [Yielding pleasurably; then remembering her principles.]",
+              "replacement": "MISS BEECH. [Yielding pleasurably; then remembering her principles.]"
+            },
+            {
+              "line_number": 5796,
+              "source": "MRS. GWYN, But you do.  D' you think I haven't seen this coming--all",
+              "replacement": "MRS. GWYN. But you do.  D' you think I haven't seen this coming--all"
+            }
+          ]
+        },
+        {
+          "id": "strife",
+          "title": "Strife",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "ANTHONY",
+            "BLACKSMITH",
+            "BROWN",
+            "BULGIN",
+            "DAVIES",
+            "EDGAR",
+            "ENID",
+            "EVANS",
+            "FROST",
+            "GREEN",
+            "HARNESS",
+            "HENRY ROUS",
+            "JAGO",
+            "JAN",
+            "LEWIS",
+            "MADGE",
+            "MRS. BULGIN",
+            "MRS. ROBERTS",
+            "MRS. ROUS",
+            "MRS. YEO",
+            "PARLOURMAID",
+            "RED-HAIRED YOUTH",
+            "ROBERT",
+            "ROBERTS",
+            "ROUS",
+            "SCANTLEBURY",
+            "TENCH",
+            "THOMAS",
+            "UNDERWOOD",
+            "WANKLIN",
+            "WILDER"
+          ],
+          "ignored_line_numbers": [
+            6573,
+            7759,
+            7761,
+            8533,
+            9135,
+            10260
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1",
+              "act": 1,
+              "start_line": 6573,
+              "end_line": 7759,
+              "start_text": "ACT I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2-scene-1",
+              "act": 2,
+              "start_line": 7759,
+              "end_line": 8533,
+              "start_text": "ACT II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2-scene-2",
+              "act": 2,
+              "start_line": 8533,
+              "end_line": 9135,
+              "start_text": "SCENE II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3",
+              "act": 3,
+              "start_line": 9135,
+              "end_line": 10269,
+              "start_text": "ACT III",
+              "end_text": ""
+            }
+          ],
+          "line_replacements": [
+            {
+              "line_number": 7792,
+              "source": "MRS ROBERTS.  Seven, Mrs. Rous.",
+              "replacement": "MRS. ROBERTS.  Seven, Mrs. Rous."
+            },
+            {
+              "line_number": 7798,
+              "source": "MRS. Rous.  [Placidly.]  The Company hadn't been started three years.",
+              "replacement": "MRS. ROUS.  [Placidly.]  The Company hadn't been started three years."
+            }
+          ]
+        },
+        {
+          "id": "justice",
+          "title": "Justice",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "CLEAVER",
+            "CLIFTON",
+            "COKESON",
+            "COWLEY",
+            "FALDER",
+            "FOREMAN",
+            "FOREMAN OF THE JURY",
+            "FROME",
+            "INSTRUCTOR",
+            "JAMES",
+            "JUDGE",
+            "MOANEY",
+            "O'CLEARY",
+            "RUTH",
+            "SWEEDLE",
+            "THE CHAPLAIN",
+            "THE CLERK",
+            "THE DOCTOR",
+            "THE GOVERNOR",
+            "THE JUDGE",
+            "WALTER",
+            "WISTER",
+            "WOODER"
+          ],
+          "ignored_line_numbers": [
+            14259,
+            15106,
+            16264,
+            16266,
+            16615,
+            17068
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1",
+              "act": 1,
+              "start_line": 14259,
+              "end_line": 15106,
+              "start_text": "ACT I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2",
+              "act": 2,
+              "start_line": 15106,
+              "end_line": 16264,
+              "start_text": "ACT II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3-scene-1",
+              "act": 3,
+              "start_line": 16264,
+              "end_line": 16615,
+              "start_text": "ACT III",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3-scene-2",
+              "act": 3,
+              "start_line": 16615,
+              "end_line": 17001,
+              "start_text": "SCENE II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-4",
+              "act": 4,
+              "start_line": 17068,
+              "end_line": 17945,
+              "start_text": "ACT IV",
+              "end_text": ""
+            }
+          ],
+          "line_replacements": [
+            {
+              "line_number": 14829,
+              "source": "JADES.  Look at it.  You cashed it last Friday week.",
+              "replacement": "JAMES.  Look at it.  You cashed it last Friday week."
+            },
+            {
+              "line_number": 15082,
+              "source": "FALTER.  Oh, sir!  There's some one--I did it for her.  Let me be",
+              "replacement": "FALDER.  Oh, sir!  There's some one--I did it for her.  Let me be"
+            },
+            {
+              "line_number": 15569,
+              "source": "FROZE.  Did he ever give you any money?",
+              "replacement": "FROME.  Did he ever give you any money?"
+            },
+            {
+              "line_number": 16755,
+              "source": "CLIPTON.  He keeps me awake.  I don't know who he is.  [With",
+              "replacement": "CLIFTON.  He keeps me awake.  I don't know who he is.  [With"
+            },
+            {
+              "line_number": 16762,
+              "source": "CLIPTON.  He knocks about like a wild beast in the early morning.",
+              "replacement": "CLIFTON.  He knocks about like a wild beast in the early morning."
+            },
+            {
+              "line_number": 17327,
+              "source": "FALSER.  Yes; very good people, knew all about it--very kind to me.",
+              "replacement": "FALDER.  Yes; very good people, knew all about it--very kind to me."
+            }
+          ]
+        },
+        {
+          "id": "the-first-and-the-last",
+          "title": "The First and the Last",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "KEITH",
+            "LARRY",
+            "VOICE",
+            "WANDA"
+          ],
+          "ignored_line_numbers": [
+            37427,
+            37897,
+            37902,
+            38431,
+            38435,
+            38437,
+            38707
+          ],
+          "scenes": [
+            {
+              "scene_id": "scene-1",
+              "act": 1,
+              "start_line": 37427,
+              "end_line": 37902,
+              "start_text": "SCENE I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "scene-2",
+              "act": 1,
+              "start_line": 37902,
+              "end_line": 38435,
+              "start_text": "SCENE II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "scene-3",
+              "act": 1,
+              "start_line": 38435,
+              "end_line": 38714,
+              "start_text": "SCENE III.",
+              "end_text": ""
+            }
+          ]
+        },
+        {
+          "id": "the-little-man",
+          "title": "The Little Man",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "AMERICAN",
+            "AMERICAN TRAVELLER",
+            "ENGLISHMAN",
+            "ENGLISHWOMAN",
+            "GERMAN",
+            "GERMAN TRAVELLER",
+            "LITTLE MAN",
+            "MOTHER",
+            "OFFICIAL",
+            "WAITER"
+          ],
+          "ignored_line_numbers": [
+            38738,
+            39105,
+            39110,
+            39395,
+            39399,
+            39745,
+            39752
+          ],
+          "scenes": [
+            {
+              "scene_id": "scene-1",
+              "act": 1,
+              "start_line": 38738,
+              "end_line": 39110,
+              "start_text": "SCENE I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "scene-2",
+              "act": 1,
+              "start_line": 39110,
+              "end_line": 39399,
+              "start_text": "SCENE II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "scene-3",
+              "act": 1,
+              "start_line": 39399,
+              "end_line": 39760,
+              "start_text": "SCENE III",
+              "end_text": ""
+            }
+          ],
+          "line_replacements": [
+            {
+              "line_number": 39230,
+              "source": "LITTLE MAM.  Oh!  I think the right end.  Yes, yes, it is.",
+              "replacement": "LITTLE MAN.  Oh!  I think the right end.  Yes, yes, it is."
+            }
+          ]
+        },
+        {
+          "id": "hall-marked",
+          "title": "Hall-marked",
+          "author": "John Galsworthy",
+          "split": "train",
+          "speaker_labels": [
+            "DOCTOR",
+            "HER VOICE",
+            "HERSELF",
+            "JARVIS",
+            "LADY ELLA",
+            "MAUD",
+            "SHE",
+            "THE MAID",
+            "THE RECTOR",
+            "THE SQUIRE"
+          ],
+          "ignored_line_numbers": [
+            39789,
+            40424
+          ],
+          "scenes": [
+            {
+              "scene_id": "single-scene",
+              "act": 1,
+              "start_line": 39789,
+              "end_line": 40432,
+              "start_text": "HALL-MARKED",
+              "end_text": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gutenberg-58569-beyond-the-horizon",
+      "title": "Beyond the Horizon",
+      "author": "Eugene O'Neill",
+      "language": "en",
+      "original_publication_year": 1920,
+      "source_landing_page": "https://www.gutenberg.org/ebooks/58569",
+      "source_url": "https://www.gutenberg.org/cache/epub/58569/pg58569.txt",
+      "source_sha256": "dcc78b6672e99e0f73149ca78c4dbfbf4da714781790d05ee6429cffe53a407d",
+      "source_bytes": 199236,
+      "retrieved_on": "2026-11-12",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 58569 as public domain in the United States. Eugene O'Neill died in 1953. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_explicit_v2",
+      "works": [
+        {
+          "id": "beyond-the-horizon",
+          "title": "Beyond the Horizon",
+          "author": "Eugene O'Neill",
+          "split": "test",
+          "speaker_labels": [
+            "ANDREW",
+            "ROBERT",
+            "RUTH",
+            "THE CAPTAIN",
+            "MRS. MAYO",
+            "SCOTT",
+            "MAYO",
+            "MRS. ATKINS",
+            "MARY",
+            "BEN",
+            "ANDY’S VOICE",
+            "FAWCETT"
+          ],
+          "ignored_line_numbers": [
+            179,
+            184,
+            706,
+            709,
+            1487,
+            1490,
+            2201,
+            2204,
+            2828,
+            2831,
+            3776,
+            3779
+          ],
+          "line_replacements": [
+            {
+              "line_number": 1620,
+              "source": "MRS. MAYO.--I’ll do what Robbie says is needful.",
+              "replacement": "MRS. MAYO. I’ll do what Robbie says is needful."
+            }
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1-scene-1",
+              "act": 1,
+              "start_line": 179,
+              "end_line": 702,
+              "start_text": "ACT ONE",
+              "end_text": "(_The Curtain Falls_)"
+            },
+            {
+              "scene_id": "act-1-scene-2",
+              "act": 1,
+              "start_line": 706,
+              "end_line": 1481,
+              "start_text": "ACT ONE",
+              "end_text": "(_The Curtain Falls_)"
+            },
+            {
+              "scene_id": "act-2-scene-1",
+              "act": 2,
+              "start_line": 1487,
+              "end_line": 2197,
+              "start_text": "ACT TWO",
+              "end_text": "(_The Curtain Falls_)"
+            },
+            {
+              "scene_id": "act-2-scene-2",
+              "act": 2,
+              "start_line": 2201,
+              "end_line": 2817,
+              "start_text": "ACT TWO",
+              "end_text": "(_The Curtain Falls_)"
+            },
+            {
+              "scene_id": "act-3-scene-1",
+              "act": 3,
+              "start_line": 2828,
+              "end_line": 3772,
+              "start_text": "ACT THREE",
+              "end_text": "(_The Curtain Falls_)"
+            },
+            {
+              "scene_id": "act-3-scene-2",
+              "act": 3,
+              "start_line": 3776,
+              "end_line": 3881,
+              "start_text": "ACT THREE",
+              "end_text": "(_The Curtain Falls_)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gutenberg-994-riders-to-the-sea",
+      "title": "Riders to the Sea",
+      "author": "J. M. Synge",
+      "language": "en",
+      "original_publication_year": 1904,
+      "source_landing_page": "https://www.gutenberg.org/ebooks/994",
+      "source_url": "https://www.gutenberg.org/cache/epub/994/pg994.txt",
+      "source_sha256": "69ccbe885155ff6f7e9026435008a035dbdfb5d040b9a06947a8732c784c306c",
+      "source_bytes": 47974,
+      "retrieved_on": "2026-11-12",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 994 as public domain in the United States. J. M. Synge died in 1909. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_explicit_v2",
+      "works": [
+        {
+          "id": "riders-to-the-sea",
+          "title": "Riders to the Sea",
+          "author": "J. M. Synge",
+          "split": "test",
+          "speaker_labels": [
+            "NORA",
+            "CATHLEEN",
+            "MAURYA",
+            "BARTLEY",
+            "CATHLEEN AND NORA",
+            "ONE OF THE WOMEN",
+            "THE OLD MAN",
+            "ANOTHER MAN"
+          ],
+          "ignored_line_numbers": [
+            155
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1",
+              "act": 1,
+              "start_line": 155,
+              "end_line": 798,
+              "start_text": "SCENE.",
+              "end_text": "[_She kneels down again and the curtain falls slowly._]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gutenberg-3618-arms-and-the-man",
+      "title": "Arms and the Man",
+      "author": "George Bernard Shaw",
+      "language": "en",
+      "original_publication_year": 1894,
+      "source_landing_page": "https://www.gutenberg.org/ebooks/3618",
+      "source_url": "https://www.gutenberg.org/cache/epub/3618/pg3618.txt",
+      "source_sha256": "e9230f4aa9716752addd0e88920b594d9b9fcd9bcad634a8257580a847b4529f",
+      "source_bytes": 166321,
+      "retrieved_on": "2026-11-12",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 3618 as public domain in the United States. George Bernard Shaw died in 1950. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_explicit_v2",
+      "works": [
+        {
+          "id": "arms-and-the-man",
+          "title": "Arms and the Man",
+          "author": "George Bernard Shaw",
+          "split": "validation",
+          "speaker_labels": [
+            "CATHERINE",
+            "RAINA",
+            "LOUKA",
+            "A MAN’S VOICE",
+            "MAN",
+            "THE OFFICER",
+            "NICOLA",
+            "MALE VOICE OUTSIDE",
+            "PETKOFF",
+            "SERGIUS",
+            "BLUNTSCHLI"
+          ],
+          "ignored_line_numbers": [
+            207,
+            1165,
+            2381
+          ],
+          "line_replacements": [
+            {
+              "line_number": 3875,
+              "source": "NO.",
+              "replacement": "No."
+            }
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1",
+              "act": 1,
+              "start_line": 207,
+              "end_line": 1165,
+              "start_text": "ACT I",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2",
+              "act": 2,
+              "start_line": 1165,
+              "end_line": 2381,
+              "start_text": "ACT II",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3",
+              "act": 3,
+              "start_line": 2381,
+              "end_line": 3937,
+              "start_text": "ACT III",
+              "end_text": "What a man! What a man!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gutenberg-885-an-ideal-husband",
+      "title": "An Ideal Husband",
+      "author": "Oscar Wilde",
+      "language": "en",
+      "original_publication_year": 1895,
+      "source_landing_page": "https://www.gutenberg.org/ebooks/885",
+      "source_url": "https://www.gutenberg.org/cache/epub/885/pg885.txt",
+      "source_sha256": "c59b8e04974f62a0bb67fd10dc0555932fc837bd57317ecb34801bd20d29943b",
+      "source_bytes": 203856,
+      "retrieved_on": "2026-11-12",
+      "jurisdiction": "United States",
+      "public_domain_basis": "Project Gutenberg catalogs ebook 885 as public domain in the United States. Oscar Wilde died in 1900. Reusers outside the United States must verify local copyright law.",
+      "source_terms": "The downloaded file includes the Project Gutenberg License and trademark terms. The pipeline preserves the unmodified source locally but does not commit it to this repository.",
+      "parser": "gutenberg_stage_explicit_v2",
+      "works": [
+        {
+          "id": "an-ideal-husband",
+          "title": "An Ideal Husband",
+          "author": "Oscar Wilde",
+          "split": "test",
+          "speaker_labels": [
+            "MRS. MARCHMONT",
+            "LADY BASILDON",
+            "MASON",
+            "LORD CAVERSHAM",
+            "LADY CHILTERN",
+            "MABEL CHILTERN",
+            "LADY MARKBY",
+            "MRS. CHEVELEY",
+            "VICOMTE DE NANJAC",
+            "SIR ROBERT CHILTERN",
+            "LORD GORING",
+            "PHIPPS",
+            "JAMES",
+            "MR. MONTFORD",
+            "HAROLD"
+          ],
+          "ignored_line_numbers": [
+            145,
+            148,
+            1445,
+            1450,
+            1453,
+            2574,
+            2579,
+            2582,
+            3580,
+            3585,
+            3588,
+            4490
+          ],
+          "scenes": [
+            {
+              "scene_id": "act-1",
+              "act": 1,
+              "start_line": 145,
+              "end_line": 1450,
+              "start_text": "FIRST ACT",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-2",
+              "act": 2,
+              "start_line": 1450,
+              "end_line": 2579,
+              "start_text": "SECOND ACT",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-3",
+              "act": 3,
+              "start_line": 2579,
+              "end_line": 3585,
+              "start_text": "THIRD ACT",
+              "end_text": ""
+            },
+            {
+              "scene_id": "act-4",
+              "act": 4,
+              "start_line": 3585,
+              "end_line": 4491,
+              "start_text": "FOURTH ACT",
+              "end_text": "CURTAIN"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

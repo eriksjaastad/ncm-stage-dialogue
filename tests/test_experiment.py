@@ -177,7 +177,7 @@ def test_smoke_configs_are_parameter_matched() -> None:
     assert primary["model"]["iterations_per_stage"] == 4
 
 
-def test_frozen_manifest_has_nineteen_complete_work_splits() -> None:
+def test_frozen_manifest_has_thirty_complete_work_splits() -> None:
     repository = Path(__file__).parents[1]
     sources = load_sources(repository / "sources" / "plays.json")
     work_splits: list[set[str]] = []
@@ -188,7 +188,7 @@ def test_frozen_manifest_has_nineteen_complete_work_splits() -> None:
         else:
             work_splits.append(set(source.scene_splits.values()))
 
-    assert len(work_splits) == 19
+    assert len(work_splits) == 30
     assert all(len(splits) == 1 for splits in work_splits)
 
 
