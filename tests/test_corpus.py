@@ -262,7 +262,7 @@ def test_parser_separates_parenthesized_italic_stage_directions() -> None:
 
 def test_strict_parser_accepts_uppercase_names_inside_multiline_directions() -> None:
     content = wrapped(
-        "FIRST ACT\nALICE. Hello.\n[BOB crosses the room,\nCHARLIE. watches him.]\nBOB. Goodbye."
+        "FIRST ACT\nALICE. Hello. [BOB crosses the room,\nBOB. watches him.]\nBOB. Goodbye."
     )
     source = replace(
         source_for(content),
@@ -271,9 +271,26 @@ def test_strict_parser_accepts_uppercase_names_inside_multiline_directions() -> 
 
     scenes = parse_gutenberg_stage_play(source, content.decode())
 
-    assert scenes[0]["turns"][0]["stage_directions"] == [
-        "BOB crosses the room, CHARLIE. watches him."
+    assert scenes[0]["turns"] == [
+        {
+            "speaker": "ALICE",
+            "text": "Hello.",
+            "stage_directions": ["BOB crosses the room, BOB. watches him."],
+        },
+        {"speaker": "BOB", "text": "Goodbye.", "stage_directions": []},
     ]
+
+
+def test_strict_parser_ends_unclosed_direction_at_paragraph_break() -> None:
+    content = wrapped("FIRST ACT\nALICE. Hello.\n[_She crosses._\n\nBOB. Goodbye.")
+    source = replace(
+        source_for(content),
+        metadata={"strict_speaker_labels": True},
+    )
+
+    scenes = parse_gutenberg_stage_play(source, content.decode())
+
+    assert [turn["speaker"] for turn in scenes[0]["turns"]] == ["ALICE", "BOB"]
 
 
 def test_declared_act_markers_skip_toc_and_enforce_complete_play_split() -> None:

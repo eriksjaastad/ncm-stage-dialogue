@@ -4,13 +4,13 @@ Corpus V2 freezes the bounded expansion selected from the V1 failure analysis. V
 
 ## Frozen corpus
 
-- **30 independent plays** across **75 scenes** and **14,800 dialogue turns**.
+- **30 independent plays** across **75 scenes** and **14,797 dialogue turns**.
 - **2,094,294 serialized byte-level tokens**, up **1,031,970** (**97.14%**) from V1.
-- Train: **23 works / 50 scenes / 8,682 turns / 1,189,607 tokens**.
+- Train: **23 works / 50 scenes / 8,680 turns / 1,189,603 tokens**.
 - Validation: **3 works / 11 scenes / 3,065 turns / 426,484 tokens**.
-- Test: **4 works / 14 scenes / 3,053 turns / 478,203 tokens**.
-- Corpus SHA-256: `1deb3f405f96b81208352de6cb87a5477b6cb2841ac2f3809433e49f7c6d981d`.
-- Manifest SHA-256: `e09014769afb9e04d61d668bd60daa883db65f5c9f95d38de48b1580a7dbc1fb`.
+- Test: **4 works / 14 scenes / 3,052 turns / 478,207 tokens**.
+- Corpus SHA-256: `d2126f5d958e3190a708f7a502259196d8d9971df4935e33e53c388e1ee9a7c5`.
+- Manifest SHA-256: `52430fe5ead44b4a154e4a628952aa60494e8baad9c5abcc566eba979e2ebc03`.
 
 ## Author-aware partition
 

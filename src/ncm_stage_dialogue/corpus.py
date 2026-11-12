@@ -360,6 +360,12 @@ def _validate_explicit_works(value: Any, source_id: str) -> None:
             or len(set(ignored)) != len(ignored)
         ):
             raise CorpusError(f"invalid ignored_line_numbers for {work['id']}")
+        scene_ranges = [range(scene["start_line"], scene["end_line"]) for scene in scenes]
+        if any(
+            not any(line_number in scene_range for scene_range in scene_ranges)
+            for line_number in ignored
+        ):
+            raise CorpusError(f"ignored line outside scene ranges for {work['id']}")
         replacements = work.get("line_replacements", [])
         if not isinstance(replacements, list):
             raise CorpusError(f"line_replacements must be a list: {work['id']}")
@@ -377,6 +383,8 @@ def _validate_explicit_works(value: Any, source_id: str) -> None:
                 or replacement["line_number"] in replacement_lines
             ):
                 raise CorpusError(f"invalid explicit line replacement for {work['id']}")
+            if not any(replacement["line_number"] in scene_range for scene_range in scene_ranges):
+                raise CorpusError(f"replacement line outside scene ranges for {work['id']}")
             replacement_lines.add(replacement["line_number"])
 
 
@@ -524,7 +532,7 @@ def load_sources(manifest_path: Path) -> list[Source]:
                 metadata=dict(raw),
             )
         )
-    if payload.get("author_split_isolation", False):
+    if "author_split_isolation" in payload:
         if payload["author_split_isolation"] is not True:
             raise CorpusError("author_split_isolation must be true when present")
         _validate_author_split_isolation(sources)
@@ -763,9 +771,12 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             continue
         if not line:
             paragraph_break = True
+            direction_depth = 0
             continue
         inside_direction = direction_depth > 0
-        speaker_match = _match_speaker_line(line, source.speaker_labels)
+        speaker_match = (
+            None if inside_direction else _match_speaker_line(line, source.speaker_labels)
+        )
         if (
             source.metadata.get("strict_speaker_labels", False)
             and current_speaker is not None
@@ -794,6 +805,14 @@ def parse_gutenberg_stage_play(source: Source, text: str) -> list[dict[str, Any]
             current_speaker, same_line_content = speaker_match
             if same_line_content:
                 turn_lines.append(same_line_content)
+                direction_depth = max(
+                    0,
+                    direction_depth
+                    + same_line_content.count("[")
+                    - same_line_content.count("]")
+                    + same_line_content.count("(_")
+                    - same_line_content.count("_)"),
+                )
             paragraph_break = False
             continue
         if current_speaker is None:

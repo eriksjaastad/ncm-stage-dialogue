@@ -420,6 +420,109 @@ def test_explicit_parser_rejects_boundary_drift() -> None:
         parse_gutenberg_stage_explicit(source, text)
 
 
+@pytest.mark.parametrize(
+    ("metadata_update", "message"),
+    [
+        ({"ignored_line_numbers": [2]}, "ignored line outside scene ranges"),
+        (
+            {
+                "line_replacements": [
+                    {"line_number": 2, "source": "FRONT MATTER", "replacement": "Front matter"}
+                ]
+            },
+            "replacement line outside scene ranges",
+        ),
+    ],
+)
+def test_explicit_parser_rejects_line_operations_outside_scene_ranges(
+    metadata_update: dict[str, object], message: str
+) -> None:
+    text = wrapped("FRONT MATTER\nACT I\nALICE. Hello.\nCURTAIN")
+    content = text.encode()
+    work = {
+        "id": "work-one",
+        "title": "Work One",
+        "author": "Author One",
+        "split": "train",
+        "speaker_labels": ["ALICE"],
+        "scenes": [
+            {
+                "scene_id": "act-1",
+                "act": 1,
+                "start_line": 3,
+                "end_line": 6,
+                "start_text": "ACT I",
+                "end_text": "CURTAIN",
+            }
+        ],
+        **metadata_update,
+    }
+    source = Source(
+        id="fixture-explicit",
+        title="Fixture Explicit Collection",
+        author="Fixture Author",
+        source_url="https://www.gutenberg.org/cache/epub/999998/pg999998.txt",
+        source_sha256=sha256_bytes(content),
+        source_bytes=len(content),
+        parser="gutenberg_stage_explicit_v2",
+        scene_splits={},
+        speaker_labels=(),
+        metadata={"works": [work]},
+    )
+
+    with pytest.raises(CorpusError, match=message):
+        parse_gutenberg_stage_explicit(source, text)
+
+
+def test_explicit_parser_rejects_ignored_line_between_scene_ranges() -> None:
+    text = wrapped("ACT I\nALICE. Hello.\nUNCLAIMED\nACT II\nALICE. Goodbye.")
+    content = text.encode()
+    source = Source(
+        id="fixture-explicit",
+        title="Fixture Explicit Collection",
+        author="Fixture Author",
+        source_url="https://www.gutenberg.org/cache/epub/999998/pg999998.txt",
+        source_sha256=sha256_bytes(content),
+        source_bytes=len(content),
+        parser="gutenberg_stage_explicit_v2",
+        scene_splits={},
+        speaker_labels=(),
+        metadata={
+            "works": [
+                {
+                    "id": "work-one",
+                    "title": "Work One",
+                    "author": "Author One",
+                    "split": "train",
+                    "speaker_labels": ["ALICE"],
+                    "ignored_line_numbers": [4],
+                    "scenes": [
+                        {
+                            "scene_id": "act-1",
+                            "act": 1,
+                            "start_line": 2,
+                            "end_line": 4,
+                            "start_text": "ACT I",
+                            "end_text": "ALICE. Hello.",
+                        },
+                        {
+                            "scene_id": "act-2",
+                            "act": 2,
+                            "start_line": 5,
+                            "end_line": 7,
+                            "start_text": "ACT II",
+                            "end_text": "ALICE. Goodbye.",
+                        },
+                    ],
+                }
+            ]
+        },
+    )
+
+    with pytest.raises(CorpusError, match="ignored line outside scene ranges"):
+        parse_gutenberg_stage_explicit(source, text)
+
+
 def test_author_split_isolation_rejects_coauthor_overlap(tmp_path: Path) -> None:
     text = fixture_text()
     source = collection_manifest_record(text)
@@ -442,6 +545,27 @@ def test_author_split_isolation_rejects_coauthor_overlap(tmp_path: Path) -> None
     )
 
     with pytest.raises(CorpusError, match="author split leakage.*Author One"):
+        load_sources(manifest)
+
+
+@pytest.mark.parametrize("invalid_value", [False, 0])
+def test_author_split_isolation_rejects_falsey_values(
+    tmp_path: Path, invalid_value: object
+) -> None:
+    text = fixture_text()
+    manifest = tmp_path / "plays.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "author_split_isolation": invalid_value,
+                "sources": [collection_manifest_record(text)],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(CorpusError, match="author_split_isolation must be true"):
         load_sources(manifest)
 
 
@@ -483,7 +607,7 @@ def test_corpus_v2_report_records_frozen_inventory() -> None:
 
     assert report["v2"]["work_count"] == 30
     assert report["v2"]["scenes"] == 75
-    assert report["v2"]["turns"] == 14800
+    assert report["v2"]["turns"] == 14797
     assert report["v2"]["tokens"] == 2094294
     assert report["v2"]["author_leakage"] == {}
     assert len(report["v2"]["works"]) == 30
