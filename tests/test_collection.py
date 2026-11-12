@@ -420,6 +420,47 @@ def test_explicit_parser_rejects_boundary_drift() -> None:
         parse_gutenberg_stage_explicit(source, text)
 
 
+@pytest.mark.parametrize("invalid_split", [[], {}])
+def test_explicit_parser_rejects_unhashable_split_types(invalid_split: object) -> None:
+    text = wrapped("ACT I\nALICE. Hello.\nCURTAIN")
+    content = text.encode()
+    source = Source(
+        id="fixture-explicit",
+        title="Fixture Explicit Collection",
+        author="Fixture Author",
+        source_url="https://www.gutenberg.org/cache/epub/999998/pg999998.txt",
+        source_sha256=sha256_bytes(content),
+        source_bytes=len(content),
+        parser="gutenberg_stage_explicit_v2",
+        scene_splits={},
+        speaker_labels=(),
+        metadata={
+            "works": [
+                {
+                    "id": "work-one",
+                    "title": "Work One",
+                    "author": "Author One",
+                    "split": invalid_split,
+                    "speaker_labels": ["ALICE"],
+                    "scenes": [
+                        {
+                            "scene_id": "act-1",
+                            "act": 1,
+                            "start_line": 2,
+                            "end_line": 5,
+                            "start_text": "ACT I",
+                            "end_text": "CURTAIN",
+                        }
+                    ],
+                }
+            ]
+        },
+    )
+
+    with pytest.raises(CorpusError, match="invalid work split"):
+        parse_gutenberg_stage_explicit(source, text)
+
+
 @pytest.mark.parametrize(
     ("metadata_update", "message"),
     [

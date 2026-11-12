@@ -316,7 +316,7 @@ def _validate_explicit_works(value: Any, source_id: str) -> None:
         if work["id"] in seen_work_ids:
             raise CorpusError(f"duplicate work id: {work['id']}")
         seen_work_ids.add(work["id"])
-        if work["split"] not in VALID_SPLITS:
+        if not isinstance(work["split"], str) or work["split"] not in VALID_SPLITS:
             raise CorpusError(f"invalid work split for {source_id}/{work['id']}")
         _validate_speaker_labels(work["speaker_labels"], f"work {work['id']}")
 
