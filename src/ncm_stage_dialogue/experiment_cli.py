@@ -19,7 +19,6 @@ from ncm_stage_dialogue.training import (
     generate,
     load_checkpoint,
     repeated_trigram_rate,
-    structure_metrics,
     train,
 )
 
@@ -162,18 +161,15 @@ def main() -> int:
             temperature=args.temperature,
         )
         continuation = output[len(prompt) :]
-        declared_speakers = {
-            speaker for work in dataset.manifest["works"] for speaker in work["speakers"]
-        }
         print(
             json.dumps(
                 {
                     "checkpoint": str(checkpoint),
                     "prompt": args.prompt,
+                    "evaluation_scope": "unstructured_raw_byte_prompt",
                     "continuation_tokens": continuation,
                     "continuation": tokenizer.decode_display(continuation),
                     "repeated_trigram_rate": repeated_trigram_rate(continuation),
-                    "structure": structure_metrics(continuation, declared_speakers),
                 },
                 ensure_ascii=False,
                 sort_keys=True,

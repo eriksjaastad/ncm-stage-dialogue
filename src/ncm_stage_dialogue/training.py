@@ -428,8 +428,9 @@ def generate(
     max_new_tokens: int,
     seed: int,
     temperature: float = 0.8,
+    stop_token: int | None = None,
 ) -> list[int]:
-    """Generate with correct full-prefix recomputation for both architectures."""
+    """Generate with full-prefix recomputation and optional terminal-token stopping."""
     if not prompt or max_new_tokens < 0 or temperature <= 0:
         raise TrainingError(
             "generation requires a prompt, non-negative length, and positive temperature"
@@ -441,7 +442,10 @@ def generate(
         logits = model(mx.array([context], dtype=mx.int32))[0, -1]
         next_token = mx.random.categorical(logits / temperature)
         mx.eval(next_token)
-        output.append(int(next_token.item()))
+        token = int(next_token.item())
+        output.append(token)
+        if stop_token is not None and token == stop_token:
+            break
     return output
 
 
