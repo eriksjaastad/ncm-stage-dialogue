@@ -63,7 +63,9 @@ def _load_json_lines(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
-def _runner_results(run_root: Path) -> dict[str, dict[str, Any]]:
+def _runner_results(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> dict[str, dict[str, Any]]:
     results: dict[str, dict[str, Any]] = {}
     current: str | None = None
     for line in (run_root / "supervisor.log").read_text(encoding="utf-8").splitlines():
@@ -73,15 +75,17 @@ def _runner_results(run_root: Path) -> dict[str, dict[str, Any]]:
             if current is None:
                 raise ValueError("supervisor result has no experiment name")
             results[current] = json.loads(line)
-    if set(results) != set(MODEL_NAMES):
-        raise ValueError("supervisor log does not contain both V1 results")
+    if set(results) != set(model_names):
+        raise ValueError("supervisor log does not contain both comparison results")
     return results
 
 
-def _training_summary(run_root: Path) -> dict[str, Any]:
-    runner = _runner_results(run_root)
+def _training_summary(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> dict[str, Any]:
+    runner = _runner_results(run_root, model_names)
     models: dict[str, Any] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         events = _load_json_lines(run_root / name / "metrics.jsonl")
         train = [event for event in events if event["split"] == "train"]
         validation = [event for event in events if event["split"] == "validation"]
@@ -104,8 +108,8 @@ def _training_summary(run_root: Path) -> dict[str, Any]:
                 {"step": event["step"], "loss": event["loss"]} for event in validation
             ],
         }
-    textnca = models["v1-textnca"]
-    transformer = models["v1-transformer"]
+    textnca = models[model_names[0]]
+    transformer = models[model_names[1]]
     return {
         "models": models,
         "comparison": {
@@ -136,9 +140,11 @@ def _sample_record(
     seed: int,
     temperature: float,
     max_new_tokens: int,
+    include_effective_context: bool = False,
 ) -> dict[str, Any]:
     display = ByteTokenizer.decode_display(continuation)
-    return {
+    model_context = list(prompt.prompt_tokens[-context_length:])
+    record = {
         "model": model_name,
         "prompt_id": prompt.prompt_id,
         "work_key": prompt.work_key,
@@ -147,7 +153,7 @@ def _sample_record(
         "turn_ordinal": prompt.turn_ordinal,
         "prompt_sha256": prompt.prompt_sha256,
         "prompt_tokens": len(prompt.prompt_tokens),
-        "model_context_tokens": min(len(prompt.prompt_tokens), context_length),
+        "model_context_tokens": len(model_context),
         "seed": seed,
         "temperature": temperature,
         "max_new_tokens": max_new_tokens,
@@ -162,6 +168,11 @@ def _sample_record(
             max_new_tokens=max_new_tokens,
         ),
     }
+    if include_effective_context:
+        record["model_context_sha256"] = hashlib.sha256(
+            b"".join(token.to_bytes(2, "little") for token in model_context)
+        ).hexdigest()
+    return record
 
 
 def _macro_generation_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
@@ -179,20 +190,30 @@ def _macro_generation_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     for metric in SUMMARY_METRICS:
         values = [float(value) for row in work_means.values() if (value := row[metric]) is not None]
         macro[metric] = fmean(values) if values else None
-    cross_work_similarities: list[float] = []
-    for first, second in combinations(samples, 2):
-        if first["work_key"] == second["work_key"]:
-            continue
-        first_trigrams = set(
-            zip(first["continuation"], first["continuation"][1:], first["continuation"][2:])
-        )
-        second_trigrams = set(
-            zip(second["continuation"], second["continuation"][1:], second["continuation"][2:])
-        )
-        union = first_trigrams | second_trigrams
-        cross_work_similarities.append(
-            len(first_trigrams & second_trigrams) / len(union) if union else 1.0
-        )
+    work_pair_similarities: list[float] = []
+    for first_work, second_work in combinations(sorted(by_work), 2):
+        sample_pair_similarities: list[float] = []
+        for first in (sample for sample in samples if sample["work_key"] == first_work):
+            for second in (sample for sample in samples if sample["work_key"] == second_work):
+                first_trigrams = set(
+                    zip(
+                        first["continuation"],
+                        first["continuation"][1:],
+                        first["continuation"][2:],
+                    )
+                )
+                second_trigrams = set(
+                    zip(
+                        second["continuation"],
+                        second["continuation"][1:],
+                        second["continuation"][2:],
+                    )
+                )
+                union = first_trigrams | second_trigrams
+                sample_pair_similarities.append(
+                    len(first_trigrams & second_trigrams) / len(union) if union else 1.0
+                )
+        work_pair_similarities.append(fmean(sample_pair_similarities))
     return {
         "sample_count": len(samples),
         "work_count": len(by_work),
@@ -200,7 +221,9 @@ def _macro_generation_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
         "cross_prompt": {
             "unique_continuation_rate": len({sample["continuation_sha256"] for sample in samples})
             / len(samples),
-            "mean_cross_work_character_trigram_jaccard": fmean(cross_work_similarities),
+            "mean_cross_work_character_trigram_jaccard": (
+                fmean(work_pair_similarities) if work_pair_similarities else None
+            ),
         },
         "work_means": work_means,
         "raw_counts": {
@@ -217,17 +240,46 @@ def _macro_generation_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _prompt_manifest_record(
+    prompt: PromptSpec, context_length: int, *, include_effective_context: bool = False
+) -> dict[str, Any]:
+    model_context = list(prompt.prompt_tokens[-context_length:])
+    record = {
+        "prompt_id": prompt.prompt_id,
+        "work_key": prompt.work_key,
+        "title": prompt.title,
+        "boundary": prompt.label,
+        "turn_ordinal": prompt.turn_ordinal,
+        "prompt_sha256": prompt.prompt_sha256,
+        "prompt_tokens": len(prompt.prompt_tokens),
+        "allowed_speakers": list(prompt.allowed_speakers),
+    }
+    if include_effective_context:
+        record.update(
+            {
+                "model_context_tokens": len(model_context),
+                "model_context_token_ids": model_context,
+                "model_context_sha256": hashlib.sha256(
+                    b"".join(token.to_bytes(2, "little") for token in model_context)
+                ).hexdigest(),
+            }
+        )
+    return record
+
+
 def _generate_samples(
     run_root: Path,
     *,
     seed: int,
     temperature: float,
     max_new_tokens: int,
+    model_names: tuple[str, str] = MODEL_NAMES,
+    include_effective_context: bool = False,
 ) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
     samples: list[dict[str, Any]] = []
     manifest: dict[str, Any] | None = None
     prompt_manifest: list[dict[str, Any]] | None = None
-    for name in MODEL_NAMES:
+    for name in model_names:
         config = run_root / "configs" / f"{name}.json"
         model, model_config, _, dataset, checkpoint = _load_model_for_checkpoint(config, None)
         if manifest is None:
@@ -236,16 +288,11 @@ def _generate_samples(
             raise ValueError("model runs do not share one dataset manifest")
         prompts = build_prompt_specs(dataset)
         current_prompt_manifest = [
-            {
-                "prompt_id": prompt.prompt_id,
-                "work_key": prompt.work_key,
-                "title": prompt.title,
-                "boundary": prompt.label,
-                "turn_ordinal": prompt.turn_ordinal,
-                "prompt_sha256": prompt.prompt_sha256,
-                "prompt_tokens": len(prompt.prompt_tokens),
-                "allowed_speakers": list(prompt.allowed_speakers),
-            }
+            _prompt_manifest_record(
+                prompt,
+                model_config.context_length,
+                include_effective_context=include_effective_context,
+            )
             for prompt in prompts
         ]
         if prompt_manifest is None:
@@ -283,20 +330,23 @@ def _generate_samples(
                 seed=seed,
                 temperature=temperature,
                 max_new_tokens=max_new_tokens,
+                include_effective_context=include_effective_context,
             )
             record["checkpoint"] = str(checkpoint.relative_to(run_root))
             samples.append(record)
     assert manifest is not None and prompt_manifest is not None
     summaries = {
         name: _macro_generation_summary([sample for sample in samples if sample["model"] == name])
-        for name in MODEL_NAMES
+        for name in model_names
     }
     return samples, summaries, {"dataset": manifest, "prompts": prompt_manifest}
 
 
-def _artifact_hashes(run_root: Path) -> dict[str, Any]:
+def _artifact_hashes(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> dict[str, Any]:
     hashes: dict[str, Any] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         checkpoint_name = (run_root / name / "latest").read_text(encoding="utf-8").strip()
         checkpoint = run_root / name / checkpoint_name
         hashes[name] = {
@@ -309,10 +359,12 @@ def _artifact_hashes(run_root: Path) -> dict[str, Any]:
     return hashes
 
 
-def _shared_training_commit(run_root: Path) -> str:
+def _shared_training_commit(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> str:
     """Require both final checkpoints to come from one source revision."""
     commits: dict[str, str] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         checkpoint_name = (run_root / name / "latest").read_text(encoding="utf-8").strip()
         trainer_state = json.loads(
             (run_root / name / checkpoint_name / "trainer_state.json").read_text(encoding="utf-8")
@@ -323,12 +375,33 @@ def _shared_training_commit(run_root: Path) -> str:
     return next(iter(commits.values()))
 
 
-def _curve_svg(training: dict[str, Any]) -> str:
+def _shared_training_seed(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> int:
+    """Require both final checkpoints to use one training seed."""
+    seeds: dict[str, int] = {}
+    for name in model_names:
+        checkpoint_name = (run_root / name / "latest").read_text(encoding="utf-8").strip()
+        config = json.loads(
+            (run_root / name / checkpoint_name / "config.json").read_text(encoding="utf-8")
+        )
+        seed = config["training"]["seed"]
+        if isinstance(seed, bool) or not isinstance(seed, int):
+            raise TypeError(f"invalid training seed for {name}")
+        seeds[name] = seed
+    if len(set(seeds.values())) != 1:
+        raise ValueError(f"model checkpoints use different training seeds: {seeds}")
+    return next(iter(seeds.values()))
+
+
+def _curve_svg(
+    training: dict[str, Any], model_names: tuple[str, str] = MODEL_NAMES
+) -> str:
     width, height = 800, 420
     left, right, top, bottom = 70, 30, 30, 55
     curves = {
-        "TextNCA": training["models"]["v1-textnca"]["validation_curve"],
-        "Transformer": training["models"]["v1-transformer"]["validation_curve"],
+        "TextNCA": training["models"][model_names[0]]["validation_curve"],
+        "Transformer": training["models"][model_names[1]]["validation_curve"],
     }
     points = [point for curve in curves.values() for point in curve]
     x_max = max(point["step"] for point in points)
@@ -510,6 +583,7 @@ def build_report(
     )
     dataset = prompt_data["dataset"]
     training_commit = _shared_training_commit(run_root)
+    training_seed = _shared_training_seed(run_root)
     results = {
         "schema_version": 1,
         "identity": {
@@ -523,7 +597,7 @@ def build_report(
             "mlx": importlib.metadata.version("mlx"),
         },
         "protocol": {
-            "training_seed": 123,
+            "training_seed": training_seed,
             "generation_seed": seed,
             "temperature": temperature,
             "max_new_tokens": max_new_tokens,
@@ -563,7 +637,7 @@ def main() -> int:
             temperature=args.temperature,
             max_new_tokens=args.max_new_tokens,
         )
-    except (OSError, ValueError, KeyError, json.JSONDecodeError) as error:
+    except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError) as error:
         parser.exit(1, f"ncm-v1-report: {error}\n")
     print(
         json.dumps(
