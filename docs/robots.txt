@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# Review draft: indexing remains disabled until approval.

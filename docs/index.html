@@ -5,20 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NCM Stage Dialogue — Final TextNCA Experiment Results</title>
   <meta name="description" content="A controlled V1-to-V2 comparison of TextNCA and Transformer models on public-domain stage dialogue.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://ncm-stage-dialogue.vercel.app/">
-  <link rel="stylesheet" href="/assets/style.css">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="canonical" href="https://eriksjaastad.github.io/ncm-stage-dialogue/">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
+<div class="draft-banner"><strong>Review draft</strong><span>Not indexed · awaiting editorial changes</span><a href="https://github.com/eriksjaastad/ncm-stage-dialogue/issues/new">Suggest a change</a></div>
 <header class="hero" id="top">
-  <nav><a class="wordmark" href="#top">NCM Stage Dialogue</a><div><a href="#stages">Stages</a><a href="#results">Results</a><a href="#artifacts">Artifacts</a></div></nav>
+  <nav><a class="wordmark" href="#top">NCM Stage Dialogue</a><div><a href="#stages">Stages</a><a href="#results">Results</a><a href="#artifacts">Artifacts</a><a href="https://github.com/eriksjaastad/ncm-stage-dialogue">Edit on GitHub</a></div></nav>
   <div class="hero__grid">
     <div>
       <p class="eyebrow">Final experiment report · V1 → V2</p>
       <h1>We tested whether a TextNCA could learn stage dialogue. It did not.</h1>
       <p class="lede">A controlled, reproducible comparison against a parameter-matched Transformer—two corpora, four 10,000-step runs, structured generation probes, and one clear stopping decision.</p>
-      <div class="hero__actions"><a class="button" href="#conclusion">Read the conclusion</a><a class="button button--ghost" href="/data/v2-results.json">Download V2 data</a></div>
+      <div class="hero__actions"><a class="button" href="#conclusion">Read the conclusion</a><a class="button button--ghost" href="data/v2-evidence.json">Download V2 data</a></div>
     </div>
     <aside class="verdict"><span>Verdict</span><strong>Transformer wins</strong><p>TextNCA improved with more data, but remained slower, less accurate, and severely prompt-insensitive.</p></aside>
   </div>
@@ -45,11 +46,20 @@
     </ol>
   </section>
 
+  <section class="section provenance" id="provenance">
+    <p class="eyebrow">Provenance and locked protocol</p><h2>Every stage is tied to a run, revision, corpus hash, and checked-in configuration.</h2>
+    <p class="section-intro">The corpus contains 30 works parsed from 10 hash-pinned Project Gutenberg source files. Every source records retrieval date, byte count, SHA-256, United States public-domain basis, parser, and split assignment. Raw source text and checkpoints are not published.</p>
+    <div class="provenance-grid">
+      <article><span>V1 run</span><strong>v1-7e4ecad</strong><p>Commit <code>7e4ecad7071f2ac4ea2bb99c520aac7291333713</code><br>Corpus <code>7fcb04f62766b4e7ef91fc49ce803a59e78dfcf56eb8a6e61c1c884ac7e98970</code><br>27,353,920 / 27,179,200 parameters<br>10,000 steps · seed 123</p></article>
+      <article><span>V2 run</span><strong>v2-d8cbe61</strong><p>Commit <code>d8cbe61523f2627cb786ab1d7d19d0fbc04e5a19</code><br>Corpus <code>d2126f5d958e3190a708f7a502259196d8d9971df4935e33e53c388e1ee9a7c5</code><br>27,353,920 / 27,179,200 parameters<br>10,000 steps · seed 123</p></article>
+    </div>
+  </section>
+
   <section class="section" id="results">
     <p class="eyebrow">Results</p><h2>More data helped both models. It helped the Transformer much more.</h2>
     <div class="result-grid">
-      <article class="panel"><div class="panel__head"><span>V1</span><strong>19 works</strong></div><img src="/assets/v1-training-curves.svg" alt="V1 validation loss curves"><table><thead><tr><th>Metric</th><th>TextNCA</th><th>Transformer</th></tr></thead><tbody><tr><th>Test loss ↓</th><td class="">2.497</td><td class="winner">2.309</td></tr><tr><th>Training time ↓</th><td class="">58.2 min</td><td class="winner">17.7 min</td></tr><tr><th>Unique continuations ↑</th><td class="">55.6%</td><td class="winner">100.0%</td></tr><tr><th>Cross-work similarity ↓</th><td class="">0.890</td><td class="winner">0.187</td></tr><tr><th>Allowed held-out speaker ↑</th><td class="">0.0%</td><td class="">0.0%</td></tr></tbody></table></article>
-      <article class="panel"><div class="panel__head"><span>V2</span><strong>30 works</strong></div><img src="/assets/v2-training-curves.svg" alt="V2 validation loss curves"><table><thead><tr><th>Metric</th><th>TextNCA</th><th>Transformer</th></tr></thead><tbody><tr><th>Test loss ↓</th><td class="">2.258</td><td class="winner">1.813</td></tr><tr><th>Training time ↓</th><td class="">69.5 min</td><td class="winner">21.1 min</td></tr><tr><th>Unique continuations ↑</th><td class="">50.0%</td><td class="winner">100.0%</td></tr><tr><th>Cross-work similarity ↓</th><td class="">0.737</td><td class="winner">0.215</td></tr><tr><th>Prefix-valid continuation ↑</th><td class="winner">91.7%</td><td class="">66.7%</td></tr><tr><th>Allowed held-out speaker ↑</th><td class="">0.0%</td><td class="">0.0%</td></tr></tbody></table></article>
+      <article class="panel"><div class="panel__head"><span>V1</span><strong>19 works</strong></div><img src="assets/v1-training-curves.svg" alt="V1 validation loss curves"><table><thead><tr><th>Metric</th><th>TextNCA</th><th>Transformer</th></tr></thead><tbody><tr><th>Test loss ↓</th><td class="">2.497</td><td class="winner">2.309</td></tr><tr><th>Training time ↓</th><td class="">58.2 min</td><td class="winner">17.7 min</td></tr><tr><th>Unique continuations ↑</th><td class="">55.6%</td><td class="winner">100.0%</td></tr><tr><th>Cross-work similarity ↓</th><td class="">0.890</td><td class="winner">0.187</td></tr><tr><th>Token repeated trigrams ↓</th><td class="">20.0%</td><td class="winner">19.4%</td></tr><tr><th>Character repeated trigrams ↓</th><td class="">14.0%</td><td class="winner">8.1%</td></tr><tr><th>Allowed held-out speaker ↑</th><td class="">0.0%</td><td class="">0.0%</td></tr></tbody></table></article>
+      <article class="panel"><div class="panel__head"><span>V2</span><strong>30 works</strong></div><img src="assets/v2-training-curves.svg" alt="V2 validation loss curves"><table><thead><tr><th>Metric</th><th>TextNCA</th><th>Transformer</th></tr></thead><tbody><tr><th>Test loss ↓</th><td class="">2.258</td><td class="winner">1.813</td></tr><tr><th>Training time ↓</th><td class="">69.5 min</td><td class="winner">21.1 min</td></tr><tr><th>Unique continuations ↑</th><td class="">50.0%</td><td class="winner">100.0%</td></tr><tr><th>Cross-work similarity ↓</th><td class="">0.737</td><td class="winner">0.215</td></tr><tr><th>Token repeated trigrams ↓</th><td class="winner">17.8%</td><td class="">19.2%</td></tr><tr><th>Character repeated trigrams ↓</th><td class="winner">0.0%</td><td class="">5.3%</td></tr><tr><th>Prefix-valid continuation ↑</th><td class="winner">91.7%</td><td class="">66.7%</td></tr><tr><th>Allowed held-out speaker ↑</th><td class="">0.0%</td><td class="">0.0%</td></tr></tbody></table></article>
     </div>
     <div class="callout"><strong>The widening gap matters.</strong><p>From V1 to V2, TextNCA test loss improved 9.5%. Transformer test loss improved 21.5%.</p></div>
   </section>
@@ -77,11 +87,12 @@
 
   <section class="section artifacts" id="artifacts">
     <p class="eyebrow">Evidence</p><h2>Committed artifacts, not reconstructed claims</h2>
-    <div class="artifact-grid"><a href="/data/v1-results.json"><strong>V1 results</strong><span>Metrics, prompts, samples, hashes</span></a><a href="/data/v2-results.json"><strong>V2 results</strong><span>Final metrics and decision rule</span></a><a href="/data/corpus-v2-results.json"><strong>Corpus V2</strong><span>Scale, rationale, limitations</span></a><a href="/data/v2-textnca-config.json"><strong>TextNCA config</strong><span>Locked architecture and training</span></a><a href="/data/v2-transformer-config.json"><strong>Transformer config</strong><span>Matched comparison baseline</span></a></div>
+    <div class="artifact-grid"><a href="data/v1-evidence.json"><strong>V1 evidence</strong><span>Sanitized metrics, protocol, hashes</span></a><a href="data/v2-evidence.json"><strong>V2 evidence</strong><span>Final metrics and decision rule</span></a><a href="data/corpus-v2-evidence.json"><strong>Corpus V2</strong><span>Scale, rationale, limitations</span></a><a href="data/experiment-configs.json"><strong>Locked configs</strong><span>All four model/training configs</span></a><a href="https://github.com/eriksjaastad/ncm-stage-dialogue"><strong>Edit the draft</strong><span>Source, issues, and revision history</span></a></div>
+    <p class="metric-definition"><strong>Metric definitions:</strong> repeated-trigram rates measure within-sample repetition; exact unique-continuation rate measures duplicate outputs; cross-work character-trigram Jaccard measures similarity between prompts from different held-out plays. Lower repetition and cross-work similarity are better; higher uniqueness is better.</p>
     <p class="hashes">V2 training commit <code>d8cbe61523f2627cb786ab1d7d19d0fbc04e5a19</code><br>Corpus SHA-256 <code>d2126f5d958e3190a708f7a502259196d8d9971df4935e33e53c388e1ee9a7c5</code></p>
   </section>
 </main>
-<footer><p>NCM Stage Dialogue · Negative results are results.</p><div><a href="/privacy.html">Privacy</a><a href="/sitemap.xml">Sitemap</a><a href="#top">Back to top</a></div></footer>
+<footer><p>NCM Stage Dialogue · Review draft · Negative results are results.</p><div><a href="privacy.html">Privacy</a><a href="sitemap.xml">Sitemap</a><a href="https://github.com/eriksjaastad/ncm-stage-dialogue">GitHub</a><a href="#top">Back to top</a></div></footer>
 
 </body>
 </html>

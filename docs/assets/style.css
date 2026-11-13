@@ -18,6 +18,9 @@ html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); line-height: 1.6; }
 a { color: inherit; }
 code { font-family: var(--mono); font-size: .9em; overflow-wrap: anywhere; }
+.draft-banner { min-height: 40px; padding: 8px clamp(20px, 5vw, 72px); display: flex; align-items: center; justify-content: center; gap: 18px; background: #f7c948; color: #241b00; font-size: .76rem; letter-spacing: .03em; }
+.draft-banner strong { text-transform: uppercase; letter-spacing: .13em; }
+.draft-banner a { font-weight: 800; }
 
 .hero { min-height: 82vh; padding: 24px clamp(24px, 5vw, 72px) 72px; color: var(--white); background: var(--forest); position: relative; overflow: hidden; }
 .hero::after { content: ""; position: absolute; width: 680px; height: 680px; right: -290px; top: -280px; border: 1px solid rgba(255,255,255,.22); border-radius: 50%; box-shadow: 0 0 0 70px rgba(255,255,255,.035), 0 0 0 150px rgba(255,255,255,.025); }
@@ -59,6 +62,12 @@ main { overflow: hidden; }
 .timeline li > span { font-family: var(--mono); color: var(--rust); }
 .timeline h3 { margin-bottom: 8px; }
 .timeline p { max-width: 780px; margin: 0; color: #4d584f; }
+.provenance { background: var(--paper-2); }
+.provenance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 46px; }
+.provenance-grid article { padding: 28px; background: var(--white); border: 1px solid var(--line); }
+.provenance-grid span { text-transform: uppercase; letter-spacing: .13em; font-size: .7rem; color: var(--rust); }
+.provenance-grid strong { display: block; margin: 8px 0 18px; font-family: var(--serif); font-size: 1.8rem; }
+.provenance-grid p { margin: 0; font-size: .85rem; }
 
 .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 56px; }
 .panel { background: var(--white); border: 1px solid var(--line); }
@@ -101,7 +110,7 @@ footer p { margin: 0; }
 footer div { display: flex; gap: 22px; }
 
 @media (max-width: 900px) {
-  .hero__grid, .result-grid, .sample-grid { grid-template-columns: 1fr; }
+  .hero__grid, .result-grid, .sample-grid, .provenance-grid { grid-template-columns: 1fr; }
   .hero { min-height: auto; }
   .metric-grid { grid-template-columns: 1fr 1fr; }
   .metric:nth-child(2) { border-right: 0; }
@@ -117,5 +126,6 @@ footer div { display: flex; gap: 22px; }
   .metric { border-right: 0; border-bottom: 1px solid var(--line); }
   .timeline li { grid-template-columns: 45px 1fr; }
   .limitations { columns: 1; }
+  .draft-banner { align-items: flex-start; flex-direction: column; gap: 2px; }
   footer { flex-direction: column; }
 }

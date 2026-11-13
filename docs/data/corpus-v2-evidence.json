@@ -9,7 +9,6 @@
     "works": 11,
     "works_percent": 57.89473684210527
   },
-  "generated_from": "sources/plays.json and data/processed/scenes.jsonl",
   "manifest_sha256": "52430fe5ead44b4a154e4a628952aa60494e8baad9c5abcc566eba979e2ebc03",
   "rationale": {
     "v1_findings": [
@@ -32,6 +31,13 @@
     "Justice Act III Scene III is a silent stage-action unit and is omitted because the experiment contract requires at least one dialogue turn per scene."
   ],
   "schema_version": 1,
+  "source_provenance": {
+    "all_sources_hash_pinned": true,
+    "all_sources_record_public_domain_basis": true,
+    "jurisdiction": "United States",
+    "provider": "Project Gutenberg",
+    "source_file_count": 10
+  },
   "v1": {
     "scenes": 36,
     "split_counts": {

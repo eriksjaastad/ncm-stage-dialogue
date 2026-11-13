@@ -1,0 +1,600 @@
+{
+  "dataset": {
+    "block_length": 512,
+    "corpus_sha256": "7fcb04f62766b4e7ef91fc49ce803a59e78dfcf56eb8a6e61c1c884ac7e98970",
+    "record_count": 36,
+    "split_counts": {
+      "test": {
+        "scenes": 8,
+        "turns": 1810,
+        "works": 3
+      },
+      "train": {
+        "scenes": 26,
+        "turns": 5211,
+        "works": 14
+      },
+      "validation": {
+        "scenes": 2,
+        "turns": 395,
+        "works": 2
+      }
+    },
+    "split_token_counts": {
+      "test": 249402,
+      "train": 756015,
+      "validation": 56907
+    },
+    "turn_count": 7416,
+    "vocab_size": 271,
+    "work_count": 19
+  },
+  "generation": {
+    "summary": {
+      "v1-textnca": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.8902064742738719,
+          "unique_continuation_rate": 0.5555555555555556
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.7777777777777778,
+          "character_repeated_trigram_rate": 0.1401461154668567,
+          "multi_speaker_generation": 0.7777777777777778,
+          "prefix_valid": 0.7777777777777778,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.20034995625546803,
+          "turn_completion_rate": 0.4166666666666667,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 7,
+          "completed_text_fields": 7,
+          "prefix_valid": 7,
+          "speaker_fields": 15,
+          "structure_valid": 0
+        },
+        "sample_count": 9,
+        "work_count": 3,
+        "work_means": {
+          "gutenberg-59432-glaspell-plays::Tickless Time": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.180327868852459,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.20078740157480313,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-7986-chekhov-second-series::The Cherry Orchard": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.18000118793062483,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.20209973753280838,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.3333333333333333,
+            "character_repeated_trigram_rate": 0.06010928961748633,
+            "multi_speaker_generation": 0.3333333333333333,
+            "prefix_valid": 0.3333333333333333,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19816272965879264,
+            "turn_completion_rate": 0.25,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      },
+      "v1-transformer": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.18654426298984342,
+          "unique_continuation_rate": 1.0
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.5555555555555555,
+          "character_repeated_trigram_rate": 0.0812419994708055,
+          "multi_speaker_generation": 0.7777777777777777,
+          "prefix_valid": 0.5555555555555555,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 0.9444444444444445,
+          "speaker_transition_rate": 0.8518518518518517,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.19422572178477693,
+          "turn_completion_rate": 0.5092592592592592,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 5,
+          "completed_text_fields": 12,
+          "prefix_valid": 5,
+          "speaker_fields": 20,
+          "structure_valid": 0
+        },
+        "sample_count": 9,
+        "work_count": 3,
+        "work_means": {
+          "gutenberg-59432-glaspell-plays::Tickless Time": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.05772649124340704,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 0.6666666666666666,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19816272965879264,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-7986-chekhov-second-series::The Cherry Orchard": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.078125,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.21391076115485566,
+            "turn_completion_rate": 0.38888888888888884,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.3333333333333333,
+            "character_repeated_trigram_rate": 0.10787450716900948,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 0.3333333333333333,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 0.8333333333333334,
+            "speaker_transition_rate": 0.8888888888888888,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.17060367454068245,
+            "turn_completion_rate": 0.6388888888888888,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "identity": {
+    "run_id": "v1-7e4ecad",
+    "training_commit": "7e4ecad7071f2ac4ea2bb99c520aac7291333713"
+  },
+  "protocol": {
+    "aggregation": "sample metrics, then work means, then macro-average across works",
+    "determinism_check": "first prompt replayed per model with exact token equality",
+    "generation_seed": 123,
+    "max_new_tokens": 256,
+    "prompt_selection": "early, middle, and late completed-turn boundary per test work",
+    "temperature": 0.8,
+    "training_seed": 123
+  },
+  "schema_version": 1,
+  "training": {
+    "comparison": {
+      "parameter_difference": 174720,
+      "parameter_difference_percent": 0.6428445281685995,
+      "textnca_test_loss_relative_percent": 8.103061908083284,
+      "textnca_test_perplexity_relative_percent": 20.5793717750663,
+      "transformer_test_throughput_speedup": 3.9563424997474477,
+      "transformer_training_speedup": 3.2808917316990285
+    },
+    "models": {
+      "v1-textnca": {
+        "best_validation": {
+          "elapsed_seconds": 3.095448000007309,
+          "loss": 2.450969255356421,
+          "perplexity": 11.599584231482774,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 56906,
+          "tokens_per_second": 18383.768682228107
+        },
+        "elapsed_seconds": 3494.1257525000256,
+        "final_train_loss": 2.364881753921509,
+        "final_validation": {
+          "elapsed_seconds": 3.095448000007309,
+          "loss": 2.450969255356421,
+          "perplexity": 11.599584231482774,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 56906,
+          "tokens_per_second": 18383.768682228107
+        },
+        "parameters": 27353920,
+        "seen_tokens": 20474330,
+        "test": {
+          "elapsed_seconds": 12.648888874915428,
+          "loss": 2.496611161593177,
+          "perplexity": 12.141279331580769,
+          "split": "test",
+          "step": 10000,
+          "tokens": 249401,
+          "tokens_per_second": 19717.225952913395
+        },
+        "validation_curve": [
+          {
+            "loss": 3.5019369078776843,
+            "step": 250
+          },
+          {
+            "loss": 3.519259840584143,
+            "step": 500
+          },
+          {
+            "loss": 3.3865768458894934,
+            "step": 750
+          },
+          {
+            "loss": 3.1826261026270295,
+            "step": 1000
+          },
+          {
+            "loss": 3.124137712439154,
+            "step": 1250
+          },
+          {
+            "loss": 3.0950556242147136,
+            "step": 1500
+          },
+          {
+            "loss": 3.0650345474472154,
+            "step": 1750
+          },
+          {
+            "loss": 3.1089563837320537,
+            "step": 2000
+          },
+          {
+            "loss": 3.0795467353782993,
+            "step": 2250
+          },
+          {
+            "loss": 3.075592082845504,
+            "step": 2500
+          },
+          {
+            "loss": 3.1190558326176063,
+            "step": 2750
+          },
+          {
+            "loss": 3.083339825902585,
+            "step": 3000
+          },
+          {
+            "loss": 3.0659079124180666,
+            "step": 3250
+          },
+          {
+            "loss": 3.075085525156069,
+            "step": 3500
+          },
+          {
+            "loss": 3.014451026212636,
+            "step": 3750
+          },
+          {
+            "loss": 3.3571944749070837,
+            "step": 4000
+          },
+          {
+            "loss": 3.136669626706213,
+            "step": 4250
+          },
+          {
+            "loss": 2.9886117274952335,
+            "step": 4500
+          },
+          {
+            "loss": 2.819882008336665,
+            "step": 4750
+          },
+          {
+            "loss": 2.7679031195634027,
+            "step": 5000
+          },
+          {
+            "loss": 2.736433725065788,
+            "step": 5250
+          },
+          {
+            "loss": 2.667811804294033,
+            "step": 5500
+          },
+          {
+            "loss": 2.6576217454552244,
+            "step": 5750
+          },
+          {
+            "loss": 2.6286181944374274,
+            "step": 6000
+          },
+          {
+            "loss": 2.57627022455343,
+            "step": 6250
+          },
+          {
+            "loss": 2.5540588076444046,
+            "step": 6500
+          },
+          {
+            "loss": 2.564460787375782,
+            "step": 6750
+          },
+          {
+            "loss": 2.5266245420765165,
+            "step": 7000
+          },
+          {
+            "loss": 2.5066086403729395,
+            "step": 7250
+          },
+          {
+            "loss": 2.5161903940956356,
+            "step": 7500
+          },
+          {
+            "loss": 2.48191036636899,
+            "step": 7750
+          },
+          {
+            "loss": 2.4843270865550204,
+            "step": 8000
+          },
+          {
+            "loss": 2.4890690374738056,
+            "step": 8250
+          },
+          {
+            "loss": 2.4657882557968405,
+            "step": 8500
+          },
+          {
+            "loss": 2.460825885012125,
+            "step": 8750
+          },
+          {
+            "loss": 2.4607873629112595,
+            "step": 9000
+          },
+          {
+            "loss": 2.452553342148126,
+            "step": 9250
+          },
+          {
+            "loss": 2.4529251003711163,
+            "step": 9500
+          },
+          {
+            "loss": 2.451207664215439,
+            "step": 9750
+          },
+          {
+            "loss": 2.450969255356421,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 5859.643141163635
+      },
+      "v1-transformer": {
+        "best_validation": {
+          "elapsed_seconds": 0.7300014579668641,
+          "loss": 1.8606769431853627,
+          "perplexity": 6.4280867484386475,
+          "split": "validation",
+          "step": 4000,
+          "tokens": 56906,
+          "tokens_per_second": 77953.26896810533
+        },
+        "elapsed_seconds": 1064.9927026670193,
+        "final_train_loss": 0.9445761442184448,
+        "final_validation": {
+          "elapsed_seconds": 0.7316570420516655,
+          "loss": 2.196279924280282,
+          "perplexity": 8.991502136894677,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 56906,
+          "tokens_per_second": 77776.87732004584
+        },
+        "parameters": 27179200,
+        "seen_tokens": 20474330,
+        "test": {
+          "elapsed_seconds": 3.1971167500596493,
+          "loss": 2.30947312455957,
+          "perplexity": 10.069118086159554,
+          "split": "test",
+          "step": 10000,
+          "tokens": 249401,
+          "tokens_per_second": 78008.09901463463
+        },
+        "validation_curve": [
+          {
+            "loss": 2.6454180091126154,
+            "step": 250
+          },
+          {
+            "loss": 2.6567426916208308,
+            "step": 500
+          },
+          {
+            "loss": 2.5439591442466525,
+            "step": 750
+          },
+          {
+            "loss": 2.2086967656228036,
+            "step": 1000
+          },
+          {
+            "loss": 2.316202454829565,
+            "step": 1250
+          },
+          {
+            "loss": 2.2165499542968887,
+            "step": 1500
+          },
+          {
+            "loss": 2.05559577468627,
+            "step": 1750
+          },
+          {
+            "loss": 2.0996031326949818,
+            "step": 2000
+          },
+          {
+            "loss": 2.0797405686021686,
+            "step": 2250
+          },
+          {
+            "loss": 1.8955554599498514,
+            "step": 2500
+          },
+          {
+            "loss": 2.048332370144954,
+            "step": 2750
+          },
+          {
+            "loss": 2.02572726757586,
+            "step": 3000
+          },
+          {
+            "loss": 1.8685371120864342,
+            "step": 3250
+          },
+          {
+            "loss": 2.0199633590853225,
+            "step": 3500
+          },
+          {
+            "loss": 2.012779658697018,
+            "step": 3750
+          },
+          {
+            "loss": 1.8606769431853627,
+            "step": 4000
+          },
+          {
+            "loss": 2.0113288011424544,
+            "step": 4250
+          },
+          {
+            "loss": 2.047420229948841,
+            "step": 4500
+          },
+          {
+            "loss": 1.8885615256341048,
+            "step": 4750
+          },
+          {
+            "loss": 2.003726282844735,
+            "step": 5000
+          },
+          {
+            "loss": 1.9996968084565996,
+            "step": 5250
+          },
+          {
+            "loss": 1.9584716951323784,
+            "step": 5500
+          },
+          {
+            "loss": 2.038356905020725,
+            "step": 5750
+          },
+          {
+            "loss": 2.020382704694749,
+            "step": 6000
+          },
+          {
+            "loss": 2.038494480275037,
+            "step": 6250
+          },
+          {
+            "loss": 2.0668676829030552,
+            "step": 6500
+          },
+          {
+            "loss": 2.0903173843569878,
+            "step": 6750
+          },
+          {
+            "loss": 2.1031862157755223,
+            "step": 7000
+          },
+          {
+            "loss": 2.119849622142766,
+            "step": 7250
+          },
+          {
+            "loss": 2.169394277953994,
+            "step": 7500
+          },
+          {
+            "loss": 2.165839132942374,
+            "step": 7750
+          },
+          {
+            "loss": 2.171120114407422,
+            "step": 8000
+          },
+          {
+            "loss": 2.2135795137691434,
+            "step": 8250
+          },
+          {
+            "loss": 2.197268924197635,
+            "step": 8500
+          },
+          {
+            "loss": 2.1715369416436205,
+            "step": 8750
+          },
+          {
+            "loss": 2.2212589432710304,
+            "step": 9000
+          },
+          {
+            "loss": 2.177501092982561,
+            "step": 9250
+          },
+          {
+            "loss": 2.2012297675525208,
+            "step": 9500
+          },
+          {
+            "loss": 2.19495357389681,
+            "step": 9750
+          },
+          {
+            "loss": 2.196279924280282,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 19224.85473255069
+      }
+    }
+  }
+}
