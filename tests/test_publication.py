@@ -38,6 +38,8 @@ def test_publication_builds_from_committed_reports(tmp_path: Path) -> None:
     assert "Corpus V1" in index and "Corpus V2" in index
     assert "Token repeated trigrams" in index
     assert "Character repeated trigrams" in index
+    assert "Test throughput" in index
+    assert "76,943 tok/s" in index
     assert "Provenance and locked protocol" in index
     assert "Allowed held-out speaker" in index
     assert "Neither V2 model generated a correct held-out speaker" in index
@@ -72,10 +74,19 @@ def test_headline_cards_follow_mutated_report_data(tmp_path: Path) -> None:
     ] = 0.75
     v2["textnca_investment_decision"]["decision"] = "continue"
     v2_path.write_text(json.dumps(v2), encoding="utf-8")
+    v1_path = repository / "reports/v1/results.json"
+    v1 = json.loads(v1_path.read_text(encoding="utf-8"))
+    v1["training"]["models"]["v1-textnca"]["parameters"] = 12_345_678
+    v1["training"]["models"]["v1-transformer"]["parameters"] = 12_300_000
+    v1_path.write_text(json.dumps(v1), encoding="utf-8")
     config_path = repository / "configs/v2-textnca.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
     config["training"]["train_steps"] = 4321
     config_path.write_text(json.dumps(config), encoding="utf-8")
+    v1_config_path = repository / "configs/v1-textnca.json"
+    v1_config = json.loads(v1_config_path.read_text(encoding="utf-8"))
+    v1_config["training"]["train_steps"] = 2222
+    v1_config_path.write_text(json.dumps(v1_config), encoding="utf-8")
 
     output = tmp_path / "mutated-docs"
     _build(repository, output)
@@ -85,7 +96,9 @@ def test_headline_cards_follow_mutated_report_data(tmp_path: Path) -> None:
     assert "9.99× faster" in index
     assert "75% vs 25%" in index
     assert "Continue TextNCA" in index
-    assert "four 4,321-step runs" in index
+    assert "two 2,222-step V1 runs and two 4,321-step V2 runs" in index
+    assert "12,345,678-parameter TextNCA" in index
+    assert "12,300,000-parameter Transformer" in index
 
 
 def test_publication_has_only_declared_public_files(tmp_path: Path) -> None:

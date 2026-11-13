@@ -141,7 +141,13 @@ def build_publication(
     tn_sample = _sample(v2, "v2-textnca")
     tr_sample = _sample(v2, "v2-transformer")
     decision = v2["textnca_investment_decision"]["decision"]
+    v1_train_steps = configs["v1-textnca"]["training"]["train_steps"]
     train_steps = configs["v2-textnca"]["training"]["train_steps"]
+    run_budget_summary = (
+        f"four {train_steps:,}-step runs"
+        if v1_train_steps == train_steps
+        else f"two {v1_train_steps:,}-step V1 runs and two {train_steps:,}-step V2 runs"
+    )
     architecture_windows = configs["v2-textnca"]["model"]["windows"]
     transformer_speedup = v2["training"]["comparison"]["transformer_training_speedup"]
     textnca_loss = v2_tn["test"]["loss"]
@@ -183,6 +189,12 @@ def build_publication(
             _result_row("Test loss ↓", _fmt(v1_tn["test"]["loss"]), _fmt(v1_tr["test"]["loss"]), "transformer"),
             _result_row("Training time ↓", _minutes(v1_tn["elapsed_seconds"]), _minutes(v1_tr["elapsed_seconds"]), "transformer"),
             _result_row(
+                "Test throughput ↑",
+                f'{v1_tn["test"]["tokens_per_second"]:,.0f} tok/s',
+                f'{v1_tr["test"]["tokens_per_second"]:,.0f} tok/s',
+                "transformer",
+            ),
+            _result_row(
                 "Unique continuations ↑",
                 f'{v1_tn_gen["cross_prompt"]["unique_continuation_rate"]:.1%}',
                 f'{v1_tr_gen["cross_prompt"]["unique_continuation_rate"]:.1%}',
@@ -217,6 +229,12 @@ def build_publication(
         [
             _result_row("Test loss ↓", _fmt(v2_tn["test"]["loss"]), _fmt(v2_tr["test"]["loss"]), "transformer"),
             _result_row("Training time ↓", _minutes(v2_tn["elapsed_seconds"]), _minutes(v2_tr["elapsed_seconds"]), "transformer"),
+            _result_row(
+                "Test throughput ↑",
+                f'{v2_tn["test"]["tokens_per_second"]:,.0f} tok/s',
+                f'{v2_tr["test"]["tokens_per_second"]:,.0f} tok/s',
+                "transformer",
+            ),
             _result_row(
                 "Unique continuations ↑",
                 f'{v2_tn_gen["cross_prompt"]["unique_continuation_rate"]:.1%}',
@@ -263,7 +281,7 @@ def build_publication(
     <div>
       <p class="eyebrow">Final experiment report · V1 → V2</p>
       <h1>We tested whether a TextNCA could learn stage dialogue. It did not.</h1>
-      <p class="lede">A controlled, reproducible comparison against a parameter-matched Transformer—two corpora, four {train_steps:,}-step runs, structured generation probes, and one clear stopping decision.</p>
+      <p class="lede">A controlled, reproducible comparison against a parameter-matched Transformer—two corpora, {run_budget_summary}, structured generation probes, and one clear stopping decision.</p>
       <div class="hero__actions"><a class="button" href="#conclusion">Read the conclusion</a><a class="button button--ghost" href="data/v2-evidence.json">Download V2 data</a></div>
     </div>
     <aside class="verdict"><span>Verdict</span><strong>Transformer wins</strong><p>TextNCA improved with more data, but remained slower, less accurate, and severely prompt-insensitive.</p></aside>
@@ -283,7 +301,7 @@ def build_publication(
     <p class="eyebrow">Every stage</p><h2>From corpus design to stopping rule</h2>
     <ol class="timeline">
       <li><span>01</span><div><h3>Corpus V1</h3><p>{v1["dataset"]["work_count"]} public-domain plays, {v1["dataset"]["record_count"]} scenes, and {v1["dataset"]["turn_count"]:,} turns. Complete works were isolated by split.</p></div></li>
-      <li><span>02</span><div><h3>Locked V1 comparison</h3><p>Both ~27M-parameter models trained for 10,000 steps. The Transformer won on loss and speed; TextNCA collapsed across prompts.</p></div></li>
+      <li><span>02</span><div><h3>Locked V1 comparison</h3><p>The {v1_tn["parameters"]:,}-parameter TextNCA and {v1_tr["parameters"]:,}-parameter Transformer each trained for {v1_train_steps:,} steps. The Transformer won on loss and speed; TextNCA collapsed across prompts.</p></div></li>
       <li><span>03</span><div><h3>Corpus V2</h3><p>Expanded to {v2["dataset"]["work_count"]} works, {v2["dataset"]["record_count"]} scenes, and {v2["dataset"]["turn_count"]:,} turns—{corpus_v2["delta"]["tokens_percent"]:.1f}% more tokens—with author and coauthor isolation.</p></div></li>
       <li><span>04</span><div><h3>Locked V2 comparison</h3><p>Architecture and training settings stayed fixed. Only the frozen corpus and run destinations changed.</p></div></li>
       <li><span>05</span><div><h3>Generation-quality probes</h3><p>Early, middle, and late held-out boundaries measured repetition, exact diversity, cross-prompt collapse, grammar state, speaker formatting, and held-out speaker identity.</p></div></li>
