@@ -14,6 +14,7 @@ ncm-experiment = "ncm_stage_dialogue.experiment_cli:main"
 ncm-runner = "ncm_stage_dialogue.runner:main"
 ncm-v1-report = "ncm_stage_dialogue.v1_report:main"
 ncm-v2-report = "ncm_stage_dialogue.v2_report:main"
+ncm-publication = "ncm_stage_dialogue.publication:main"
 
 [dependency-groups]
 dev = [

@@ -1,0 +1,114 @@
+{
+  "v1-textnca": {
+    "model": {
+      "context_length": 512,
+      "ffn_size": 2816,
+      "hidden_size": 704,
+      "iterations_per_stage": 4,
+      "model_type": "textnca",
+      "num_heads": 8,
+      "num_layers": 5,
+      "vocab_size": 271,
+      "windows": [
+        8,
+        32,
+        128
+      ]
+    },
+    "training": {
+      "batch_size": 4,
+      "checkpoint_interval": 250,
+      "eval_interval": 250,
+      "learning_rate": 0.0006,
+      "max_grad_norm": 1.0,
+      "seed": 123,
+      "train_steps": 10000,
+      "warmup_steps": 500,
+      "weight_decay": 0.1
+    }
+  },
+  "v1-transformer": {
+    "model": {
+      "context_length": 512,
+      "ffn_size": 2368,
+      "hidden_size": 704,
+      "iterations_per_stage": 4,
+      "model_type": "transformer",
+      "num_heads": 8,
+      "num_layers": 5,
+      "vocab_size": 271,
+      "windows": [
+        8,
+        32,
+        128
+      ]
+    },
+    "training": {
+      "batch_size": 4,
+      "checkpoint_interval": 250,
+      "eval_interval": 250,
+      "learning_rate": 0.0006,
+      "max_grad_norm": 1.0,
+      "seed": 123,
+      "train_steps": 10000,
+      "warmup_steps": 500,
+      "weight_decay": 0.1
+    }
+  },
+  "v2-textnca": {
+    "model": {
+      "context_length": 512,
+      "ffn_size": 2816,
+      "hidden_size": 704,
+      "iterations_per_stage": 4,
+      "model_type": "textnca",
+      "num_heads": 8,
+      "num_layers": 5,
+      "vocab_size": 271,
+      "windows": [
+        8,
+        32,
+        128
+      ]
+    },
+    "training": {
+      "batch_size": 4,
+      "checkpoint_interval": 250,
+      "eval_interval": 250,
+      "learning_rate": 0.0006,
+      "max_grad_norm": 1.0,
+      "seed": 123,
+      "train_steps": 10000,
+      "warmup_steps": 500,
+      "weight_decay": 0.1
+    }
+  },
+  "v2-transformer": {
+    "model": {
+      "context_length": 512,
+      "ffn_size": 2368,
+      "hidden_size": 704,
+      "iterations_per_stage": 4,
+      "model_type": "transformer",
+      "num_heads": 8,
+      "num_layers": 5,
+      "vocab_size": 271,
+      "windows": [
+        8,
+        32,
+        128
+      ]
+    },
+    "training": {
+      "batch_size": 4,
+      "checkpoint_interval": 250,
+      "eval_interval": 250,
+      "learning_rate": 0.0006,
+      "max_grad_norm": 1.0,
+      "seed": 123,
+      "train_steps": 10000,
+      "warmup_steps": 500,
+      "weight_decay": 0.1
+    }
+  }
+}

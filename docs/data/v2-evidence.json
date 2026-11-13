@@ -1,0 +1,656 @@
+{
+  "dataset": {
+    "block_length": 512,
+    "corpus_sha256": "d2126f5d958e3190a708f7a502259196d8d9971df4935e33e53c388e1ee9a7c5",
+    "record_count": 75,
+    "split_counts": {
+      "test": {
+        "scenes": 14,
+        "turns": 3052,
+        "works": 4
+      },
+      "train": {
+        "scenes": 50,
+        "turns": 8680,
+        "works": 23
+      },
+      "validation": {
+        "scenes": 11,
+        "turns": 3065,
+        "works": 3
+      }
+    },
+    "split_token_counts": {
+      "test": 478207,
+      "train": 1189603,
+      "validation": 426484
+    },
+    "turn_count": 14797,
+    "vocab_size": 271,
+    "work_count": 30
+  },
+  "generation": {
+    "summary": {
+      "v2-textnca": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.7373578267448039,
+          "unique_continuation_rate": 0.5
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.9166666666666666,
+          "character_repeated_trigram_rate": 0.0,
+          "multi_speaker_generation": 0.75,
+          "prefix_valid": 0.9166666666666666,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.17847769028871394,
+          "turn_completion_rate": 0.375,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 11,
+          "completed_text_fields": 9,
+          "prefix_valid": 11,
+          "speaker_fields": 21,
+          "structure_valid": 0
+        },
+        "sample_count": 12,
+        "work_count": 4,
+        "work_means": {
+          "gutenberg-58569-beyond-the-horizon::Beyond the Horizon": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1692913385826772,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 0.3333333333333333,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1968503937007874,
+            "turn_completion_rate": 0.16666666666666666,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-885-an-ideal-husband::An Ideal Husband": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.17847769028871394,
+            "turn_completion_rate": 0.3333333333333333,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-994-riders-to-the-sea::Riders to the Sea": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1692913385826772,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      },
+      "v2-transformer": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.21546890252293782,
+          "unique_continuation_rate": 1.0
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.6666666666666666,
+          "character_repeated_trigram_rate": 0.052872949253229544,
+          "multi_speaker_generation": 0.6666666666666666,
+          "prefix_valid": 0.6666666666666666,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 0.9166666666666666,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.1919291338582677,
+          "turn_completion_rate": 0.46944444444444444,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 8,
+          "completed_text_fields": 18,
+          "prefix_valid": 8,
+          "speaker_fields": 26,
+          "structure_valid": 0
+        },
+        "sample_count": 12,
+        "work_count": 4,
+        "work_means": {
+          "gutenberg-58569-beyond-the-horizon::Beyond the Horizon": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.06590794826088942,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19028871391076116,
+            "turn_completion_rate": 0.6,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.058165548098433995,
+            "multi_speaker_generation": 0.3333333333333333,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.24015748031496065,
+            "turn_completion_rate": 0.25,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-885-an-ideal-husband::An Ideal Husband": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.031862745098039214,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 0.6666666666666666,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1469816272965879,
+            "turn_completion_rate": 0.5833333333333334,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-994-riders-to-the-sea::Riders to the Sea": {
+            "censored_by_length": 0.3333333333333333,
+            "character_repeated_trigram_rate": 0.055555555555555546,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 0.3333333333333333,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19028871391076116,
+            "turn_completion_rate": 0.4444444444444444,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "identity": {
+    "run_id": "v2-d8cbe61",
+    "training_commit": "d8cbe61523f2627cb786ab1d7d19d0fbc04e5a19"
+  },
+  "protocol": {
+    "aggregation": "sample metrics, then work means, then macro-average across works",
+    "determinism_check": "first prompt replayed per model with exact token equality",
+    "generation_seed": 123,
+    "max_new_tokens": 256,
+    "model_context_policy": "final block_length token suffix of each canonical full prefix",
+    "prompt_selection": "early, middle, and late completed-turn boundary per test work",
+    "temperature": 0.8,
+    "training_seed": 123,
+    "truncated_prompt_count": 11
+  },
+  "schema_version": 2,
+  "textnca_investment_decision": {
+    "criteria": {
+      "textnca_cross_work_similarity_no_better": true,
+      "textnca_test_loss_worse": true,
+      "textnca_training_slower": true,
+      "textnca_unique_rate_no_better": true
+    },
+    "decision": "stop",
+    "rule": "Stop further TextNCA investment when it loses on held-out loss and training speed and shows no advantage on exact continuation diversity or cross-work collapse."
+  },
+  "training": {
+    "comparison": {
+      "parameter_difference": 174720,
+      "parameter_difference_percent": 0.6428445281685995,
+      "textnca_test_loss_relative_percent": 24.56202416698563,
+      "textnca_test_perplexity_relative_percent": 56.09958686699538,
+      "transformer_test_throughput_speedup": 3.629956074367167,
+      "transformer_training_speedup": 3.2956556471312055
+    },
+    "models": {
+      "v2-textnca": {
+        "best_validation": {
+          "elapsed_seconds": 20.08312416700028,
+          "loss": 2.245425291797515,
+          "perplexity": 9.44443134164137,
+          "split": "validation",
+          "step": 9250,
+          "tokens": 426483,
+          "tokens_per_second": 21235.889219904264
+        },
+        "elapsed_seconds": 4169.5084373750005,
+        "final_train_loss": 2.2231569290161133,
+        "final_validation": {
+          "elapsed_seconds": 20.077079667000362,
+          "loss": 2.2455727277005875,
+          "perplexity": 9.445823892558709,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 426483,
+          "tokens_per_second": 21242.28259655649
+        },
+        "parameters": 27353920,
+        "seen_tokens": 20475138,
+        "test": {
+          "elapsed_seconds": 22.56051670800116,
+          "loss": 2.25838301609296,
+          "perplexity": 9.567605987201658,
+          "split": "test",
+          "step": 10000,
+          "tokens": 478206,
+          "tokens_per_second": 21196.58898727274
+        },
+        "validation_curve": [
+          {
+            "loss": 3.5867894313278974,
+            "step": 250
+          },
+          {
+            "loss": 2.874320522115532,
+            "step": 500
+          },
+          {
+            "loss": 2.7578810412770336,
+            "step": 750
+          },
+          {
+            "loss": 2.5487821969690723,
+            "step": 1000
+          },
+          {
+            "loss": 2.6375549555261433,
+            "step": 1250
+          },
+          {
+            "loss": 2.5623825622473158,
+            "step": 1500
+          },
+          {
+            "loss": 2.5131961455971172,
+            "step": 1750
+          },
+          {
+            "loss": 2.7003187953353724,
+            "step": 2000
+          },
+          {
+            "loss": 2.548818534155743,
+            "step": 2250
+          },
+          {
+            "loss": 2.5857887222717553,
+            "step": 2500
+          },
+          {
+            "loss": 2.4721326762864266,
+            "step": 2750
+          },
+          {
+            "loss": 2.5130308621026147,
+            "step": 3000
+          },
+          {
+            "loss": 2.5137587032246156,
+            "step": 3250
+          },
+          {
+            "loss": 2.4688733460195804,
+            "step": 3500
+          },
+          {
+            "loss": 2.619930143997625,
+            "step": 3750
+          },
+          {
+            "loss": 2.4614541559293177,
+            "step": 4000
+          },
+          {
+            "loss": 2.4798590616219975,
+            "step": 4250
+          },
+          {
+            "loss": 2.4108376673484972,
+            "step": 4500
+          },
+          {
+            "loss": 2.4232179348686853,
+            "step": 4750
+          },
+          {
+            "loss": 2.3903993615641626,
+            "step": 5000
+          },
+          {
+            "loss": 2.3994133881527078,
+            "step": 5250
+          },
+          {
+            "loss": 2.413652764180921,
+            "step": 5500
+          },
+          {
+            "loss": 2.372550126340854,
+            "step": 5750
+          },
+          {
+            "loss": 2.3780213074258127,
+            "step": 6000
+          },
+          {
+            "loss": 2.340830742557441,
+            "step": 6250
+          },
+          {
+            "loss": 2.349179681248835,
+            "step": 6500
+          },
+          {
+            "loss": 2.323100494997932,
+            "step": 6750
+          },
+          {
+            "loss": 2.3134477779457576,
+            "step": 7000
+          },
+          {
+            "loss": 2.329137859901325,
+            "step": 7250
+          },
+          {
+            "loss": 2.2864160458046174,
+            "step": 7500
+          },
+          {
+            "loss": 2.2987252332275334,
+            "step": 7750
+          },
+          {
+            "loss": 2.275156108421416,
+            "step": 8000
+          },
+          {
+            "loss": 2.2662631454902655,
+            "step": 8250
+          },
+          {
+            "loss": 2.279523282809998,
+            "step": 8500
+          },
+          {
+            "loss": 2.2502149802566684,
+            "step": 8750
+          },
+          {
+            "loss": 2.2681895788169237,
+            "step": 9000
+          },
+          {
+            "loss": 2.245425291797515,
+            "step": 9250
+          },
+          {
+            "loss": 2.24982233982839,
+            "step": 9500
+          },
+          {
+            "loss": 2.2459407939518177,
+            "step": 9750
+          },
+          {
+            "loss": 2.2455727277005875,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 4910.683910952952
+      },
+      "v2-transformer": {
+        "best_validation": {
+          "elapsed_seconds": 5.812941791000412,
+          "loss": 1.786320026449664,
+          "perplexity": 5.967451945221771,
+          "split": "validation",
+          "step": 8000,
+          "tokens": 426483,
+          "tokens_per_second": 73367.84288125513
+        },
+        "elapsed_seconds": 1265.1529418749997,
+        "final_train_loss": 1.2629703283309937,
+        "final_validation": {
+          "elapsed_seconds": 5.476903624999977,
+          "loss": 1.7969191109283023,
+          "perplexity": 6.031037853445751,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 426483,
+          "tokens_per_second": 77869.36364066508
+        },
+        "parameters": 27179200,
+        "seen_tokens": 20475138,
+        "test": {
+          "elapsed_seconds": 6.2150935839999875,
+          "loss": 1.8130590211551252,
+          "perplexity": 6.129168038960753,
+          "split": "test",
+          "step": 10000,
+          "tokens": 478206,
+          "tokens_per_second": 76942.68695021488
+        },
+        "validation_curve": [
+          {
+            "loss": 2.986562422329847,
+            "step": 250
+          },
+          {
+            "loss": 2.629491851642991,
+            "step": 500
+          },
+          {
+            "loss": 2.688847154977547,
+            "step": 750
+          },
+          {
+            "loss": 2.4924301385135443,
+            "step": 1000
+          },
+          {
+            "loss": 2.3683727727007327,
+            "step": 1250
+          },
+          {
+            "loss": 2.2616357497553023,
+            "step": 1500
+          },
+          {
+            "loss": 2.190574612632933,
+            "step": 1750
+          },
+          {
+            "loss": 2.217949366579749,
+            "step": 2000
+          },
+          {
+            "loss": 2.149024647546949,
+            "step": 2250
+          },
+          {
+            "loss": 2.1197156563350523,
+            "step": 2500
+          },
+          {
+            "loss": 1.979091889680758,
+            "step": 2750
+          },
+          {
+            "loss": 2.0299030760064367,
+            "step": 3000
+          },
+          {
+            "loss": 1.966366530944485,
+            "step": 3250
+          },
+          {
+            "loss": 1.9187215219360296,
+            "step": 3500
+          },
+          {
+            "loss": 1.9586142172989969,
+            "step": 3750
+          },
+          {
+            "loss": 1.9249004997707997,
+            "step": 4000
+          },
+          {
+            "loss": 1.9279644822746635,
+            "step": 4250
+          },
+          {
+            "loss": 1.835342768765155,
+            "step": 4500
+          },
+          {
+            "loss": 1.9223853606855372,
+            "step": 4750
+          },
+          {
+            "loss": 1.885685964796296,
+            "step": 5000
+          },
+          {
+            "loss": 1.873644591137535,
+            "step": 5250
+          },
+          {
+            "loss": 1.904043278056731,
+            "step": 5500
+          },
+          {
+            "loss": 1.8401780144500923,
+            "step": 5750
+          },
+          {
+            "loss": 1.9070607320285553,
+            "step": 6000
+          },
+          {
+            "loss": 1.8052869430791258,
+            "step": 6250
+          },
+          {
+            "loss": 1.8987501183599713,
+            "step": 6500
+          },
+          {
+            "loss": 1.8711544309521861,
+            "step": 6750
+          },
+          {
+            "loss": 1.8440171720465703,
+            "step": 7000
+          },
+          {
+            "loss": 1.885449314406564,
+            "step": 7250
+          },
+          {
+            "loss": 1.8128951366009167,
+            "step": 7500
+          },
+          {
+            "loss": 1.874979731227014,
+            "step": 7750
+          },
+          {
+            "loss": 1.786320026449664,
+            "step": 8000
+          },
+          {
+            "loss": 1.8500265297841956,
+            "step": 8250
+          },
+          {
+            "loss": 1.8377714853504565,
+            "step": 8500
+          },
+          {
+            "loss": 1.806837429078357,
+            "step": 8750
+          },
+          {
+            "loss": 1.8280965944083278,
+            "step": 9000
+          },
+          {
+            "loss": 1.7924625295664078,
+            "step": 9250
+          },
+          {
+            "loss": 1.810234840540061,
+            "step": 9500
+          },
+          {
+            "loss": 1.798736289689494,
+            "step": 9750
+          },
+          {
+            "loss": 1.7969191109283023,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 16183.923162408451
+      }
+    }
+  },
+  "v1_to_v2": {
+    "textnca": {
+      "cross_work_similarity_change": -0.15284864752906802,
+      "elapsed_seconds_change": 675.382684874975,
+      "test_loss_change": -0.2382281455002171,
+      "test_loss_change_percent": -9.542060420341755,
+      "unique_continuation_rate_change": -0.05555555555555558
+    },
+    "transformer": {
+      "cross_work_similarity_change": 0.028924639533094404,
+      "elapsed_seconds_change": 200.16023920798034,
+      "test_loss_change": -0.4964141034044447,
+      "test_loss_change_percent": -21.494690634216138,
+      "unique_continuation_rate_change": 0.0
+    }
+  }
+}

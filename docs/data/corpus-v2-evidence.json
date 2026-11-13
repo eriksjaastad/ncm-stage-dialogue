@@ -1,0 +1,408 @@
+{
+  "corpus_version": "v2",
+  "delta": {
+    "scenes": 39,
+    "tokens": 1031970,
+    "tokens_percent": 97.1426796344618,
+    "turns": 7381,
+    "turns_percent": 99.52804746494067,
+    "works": 11,
+    "works_percent": 57.89473684210527
+  },
+  "manifest_sha256": "52430fe5ead44b4a154e4a628952aa60494e8baad9c5abcc566eba979e2ebc03",
+  "rationale": {
+    "v1_findings": [
+      "V1 split complete works but leaked Susan Glaspell/George Cram Cook and Anton Chekhov authors across partitions.",
+      "V1 held-out author and genre coverage was sparse.",
+      "Both V1 models had zero held-out-speaker consistency; TextNCA also showed severe cross-prompt collapse."
+    ],
+    "v2_response": [
+      "Enforce author-to-split isolation, including overlapping coauthorship.",
+      "Add eleven independent plays and five new source files, with John Galsworthy confined to train, George Bernard Shaw and Henrik Ibsen to validation, and Oscar Wilde, Eugene O’Neill, and J. M. Synge to test.",
+      "Add naturalist drama, tragedy, social drama, satire, farce, and comedy-of-manners coverage."
+    ]
+  },
+  "remaining_limitations": [
+    "English-language drama only.",
+    "Training remains concentrated in three authorship groups: Chekhov, Galsworthy, and Glaspell/Cook.",
+    "Chekhov and Ibsen are represented through historical English translations, so translator style remains a confound.",
+    "The split is fixed and single-seed; no cross-validation claim is made.",
+    "Genre labels are coarse curator labels rather than a formal ontology.",
+    "Justice Act III Scene III is a silent stage-action unit and is omitted because the experiment contract requires at least one dialogue turn per scene."
+  ],
+  "schema_version": 1,
+  "source_provenance": {
+    "all_sources_hash_pinned": true,
+    "all_sources_record_public_domain_basis": true,
+    "jurisdiction": "United States",
+    "provider": "Project Gutenberg",
+    "source_file_count": 10
+  },
+  "v1": {
+    "scenes": 36,
+    "split_counts": {
+      "test": {
+        "scenes": 8,
+        "turns": 1810,
+        "works": 3
+      },
+      "train": {
+        "scenes": 26,
+        "turns": 5211,
+        "works": 14
+      },
+      "validation": {
+        "scenes": 2,
+        "turns": 395,
+        "works": 2
+      }
+    },
+    "split_token_counts": {
+      "test": 249402,
+      "train": 756015,
+      "validation": 56907
+    },
+    "tokens": 1062324,
+    "turns": 7416,
+    "works": 19
+  },
+  "v2": {
+    "author_leakage": {},
+    "authors_by_split": {
+      "test": [
+        "Eugene O'Neill",
+        "J. M. Synge",
+        "Oscar Wilde"
+      ],
+      "train": [
+        "Anton Chekhov",
+        "John Galsworthy",
+        "Susan Glaspell",
+        "Susan Glaspell and George Cram Cook"
+      ],
+      "validation": [
+        "George Bernard Shaw",
+        "Henrik Ibsen"
+      ]
+    },
+    "corpus_bytes": 3290364,
+    "corpus_sha256": "d2126f5d958e3190a708f7a502259196d8d9971df4935e33e53c388e1ee9a7c5",
+    "genre_counts": {
+      "comedy": 2,
+      "comedy of manners": 2,
+      "comedy-drama": 1,
+      "drama": 4,
+      "farce": 5,
+      "naturalist drama": 1,
+      "one-act comedy": 4,
+      "one-act drama": 4,
+      "realist drama": 1,
+      "satirical one-act": 2,
+      "social drama": 3,
+      "tragedy": 1
+    },
+    "scenes": 75,
+    "split_counts": {
+      "test": {
+        "scenes": 14,
+        "turns": 3052,
+        "works": 4
+      },
+      "train": {
+        "scenes": 50,
+        "turns": 8680,
+        "works": 23
+      },
+      "validation": {
+        "scenes": 11,
+        "turns": 3065,
+        "works": 3
+      }
+    },
+    "split_token_counts": {
+      "test": 478207,
+      "train": 1189603,
+      "validation": 426484
+    },
+    "split_token_sha256": {
+      "test": "d3cef43c668d28cf75fb565fc338f00ed2b1015f4fa6dfe1ee91781d5d546398",
+      "train": "c3cd0dccdf3242a8d370f83c9a0761e73c6100c0093576083783fdc8df0a25b4",
+      "validation": "683c523e5bcb95327fbd68f7dbf13b0fa055a9325b8bebd8a6cafc216570cb2d"
+    },
+    "tokens": 2094294,
+    "turns": 14797,
+    "work_count": 30,
+    "works": [
+      {
+        "author": "Eugene O'Neill",
+        "genre": "naturalist drama",
+        "scenes": 6,
+        "source_id": "gutenberg-58569-beyond-the-horizon",
+        "speakers": 12,
+        "split": "test",
+        "title": "Beyond the Horizon"
+      },
+      {
+        "author": "J. M. Synge",
+        "genre": "tragedy",
+        "scenes": 1,
+        "source_id": "gutenberg-994-riders-to-the-sea",
+        "speakers": 8,
+        "split": "test",
+        "title": "Riders to the Sea"
+      },
+      {
+        "author": "Oscar Wilde",
+        "genre": "comedy of manners",
+        "scenes": 4,
+        "source_id": "gutenberg-885-an-ideal-husband",
+        "speakers": 15,
+        "split": "test",
+        "title": "An Ideal Husband"
+      },
+      {
+        "author": "Oscar Wilde",
+        "genre": "comedy of manners",
+        "scenes": 3,
+        "source_id": "gutenberg-844-importance-of-being-earnest",
+        "speakers": 11,
+        "split": "test",
+        "title": "The Importance of Being Earnest"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "farce",
+        "scenes": 1,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 2,
+        "split": "train",
+        "title": "A Tragedian in Spite of Himself"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "drama",
+        "scenes": 1,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 17,
+        "split": "train",
+        "title": "On the High Road"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "farce",
+        "scenes": 1,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 6,
+        "split": "train",
+        "title": "The Anniversary"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "farce",
+        "scenes": 1,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 3,
+        "split": "train",
+        "title": "The Bear"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "comedy-drama",
+        "scenes": 4,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 20,
+        "split": "train",
+        "title": "The Cherry Orchard"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "farce",
+        "scenes": 1,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 3,
+        "split": "train",
+        "title": "The Proposal"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "drama",
+        "scenes": 4,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 16,
+        "split": "train",
+        "title": "The Three Sisters"
+      },
+      {
+        "author": "Anton Chekhov",
+        "genre": "farce",
+        "scenes": 1,
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": 17,
+        "split": "train",
+        "title": "The Wedding"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "one-act comedy",
+        "scenes": 1,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 10,
+        "split": "train",
+        "title": "Hall-marked"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "drama",
+        "scenes": 3,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 12,
+        "split": "train",
+        "title": "Joy"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "social drama",
+        "scenes": 5,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 23,
+        "split": "train",
+        "title": "Justice"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "social drama",
+        "scenes": 4,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 31,
+        "split": "train",
+        "title": "Strife"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "one-act drama",
+        "scenes": 3,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 4,
+        "split": "train",
+        "title": "The First and the Last"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "satirical one-act",
+        "scenes": 3,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 10,
+        "split": "train",
+        "title": "The Little Man"
+      },
+      {
+        "author": "John Galsworthy",
+        "genre": "social drama",
+        "scenes": 6,
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": 20,
+        "split": "train",
+        "title": "The Silver Box"
+      },
+      {
+        "author": "Susan Glaspell",
+        "genre": "drama",
+        "scenes": 3,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 5,
+        "split": "train",
+        "title": "Bernice"
+      },
+      {
+        "author": "Susan Glaspell",
+        "genre": "one-act comedy",
+        "scenes": 1,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 8,
+        "split": "train",
+        "title": "Close the Book"
+      },
+      {
+        "author": "Susan Glaspell",
+        "genre": "one-act drama",
+        "scenes": 1,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 5,
+        "split": "train",
+        "title": "The Outside"
+      },
+      {
+        "author": "Susan Glaspell",
+        "genre": "one-act drama",
+        "scenes": 1,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 12,
+        "split": "train",
+        "title": "The People"
+      },
+      {
+        "author": "Susan Glaspell",
+        "genre": "one-act drama",
+        "scenes": 1,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 5,
+        "split": "train",
+        "title": "Trifles"
+      },
+      {
+        "author": "Susan Glaspell",
+        "genre": "satirical one-act",
+        "scenes": 1,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 9,
+        "split": "train",
+        "title": "Woman’s Honor"
+      },
+      {
+        "author": "Susan Glaspell and George Cram Cook",
+        "genre": "one-act comedy",
+        "scenes": 2,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 3,
+        "split": "train",
+        "title": "Suppressed Desires"
+      },
+      {
+        "author": "Susan Glaspell and George Cram Cook",
+        "genre": "one-act comedy",
+        "scenes": 1,
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": 6,
+        "split": "train",
+        "title": "Tickless Time"
+      },
+      {
+        "author": "George Bernard Shaw",
+        "genre": "comedy",
+        "scenes": 3,
+        "source_id": "gutenberg-3618-arms-and-the-man",
+        "speakers": 11,
+        "split": "validation",
+        "title": "Arms and the Man"
+      },
+      {
+        "author": "George Bernard Shaw",
+        "genre": "comedy",
+        "scenes": 5,
+        "source_id": "gutenberg-3825-pygmalion",
+        "speakers": 25,
+        "split": "validation",
+        "title": "Pygmalion"
+      },
+      {
+        "author": "Henrik Ibsen",
+        "genre": "realist drama",
+        "scenes": 3,
+        "source_id": "gutenberg-2542-a-dolls-house",
+        "speakers": 12,
+        "split": "validation",
+        "title": "A Doll’s House"
+      }
+    ]
+  }
+}
