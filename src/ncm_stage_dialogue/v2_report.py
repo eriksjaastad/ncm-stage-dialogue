@@ -248,6 +248,7 @@ def build_report(
         temperature=temperature,
         max_new_tokens=max_new_tokens,
         model_names=MODEL_NAMES,
+        include_effective_context=True,
     )
     dataset = prompt_data["dataset"]
     training_commit = _shared_training_commit(run_root, MODEL_NAMES)

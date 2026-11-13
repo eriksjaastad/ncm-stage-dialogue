@@ -140,10 +140,11 @@ def _sample_record(
     seed: int,
     temperature: float,
     max_new_tokens: int,
+    include_effective_context: bool = False,
 ) -> dict[str, Any]:
     display = ByteTokenizer.decode_display(continuation)
     model_context = list(prompt.prompt_tokens[-context_length:])
-    return {
+    record = {
         "model": model_name,
         "prompt_id": prompt.prompt_id,
         "work_key": prompt.work_key,
@@ -153,9 +154,6 @@ def _sample_record(
         "prompt_sha256": prompt.prompt_sha256,
         "prompt_tokens": len(prompt.prompt_tokens),
         "model_context_tokens": len(model_context),
-        "model_context_sha256": hashlib.sha256(
-            b"".join(token.to_bytes(2, "little") for token in model_context)
-        ).hexdigest(),
         "seed": seed,
         "temperature": temperature,
         "max_new_tokens": max_new_tokens,
@@ -170,6 +168,11 @@ def _sample_record(
             max_new_tokens=max_new_tokens,
         ),
     }
+    if include_effective_context:
+        record["model_context_sha256"] = hashlib.sha256(
+            b"".join(token.to_bytes(2, "little") for token in model_context)
+        ).hexdigest()
+    return record
 
 
 def _macro_generation_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
@@ -237,9 +240,11 @@ def _macro_generation_summary(samples: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def _prompt_manifest_record(prompt: PromptSpec, context_length: int) -> dict[str, Any]:
+def _prompt_manifest_record(
+    prompt: PromptSpec, context_length: int, *, include_effective_context: bool = False
+) -> dict[str, Any]:
     model_context = list(prompt.prompt_tokens[-context_length:])
-    return {
+    record = {
         "prompt_id": prompt.prompt_id,
         "work_key": prompt.work_key,
         "title": prompt.title,
@@ -248,12 +253,18 @@ def _prompt_manifest_record(prompt: PromptSpec, context_length: int) -> dict[str
         "prompt_sha256": prompt.prompt_sha256,
         "prompt_tokens": len(prompt.prompt_tokens),
         "allowed_speakers": list(prompt.allowed_speakers),
-        "model_context_tokens": len(model_context),
-        "model_context_token_ids": model_context,
-        "model_context_sha256": hashlib.sha256(
-            b"".join(token.to_bytes(2, "little") for token in model_context)
-        ).hexdigest(),
     }
+    if include_effective_context:
+        record.update(
+            {
+                "model_context_tokens": len(model_context),
+                "model_context_token_ids": model_context,
+                "model_context_sha256": hashlib.sha256(
+                    b"".join(token.to_bytes(2, "little") for token in model_context)
+                ).hexdigest(),
+            }
+        )
+    return record
 
 
 def _generate_samples(
@@ -263,6 +274,7 @@ def _generate_samples(
     temperature: float,
     max_new_tokens: int,
     model_names: tuple[str, str] = MODEL_NAMES,
+    include_effective_context: bool = False,
 ) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
     samples: list[dict[str, Any]] = []
     manifest: dict[str, Any] | None = None
@@ -276,7 +288,12 @@ def _generate_samples(
             raise ValueError("model runs do not share one dataset manifest")
         prompts = build_prompt_specs(dataset)
         current_prompt_manifest = [
-            _prompt_manifest_record(prompt, model_config.context_length) for prompt in prompts
+            _prompt_manifest_record(
+                prompt,
+                model_config.context_length,
+                include_effective_context=include_effective_context,
+            )
+            for prompt in prompts
         ]
         if prompt_manifest is None:
             prompt_manifest = current_prompt_manifest
@@ -313,6 +330,7 @@ def _generate_samples(
                 seed=seed,
                 temperature=temperature,
                 max_new_tokens=max_new_tokens,
+                include_effective_context=include_effective_context,
             )
             record["checkpoint"] = str(checkpoint.relative_to(run_root))
             samples.append(record)
