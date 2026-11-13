@@ -1,5 +1,7 @@
+import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -24,7 +26,7 @@ def _results(
     transformer_unique: float,
     textnca_similarity: float,
     transformer_similarity: float,
-) -> dict[str, object]:
+) -> dict[str, Any]:
     return {
         "training": {
             "models": {
@@ -115,6 +117,28 @@ def test_investment_decision_stops_when_textnca_loses_loss_speed_and_collapse() 
     }
 
 
+def test_investment_decision_fails_closed_when_cross_work_similarity_is_unavailable() -> None:
+    current = _results(
+        prefix="v2",
+        textnca_loss=2.25,
+        transformer_loss=1.8,
+        textnca_seconds=120.0,
+        transformer_seconds=30.0,
+        textnca_unique=0.75,
+        transformer_unique=1.0,
+        textnca_similarity=0.4,
+        transformer_similarity=0.1,
+    )
+    current["generation"]["summary"]["v2-textnca"]["cross_prompt"][
+        "mean_cross_work_character_trigram_jaccard"
+    ] = None
+
+    decision = _investment_decision(current)
+
+    assert decision["decision"] == "continue"
+    assert decision["criteria"]["textnca_cross_work_similarity_no_better"] is False
+
+
 def test_committed_v2_report_is_self_consistent_and_portable() -> None:
     repository = Path(__file__).parents[1]
     report_dir = repository / "reports" / "v2"
@@ -128,8 +152,22 @@ def test_committed_v2_report_is_self_consistent_and_portable() -> None:
     assert results["identity"]["run_id"] == "v2-d8cbe61"
     assert len(results["prompt_manifest"]) == 12
     assert len(results["generation"]["samples"]) == 24
+    assert results["protocol"]["training_seed"] == 123
+    assert results["protocol"]["truncated_prompt_count"] == 11
     assert results["textnca_investment_decision"]["decision"] == "stop"
     assert "/Users/" not in results_text
+    contexts_by_prompt: dict[str, str] = {}
+    for prompt in results["prompt_manifest"]:
+        context = prompt["model_context_token_ids"]
+        assert len(context) == prompt["model_context_tokens"] <= 512
+        assert prompt["model_context_sha256"] == hashlib.sha256(
+            b"".join(token.to_bytes(2, "little") for token in context)
+        ).hexdigest()
+        contexts_by_prompt[prompt["prompt_id"]] = prompt["model_context_sha256"]
+    for sample_record in results["generation"]["samples"]:
+        assert sample_record["model_context_sha256"] == contexts_by_prompt[
+            sample_record["prompt_id"]
+        ]
     for model in MODEL_NAMES:
         samples = [
             sample for sample in results["generation"]["samples"] if sample["model"] == model

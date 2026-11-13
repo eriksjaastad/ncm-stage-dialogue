@@ -39,7 +39,7 @@ TextNCA's final test loss was 24.6% higher. The equal-budget comparison uses the
 
 ## Held-out generation
 
-The prompt manifest was fixed before inspecting output: early, middle, and late completed-turn boundaries from every held-out test work, with identical token prompts, generation seed, temperature, length cap, and EOS policy for both models.
+The prompt manifest was fixed before inspecting output: early, middle, and late completed-turn boundaries from every held-out test work, with identical canonical token prompts, generation seed, temperature, length cap, and EOS policy for both models. 11 of 12 canonical prompts exceeded the 512-token model context; generation used the final 512-token suffix. `results.json` preserves every effective suffix as token IDs plus a SHA-256 hash.
 
 | Macro-average across held-out works | TextNCA | Transformer |
 |---|---:|---:|
@@ -148,10 +148,19 @@ Prompt: `gutenberg-994-riders-to-the-sea::Riders to the Sea::early`; seed 123.
 - Teacher-forced loss does not measure human preference or long-range dramatic coherence.
 - Generation statistics are descriptive paired probes, not population-level significance claims.
 
-## Reproduction
+## Portable verification and regeneration
+
+The committed report is portable and verifiable from a clean checkout without the ignored training data:
+
+```bash
+uv sync --locked --dev
+uv run pytest tests/test_v1_report.py tests/test_v2_report.py -q
+```
+
+Full regeneration additionally requires restoring the intentionally untracked Corpus V2 build and `data/runs/v2-d8cbe61` checkpoint tree. Before running the generator, verify the corpus SHA-256, training commit, and checkpoint hashes against `results.json`; the command fails if the paired checkpoint commits, seeds, datasets, or prompt manifests disagree.
 
 ```bash
 uv run ncm-v2-report --run-root data/runs/v2-d8cbe61 --v1-results reports/v1/results.json --output-dir reports/v2
 ```
 
-`results.json` contains the prompt manifest, checkpoint hashes, raw sample records, metrics, V1 deltas, decision rule, environment, and exact protocol used to render this report.
+The repository does not distribute the roughly 55-million-parameter checkpoint pair. `results.json` is the durable research artifact: it contains the exact effective model-context token IDs and hashes, prompt manifest, checkpoint hashes, raw continuations, metrics, V1 deltas, decision rule, environment, and rendering protocol.

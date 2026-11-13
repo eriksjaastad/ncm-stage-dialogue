@@ -17,6 +17,7 @@ from ncm_stage_dialogue.v1_report import (
     _fmt,
     _generate_samples,
     _shared_training_commit,
+    _shared_training_seed,
     _training_summary,
 )
 
@@ -69,16 +70,19 @@ def _version_comparison(previous: dict[str, Any], current: dict[str, Any]) -> di
 def _investment_decision(results: dict[str, Any]) -> dict[str, Any]:
     textnca, transformer = _models(results, "v2")
     textnca_cross, transformer_cross = _cross_prompt(results, "v2")
+    textnca_similarity = textnca_cross["mean_cross_work_character_trigram_jaccard"]
+    transformer_similarity = transformer_cross["mean_cross_work_character_trigram_jaccard"]
     criteria = {
         "textnca_test_loss_worse": textnca["test"]["loss"] > transformer["test"]["loss"],
         "textnca_training_slower": textnca["elapsed_seconds"]
         > transformer["elapsed_seconds"],
         "textnca_unique_rate_no_better": textnca_cross["unique_continuation_rate"]
         <= transformer_cross["unique_continuation_rate"],
-        "textnca_cross_work_similarity_no_better": textnca_cross[
-            "mean_cross_work_character_trigram_jaccard"
-        ]
-        >= transformer_cross["mean_cross_work_character_trigram_jaccard"],
+        "textnca_cross_work_similarity_no_better": (
+            textnca_similarity is not None
+            and transformer_similarity is not None
+            and textnca_similarity >= transformer_similarity
+        ),
     }
     stop = all(criteria.values())
     return {
@@ -156,7 +160,7 @@ TextNCA's final test loss was {comparison["textnca_test_loss_relative_percent"]:
 
 ## Held-out generation
 
-The prompt manifest was fixed before inspecting output: early, middle, and late completed-turn boundaries from every held-out test work, with identical token prompts, generation seed, temperature, length cap, and EOS policy for both models.
+The prompt manifest was fixed before inspecting output: early, middle, and late completed-turn boundaries from every held-out test work, with identical canonical token prompts, generation seed, temperature, length cap, and EOS policy for both models. {results["protocol"]["truncated_prompt_count"]} of {len(results["prompt_manifest"])} canonical prompts exceeded the 512-token model context; generation used the final 512-token suffix. `results.json` preserves every effective suffix as token IDs plus a SHA-256 hash.
 
 | Macro-average across held-out works | TextNCA | Transformer |
 |---|---:|---:|
@@ -203,13 +207,22 @@ These are the early-boundary samples for every held-out work and both models. Th
 - Teacher-forced loss does not measure human preference or long-range dramatic coherence.
 - Generation statistics are descriptive paired probes, not population-level significance claims.
 
-## Reproduction
+## Portable verification and regeneration
+
+The committed report is portable and verifiable from a clean checkout without the ignored training data:
+
+```bash
+uv sync --locked --dev
+uv run pytest tests/test_v1_report.py tests/test_v2_report.py -q
+```
+
+Full regeneration additionally requires restoring the intentionally untracked Corpus V2 build and `data/runs/v2-d8cbe61` checkpoint tree. Before running the generator, verify the corpus SHA-256, training commit, and checkpoint hashes against `results.json`; the command fails if the paired checkpoint commits, seeds, datasets, or prompt manifests disagree.
 
 ```bash
 uv run ncm-v2-report --run-root data/runs/v2-d8cbe61 --v1-results reports/v1/results.json --output-dir reports/v2
 ```
 
-`results.json` contains the prompt manifest, checkpoint hashes, raw sample records, metrics, V1 deltas, decision rule, environment, and exact protocol used to render this report.
+The repository does not distribute the roughly 55-million-parameter checkpoint pair. `results.json` is the durable research artifact: it contains the exact effective model-context token IDs and hashes, prompt manifest, checkpoint hashes, raw continuations, metrics, V1 deltas, decision rule, environment, and rendering protocol.
 """
 
 
@@ -238,6 +251,10 @@ def build_report(
     )
     dataset = prompt_data["dataset"]
     training_commit = _shared_training_commit(run_root, MODEL_NAMES)
+    training_seed = _shared_training_seed(run_root, MODEL_NAMES)
+    truncated_prompt_count = sum(
+        prompt["prompt_tokens"] > dataset["block_length"] for prompt in prompt_data["prompts"]
+    )
     results: dict[str, Any] = {
         "schema_version": 2,
         "identity": {
@@ -252,11 +269,13 @@ def build_report(
             "mlx": importlib.metadata.version("mlx"),
         },
         "protocol": {
-            "training_seed": 123,
+            "training_seed": training_seed,
             "generation_seed": seed,
             "temperature": temperature,
             "max_new_tokens": max_new_tokens,
             "prompt_selection": "early, middle, and late completed-turn boundary per test work",
+            "model_context_policy": "final block_length token suffix of each canonical full prefix",
+            "truncated_prompt_count": truncated_prompt_count,
             "aggregation": "sample metrics, then work means, then macro-average across works",
             "determinism_check": "first prompt replayed per model with exact token equality",
         },
@@ -299,7 +318,7 @@ def main() -> int:
             temperature=args.temperature,
             max_new_tokens=args.max_new_tokens,
         )
-    except (OSError, ValueError, KeyError, json.JSONDecodeError) as error:
+    except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError) as error:
         parser.exit(1, f"ncm-v2-report: {error}\n")
     print(
         json.dumps(
