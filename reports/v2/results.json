@@ -1,0 +1,2899 @@
+{
+  "dataset": {
+    "block_length": 512,
+    "corpus_bytes": 3290364,
+    "corpus_path": "scenes.jsonl",
+    "corpus_sha256": "d2126f5d958e3190a708f7a502259196d8d9971df4935e33e53c388e1ee9a7c5",
+    "record_count": 75,
+    "schema_version": 1,
+    "serialization_version": 1,
+    "special_token_ids": {
+      "BOS": 257,
+      "DIRECTION": 267,
+      "EOS": 258,
+      "FIELD": 260,
+      "ITEM_END": 263,
+      "PAD": 256,
+      "SCENE": 261,
+      "SCENE_END": 269,
+      "SPEAKER": 265,
+      "STAGE": 262,
+      "TEXT": 266,
+      "TURN": 264,
+      "TURN_END": 268,
+      "WORK": 259,
+      "WORK_END": 270
+    },
+    "split_counts": {
+      "test": {
+        "scenes": 14,
+        "turns": 3052,
+        "works": 4
+      },
+      "train": {
+        "scenes": 50,
+        "turns": 8680,
+        "works": 23
+      },
+      "validation": {
+        "scenes": 11,
+        "turns": 3065,
+        "works": 3
+      }
+    },
+    "split_token_counts": {
+      "test": 478207,
+      "train": 1189603,
+      "validation": 426484
+    },
+    "split_token_sha256": {
+      "test": "d3cef43c668d28cf75fb565fc338f00ed2b1015f4fa6dfe1ee91781d5d546398",
+      "train": "c3cd0dccdf3242a8d370f83c9a0761e73c6100c0093576083783fdc8df0a25b4",
+      "validation": "683c523e5bcb95327fbd68f7dbf13b0fa055a9325b8bebd8a6cafc216570cb2d"
+    },
+    "tokenizer_version": 1,
+    "turn_count": 14797,
+    "vocab_size": 271,
+    "work_count": 30,
+    "works": [
+      {
+        "author": "Henrik Ibsen",
+        "scene_ids": [
+          "act-1",
+          "act-2",
+          "act-3"
+        ],
+        "source_id": "gutenberg-2542-a-dolls-house",
+        "speakers": [
+          "CHILDREN",
+          "DOCTOR RANK",
+          "HELMER",
+          "KROGSTAD",
+          "MAID",
+          "MRS LINDE",
+          "NORA",
+          "NURSE",
+          "PORTER",
+          "RANK",
+          "SERVANT",
+          "THE CHILDREN"
+        ],
+        "split": "validation",
+        "title": "A Doll’s House",
+        "work_key": "gutenberg-2542-a-dolls-house::A Doll’s House"
+      },
+      {
+        "author": "George Bernard Shaw",
+        "scene_ids": [
+          "arms-and-the-man-act-1",
+          "arms-and-the-man-act-2",
+          "arms-and-the-man-act-3"
+        ],
+        "source_id": "gutenberg-3618-arms-and-the-man",
+        "speakers": [
+          "A MAN’S VOICE",
+          "BLUNTSCHLI",
+          "CATHERINE",
+          "LOUKA",
+          "MALE VOICE OUTSIDE",
+          "MAN",
+          "NICOLA",
+          "PETKOFF",
+          "RAINA",
+          "SERGIUS",
+          "THE OFFICER"
+        ],
+        "split": "validation",
+        "title": "Arms and the Man",
+        "work_key": "gutenberg-3618-arms-and-the-man::Arms and the Man"
+      },
+      {
+        "author": "George Bernard Shaw",
+        "scene_ids": [
+          "act-1",
+          "act-2",
+          "act-3",
+          "act-4",
+          "act-5"
+        ],
+        "source_id": "gutenberg-3825-pygmalion",
+        "speakers": [
+          "A BYSTANDER",
+          "A SARCASTIC BYSTANDER",
+          "CLARA",
+          "DOOLITTLE",
+          "FREDDY",
+          "HIGGINS",
+          "LIZA",
+          "MISS EYNSFORD HILL",
+          "MRS. EYNSFORD HILL",
+          "MRS. HIGGINS",
+          "MRS. PEARCE",
+          "PICKERING",
+          "SEVERAL BYSTANDERS",
+          "THE BYSTANDER",
+          "THE BYSTANDERS GENERALLY",
+          "THE DAUGHTER",
+          "THE FLOWER GIRL",
+          "THE GENTLEMAN",
+          "THE GENTLEMEN",
+          "THE JAPANESE LADY",
+          "THE MOTHER",
+          "THE NOTE TAKER",
+          "THE PARLOR-MAID",
+          "THE SARCASTIC BYSTANDER",
+          "THE SARCASTIC ONE"
+        ],
+        "split": "validation",
+        "title": "Pygmalion",
+        "work_key": "gutenberg-3825-pygmalion::Pygmalion"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "hall-marked-single-scene"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "DOCTOR",
+          "HER VOICE",
+          "HERSELF",
+          "JARVIS",
+          "LADY ELLA",
+          "MAUD",
+          "SHE",
+          "THE MAID",
+          "THE RECTOR",
+          "THE SQUIRE"
+        ],
+        "split": "train",
+        "title": "Hall-marked",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::Hall-marked"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "joy-act-1",
+          "joy-act-2",
+          "joy-act-3"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "COLONEL",
+          "DICK",
+          "ERNEST",
+          "GWYN",
+          "JOY",
+          "LETTY",
+          "LEVER",
+          "MISS BEECH",
+          "MRS. GWYN",
+          "MRS. HOPE",
+          "NEVER",
+          "ROSE"
+        ],
+        "split": "train",
+        "title": "Joy",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::Joy"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "justice-act-1",
+          "justice-act-2",
+          "justice-act-3-scene-1",
+          "justice-act-3-scene-2",
+          "justice-act-4"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "CLEAVER",
+          "CLIFTON",
+          "COKESON",
+          "COWLEY",
+          "FALDER",
+          "FOREMAN",
+          "FOREMAN OF THE JURY",
+          "FROME",
+          "INSTRUCTOR",
+          "JAMES",
+          "JUDGE",
+          "MOANEY",
+          "O'CLEARY",
+          "RUTH",
+          "SWEEDLE",
+          "THE CHAPLAIN",
+          "THE CLERK",
+          "THE DOCTOR",
+          "THE GOVERNOR",
+          "THE JUDGE",
+          "WALTER",
+          "WISTER",
+          "WOODER"
+        ],
+        "split": "train",
+        "title": "Justice",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::Justice"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "strife-act-1",
+          "strife-act-2-scene-1",
+          "strife-act-2-scene-2",
+          "strife-act-3"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "ANTHONY",
+          "BLACKSMITH",
+          "BROWN",
+          "BULGIN",
+          "DAVIES",
+          "EDGAR",
+          "ENID",
+          "EVANS",
+          "FROST",
+          "GREEN",
+          "HARNESS",
+          "HENRY ROUS",
+          "JAGO",
+          "JAN",
+          "LEWIS",
+          "MADGE",
+          "MRS. BULGIN",
+          "MRS. ROBERTS",
+          "MRS. ROUS",
+          "MRS. YEO",
+          "PARLOURMAID",
+          "RED-HAIRED YOUTH",
+          "ROBERT",
+          "ROBERTS",
+          "ROUS",
+          "SCANTLEBURY",
+          "TENCH",
+          "THOMAS",
+          "UNDERWOOD",
+          "WANKLIN",
+          "WILDER"
+        ],
+        "split": "train",
+        "title": "Strife",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::Strife"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "the-first-and-the-last-scene-1",
+          "the-first-and-the-last-scene-2",
+          "the-first-and-the-last-scene-3"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "KEITH",
+          "LARRY",
+          "VOICE",
+          "WANDA"
+        ],
+        "split": "train",
+        "title": "The First and the Last",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::The First and the Last"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "the-little-man-scene-1",
+          "the-little-man-scene-2",
+          "the-little-man-scene-3"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "AMERICAN",
+          "AMERICAN TRAVELLER",
+          "ENGLISHMAN",
+          "ENGLISHWOMAN",
+          "GERMAN",
+          "GERMAN TRAVELLER",
+          "LITTLE MAN",
+          "MOTHER",
+          "OFFICIAL",
+          "WAITER"
+        ],
+        "split": "train",
+        "title": "The Little Man",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::The Little Man"
+      },
+      {
+        "author": "John Galsworthy",
+        "scene_ids": [
+          "the-silver-box-act-1-scene-1",
+          "the-silver-box-act-1-scene-2",
+          "the-silver-box-act-1-scene-3",
+          "the-silver-box-act-2-scene-1",
+          "the-silver-box-act-2-scene-2",
+          "the-silver-box-act-3"
+        ],
+        "source_id": "gutenberg-4269-galsworthy-complete-plays",
+        "speakers": [
+          "BALD CONSTABLE",
+          "BARTHWICK",
+          "CLERK",
+          "JACK",
+          "JONES",
+          "LEVINS",
+          "LIVENS",
+          "MAGISTRATE",
+          "MARLOW",
+          "MRS. BARTHWICK",
+          "MRS. JONES",
+          "MRS. SEDDON",
+          "RELIEVING OFFICER",
+          "ROPER",
+          "SNOW",
+          "SWEARING CLERK",
+          "UNKNOWN",
+          "UNKNOWN LADY",
+          "USHER",
+          "WHEELER"
+        ],
+        "split": "train",
+        "title": "The Silver Box",
+        "work_key": "gutenberg-4269-galsworthy-complete-plays::The Silver Box"
+      },
+      {
+        "author": "Eugene O'Neill",
+        "scene_ids": [
+          "beyond-the-horizon-act-1-scene-1",
+          "beyond-the-horizon-act-1-scene-2",
+          "beyond-the-horizon-act-2-scene-1",
+          "beyond-the-horizon-act-2-scene-2",
+          "beyond-the-horizon-act-3-scene-1",
+          "beyond-the-horizon-act-3-scene-2"
+        ],
+        "source_id": "gutenberg-58569-beyond-the-horizon",
+        "speakers": [
+          "ANDREW",
+          "ANDY’S VOICE",
+          "BEN",
+          "FAWCETT",
+          "MARY",
+          "MAYO",
+          "MRS. ATKINS",
+          "MRS. MAYO",
+          "ROBERT",
+          "RUTH",
+          "SCOTT",
+          "THE CAPTAIN"
+        ],
+        "split": "test",
+        "title": "Beyond the Horizon",
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "bernice-act-1",
+          "bernice-act-2",
+          "bernice-act-3"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ABBIE",
+          "CRAIG",
+          "FATHER",
+          "LAURA",
+          "MARGARET"
+        ],
+        "split": "train",
+        "title": "Bernice",
+        "work_key": "gutenberg-59432-glaspell-plays::Bernice"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "close-the-book-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "BESSIE",
+          "GRANDMOTHER",
+          "JHANSI",
+          "MRS. BYRD",
+          "MRS. ROOT",
+          "PEYTON",
+          "SENATOR BYRD",
+          "UNCLE GEORGE"
+        ],
+        "split": "train",
+        "title": "Close the Book",
+        "work_key": "gutenberg-59432-glaspell-plays::Close the Book"
+      },
+      {
+        "author": "Susan Glaspell and George Cram Cook",
+        "scene_ids": [
+          "suppressed-desires-scene-1",
+          "suppressed-desires-scene-2"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "HENRIETTA",
+          "MABEL",
+          "STEVE"
+        ],
+        "split": "train",
+        "title": "Suppressed Desires",
+        "work_key": "gutenberg-59432-glaspell-plays::Suppressed Desires"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "the-outside-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ALLIE MAYO",
+          "BRADFORD",
+          "CAPTAIN",
+          "MRS. PATRICK",
+          "TONY"
+        ],
+        "split": "train",
+        "title": "The Outside",
+        "work_key": "gutenberg-59432-glaspell-plays::The Outside"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "the-people-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ARTIST",
+          "EARNEST APPROACH",
+          "ED",
+          "FIREBRAND",
+          "LIGHT TOUCH",
+          "OSCAR",
+          "PHILOSOPHER",
+          "SARA",
+          "THE BOY",
+          "THE MAN",
+          "THE WOMAN",
+          "TOM"
+        ],
+        "split": "train",
+        "title": "The People",
+        "work_key": "gutenberg-59432-glaspell-plays::The People"
+      },
+      {
+        "author": "Susan Glaspell and George Cram Cook",
+        "scene_ids": [
+          "tickless-time-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "ALICE",
+          "ANNIE",
+          "EDDY",
+          "ELOISE",
+          "IAN",
+          "MRS. STUBBS"
+        ],
+        "split": "train",
+        "title": "Tickless Time",
+        "work_key": "gutenberg-59432-glaspell-plays::Tickless Time"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "trifles-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "COUNTY ATTORNEY",
+          "HALE",
+          "MRS. HALE",
+          "MRS. PETERS",
+          "SHERIFF"
+        ],
+        "split": "train",
+        "title": "Trifles",
+        "work_key": "gutenberg-59432-glaspell-plays::Trifles"
+      },
+      {
+        "author": "Susan Glaspell",
+        "scene_ids": [
+          "womans-honor-scene-1"
+        ],
+        "source_id": "gutenberg-59432-glaspell-plays",
+        "speakers": [
+          "BOY",
+          "CHEATED ONE",
+          "LAWYER",
+          "MERCENARY ONE",
+          "MOTHERLY ONE",
+          "PRISONER",
+          "SCORNFUL ONE",
+          "SHIELDED ONE",
+          "SILLY ONE"
+        ],
+        "split": "train",
+        "title": "Woman’s Honor",
+        "work_key": "gutenberg-59432-glaspell-plays::Woman’s Honor"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "a-tragedian-in-spite-of-himself-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "MURASHKIN",
+          "TOLKACHOV"
+        ],
+        "split": "train",
+        "title": "A Tragedian in Spite of Himself",
+        "work_key": "gutenberg-7986-chekhov-second-series::A Tragedian in Spite of Himself"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "on-the-high-road-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "A VOICE",
+          "A VOICE FROM THE CORNER",
+          "BORTSOV",
+          "COACHMAN",
+          "EFIMOVNA",
+          "FEDYA",
+          "KUSMA",
+          "MARIA",
+          "MARIA EGOROVNA",
+          "MERIK",
+          "MERIN",
+          "NAZAROVNA",
+          "SAVVA",
+          "SAWA",
+          "THE VOICE",
+          "THE VOICE FROM THE CORNER",
+          "TIHON"
+        ],
+        "split": "train",
+        "title": "On the High Road",
+        "work_key": "gutenberg-7986-chekhov-second-series::On the High Road"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-anniversary-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "KHIRIN",
+          "MERCHUTKINA",
+          "ONE OF THE DEPUTATION",
+          "SHIPUCHIN",
+          "TATIANA ALEXEYEVNA",
+          "THE MEMBER OF THE DEPUTATION"
+        ],
+        "split": "train",
+        "title": "The Anniversary",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Anniversary"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-bear-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "LUKA",
+          "POPOVA",
+          "SMIRNOV"
+        ],
+        "split": "train",
+        "title": "The Bear",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Bear"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-cherry-orchard-act-1",
+          "the-cherry-orchard-act-2",
+          "the-cherry-orchard-act-3",
+          "the-cherry-orchard-act-4"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "ANYA",
+          "ANYA’S VOICE",
+          "CHARLOTTA",
+          "DUNYASHA",
+          "EPIKHODOV",
+          "FIERS",
+          "GAEV",
+          "LOPAKHIN",
+          "LUBOV",
+          "LUBOV ANDREYEVNA",
+          "PISCHIN",
+          "STATION-MASTER",
+          "THE VOICE OF VARYA",
+          "TRAMP",
+          "TROFIMOV",
+          "TROFIMOV’S VOICE",
+          "VARYA",
+          "VOICE AT THE DOOR",
+          "VOICES FROM THE DRAWING-ROOM",
+          "YASHA"
+        ],
+        "split": "train",
+        "title": "The Cherry Orchard",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Cherry Orchard"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-proposal-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "CHUBUKOV",
+          "LOMOV",
+          "NATALYA STEPANOVNA"
+        ],
+        "split": "train",
+        "title": "The Proposal",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Proposal"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-three-sisters-act-1",
+          "the-three-sisters-act-2",
+          "the-three-sisters-act-3",
+          "the-three-sisters-act-4"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "ANDREY",
+          "ANDREY’S VOICE",
+          "ANFISA",
+          "CHEBUTIKIN",
+          "FEDOTIK",
+          "FERAPONT",
+          "IRINA",
+          "KULIGIN",
+          "MASHA",
+          "NATASHA",
+          "OLGA",
+          "RODE",
+          "SOLENI",
+          "TUZENBACH",
+          "VERSHININ",
+          "VERSHININ’S VOICE"
+        ],
+        "split": "train",
+        "title": "The Three Sisters",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Three Sisters"
+      },
+      {
+        "author": "Anton Chekhov",
+        "scene_ids": [
+          "the-wedding-scene-1"
+        ],
+        "source_id": "gutenberg-7986-chekhov-second-series",
+        "speakers": [
+          "A GROOMSMAN",
+          "A WAITER",
+          "ALL",
+          "APLOMBOV",
+          "DASHENKA",
+          "DIMBA",
+          "GROOMSMAN",
+          "MOZGOVOY",
+          "NASTASYA TIMOFEYEVNA",
+          "NUNIN",
+          "REVUNOV",
+          "THE GENTLEMEN",
+          "THE GROOMSMAN",
+          "VARIOUS GENTLEMEN",
+          "YATS",
+          "ZHIGALOV",
+          "ZMEYUKINA"
+        ],
+        "split": "train",
+        "title": "The Wedding",
+        "work_key": "gutenberg-7986-chekhov-second-series::The Wedding"
+      },
+      {
+        "author": "Oscar Wilde",
+        "scene_ids": [
+          "act-1",
+          "act-2",
+          "act-3"
+        ],
+        "source_id": "gutenberg-844-importance-of-being-earnest",
+        "speakers": [
+          "ALGERNON",
+          "CECILY",
+          "CHASUBLE",
+          "GWENDOLEN",
+          "GWENDOLEN AND CECILY",
+          "JACK",
+          "JACK AND ALGERNON",
+          "LADY BRACKNELL",
+          "LANE",
+          "MERRIMAN",
+          "MISS PRISM"
+        ],
+        "split": "test",
+        "title": "The Importance of Being Earnest",
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "author": "Oscar Wilde",
+        "scene_ids": [
+          "an-ideal-husband-act-1",
+          "an-ideal-husband-act-2",
+          "an-ideal-husband-act-3",
+          "an-ideal-husband-act-4"
+        ],
+        "source_id": "gutenberg-885-an-ideal-husband",
+        "speakers": [
+          "HAROLD",
+          "JAMES",
+          "LADY BASILDON",
+          "LADY CHILTERN",
+          "LADY MARKBY",
+          "LORD CAVERSHAM",
+          "LORD GORING",
+          "MABEL CHILTERN",
+          "MASON",
+          "MR. MONTFORD",
+          "MRS. CHEVELEY",
+          "MRS. MARCHMONT",
+          "PHIPPS",
+          "SIR ROBERT CHILTERN",
+          "VICOMTE DE NANJAC"
+        ],
+        "split": "test",
+        "title": "An Ideal Husband",
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "author": "J. M. Synge",
+        "scene_ids": [
+          "riders-to-the-sea-act-1"
+        ],
+        "source_id": "gutenberg-994-riders-to-the-sea",
+        "speakers": [
+          "ANOTHER MAN",
+          "BARTLEY",
+          "CATHLEEN",
+          "CATHLEEN AND NORA",
+          "MAURYA",
+          "NORA",
+          "ONE OF THE WOMEN",
+          "THE OLD MAN"
+        ],
+        "split": "test",
+        "title": "Riders to the Sea",
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      }
+    ]
+  },
+  "environment": {
+    "mlx": "0.32.4",
+    "platform": "macOS-26.3.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.12"
+  },
+  "generation": {
+    "samples": [
+      {
+        "boundary": "early",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "fd063183d3c849d372b4f70fa248ec900028e92aebea98d8172fc139d87caaea",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MADON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::early",
+        "prompt_sha256": "cf85bb883d9e5ac5ed9145f33846e344fb0a2814191cc36efa26ff44d5af0fb7",
+        "prompt_tokens": 2848,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Beyond the Horizon",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "fd063183d3c849d372b4f70fa248ec900028e92aebea98d8172fc139d87caaea",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MADON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::middle",
+        "prompt_sha256": "323d1abfc14ae3e607ba73c595fc29afce69d27f0a1d9c7dfb1ba6bc4e24436d",
+        "prompt_tokens": 87059,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Beyond the Horizon",
+        "turn_ordinal": 428,
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKON<TEXT>Dit'tel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "7a731825ebd1614b50a589ea64c3a4271b099f90e5cb9974fdd43f2be69c945b",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MAKON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::late",
+        "prompt_sha256": "c131941008caab1291adddd75087e52aadc5a57baff1771c7e373fabbe675a80",
+        "prompt_tokens": 167063,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Beyond the Horizon",
+        "turn_ordinal": 855,
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADANE<TEXT>A noel tone’s at with that you to the ike llince ay ul sunase t, you if nok shet noo your thild mangteny youre amend thewith  elis meow ay as hat sit I you you andous t yo---2�t romy tou nof pecutl serndous the is feand if a fooouler shat that w",
+        "continuation_sha256": "12abc1d78a7c7fa70e79fcd0d8d129e4479024db84305d31dfcbe867430667d9",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": false,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": 9,
+          "syntax_error_state": "turn_text",
+          "token_repeated_trigram_rate": 0.22834645669291342,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MADANE"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 402,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::early",
+        "prompt_sha256": "34a9084f183439ca08ec5c5c508b82334265c25e370acc5440ebcfa8ee0dec12",
+        "prompt_tokens": 402,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "614147740edca794583f7f5cbac78fe4b96bd6e0a9ccead04dba7c578d6eebd1",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MAKON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::middle",
+        "prompt_sha256": "17e8ee5ecb6f4a375e91e2c2d8c38fb217b5e46ad425c1e1e1429891464fa3ef",
+        "prompt_tokens": 58111,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 440,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MA<TEXT>Doulit'se, to Ohat! It wit'vele she sof the ike lomice. You. se ashit, you if nok sang noo your ase is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "4b036662f34fac919d08bcbd7e30b658de1625640e7bcca3b8df14f4f0846352",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": false,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.19291338582677164,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::late",
+        "prompt_sha256": "24a04b93fa7f2c2e90a115e52f88a9db549b4412e126d7b43629727666da94a9",
+        "prompt_tokens": 116536,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 879,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKAN<TEXT>Dit't wat teast! Thay ay to I you Whe cof knoury w this be realdit, you if nok shee nooky lind alis a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "914438e2014a9f4703f1ce4e28c458500f63fb4141d81caea7148645507531c4",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": false,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.19685039370078738,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MAKAN"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::early",
+        "prompt_sha256": "0058951c2d0c1fdfb8c555b82c088b4acc6b9a45c80ab6add816e62b0d90978a",
+        "prompt_tokens": 1085,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "An Ideal Husband",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKON<TEXT>Dit'tel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "7a731825ebd1614b50a589ea64c3a4271b099f90e5cb9974fdd43f2be69c945b",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MAKON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::middle",
+        "prompt_sha256": "3bd8a33a1a92ea777c9630c87babc61da04e7992fb9f58530a0dd036d7ab12c6",
+        "prompt_tokens": 91477,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "An Ideal Husband",
+        "turn_ordinal": 599,
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "614147740edca794583f7f5cbac78fe4b96bd6e0a9ccead04dba7c578d6eebd1",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MAKON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::late",
+        "prompt_sha256": "4a379bf9c5ae35cca04898bf81e2528781e899273b5a4991a74e0afb6b50e09d",
+        "prompt_tokens": 172674,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "An Ideal Husband",
+        "turn_ordinal": 1196,
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "614147740edca794583f7f5cbac78fe4b96bd6e0a9ccead04dba7c578d6eebd1",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MAKON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::early",
+        "prompt_sha256": "6a4784ae80acb61ae0215625abca8f31a4ccf49a2774fadf72a91577d9782f0a",
+        "prompt_tokens": 551,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Riders to the Sea",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "fd063183d3c849d372b4f70fa248ec900028e92aebea98d8172fc139d87caaea",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MADON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::middle",
+        "prompt_sha256": "6ef54107f72a40f8b1e17d45507ac031dc9d5e872dc415ca2d8ea36ef8f6e9c3",
+        "prompt_tokens": 9868,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Riders to the Sea",
+        "turn_ordinal": 62,
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAKON<TEXT>Dit'sel to list! The no stome..<TURN_END><TURN><SPEAKER>WISSEL<DIRECTION>Hel lomice._<ITEM_END><TEXT>I’s as it, you if nok sang noo your ast is a theny you ou mand thewird  eifthe ow in alout. I t I you you arangh t you thit. We neveencks, cutherer ay hit whis feand if a foooule-t ma to Muse",
+        "continuation_sha256": "614147740edca794583f7f5cbac78fe4b96bd6e0a9ccead04dba7c578d6eebd1",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 31,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1692913385826772,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MAKON",
+            "WISSEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-textnca",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::late",
+        "prompt_sha256": "d3022db5d95dfdab9b6c32b6ed7662f10bf774b4eb1ef6b9327ea993c13d83d3",
+        "prompt_tokens": 21922,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Riders to the Sea",
+        "turn_ordinal": 122,
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGO<TEXT>Didn’t you’ve got the laugh, sir.... in all two give. I said things.<TURN_END><TURN><SPEAKER>STER<DIRECTION>She scared the rightently.<ITEM_END><DIRECTION>Droposed is her her  eyes after and chair rights thround at a moment, to reman age comples are of the bright fears and the out of man the co",
+        "continuation_sha256": "fdc2218adffb4fdc6b2b320c01f520350fb2669f36f251c2146f3e8a41596f43",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.030303030303030276,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 68,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.1889763779527559,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MADGO",
+            "STER"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::early",
+        "prompt_sha256": "cf85bb883d9e5ac5ed9145f33846e344fb0a2814191cc36efa26ff44d5af0fb7",
+        "prompt_tokens": 2848,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Beyond the Horizon",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADYA<TEXT>Didn’t you’ve the mant.<TURN_END><TURN><SPEAKER>LADY Excuse know what the baby all thing in. Something could nothing to the your hone. Oh, it’s never me a have contrict I have poor angry, you a times the gentlement life. Something since immerict of terrible that t",
+        "continuation_sha256": "66e7563dd832c20761584d33ddf60c46cb505935e7112605f5a170ff25e528ca",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 23,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "speaker",
+          "multi_speaker_generation": false,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.20472440944881887,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "MADYA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::middle",
+        "prompt_sha256": "323d1abfc14ae3e607ba73c595fc29afce69d27f0a1d9c7dfb1ba6bc4e24436d",
+        "prompt_tokens": 87059,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Beyond the Horizon",
+        "turn_ordinal": 428,
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGAR<TEXT>And enought to say with the should because our people us such him, you know what the half in thing about yourse the now?<TURN_END><TURN><SPEAKER>ED<TEXT>Yes, sixpositings him?<TURN_END><TURN><SPEAKER>LITTA<TEXT>Or don’t be love mights. I don’t course, you shall his fears!<TURN_END><TURN><SPEAKER>ED<TEXT>Moscow-far thing.<TURN_END><TURN>",
+        "continuation_sha256": "3be49e086a3fd8f4a60b6a43440afbfa2e0dafa0ea9b627c4386173fa94a2eda",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.16742081447963797,
+          "completed_before_cap": false,
+          "completed_text_fields": 4,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 223,
+          "generated_turns_completed": 4,
+          "generated_turns_started": 5,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "after_turn_marker",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 4,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.17716535433070868,
+          "turn_completion_rate": 0.8,
+          "unknown_speakers": [
+            "ED",
+            "LITTA",
+            "MADGAR"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::late",
+        "prompt_sha256": "c131941008caab1291adddd75087e52aadc5a57baff1771c7e373fabbe675a80",
+        "prompt_tokens": 167063,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Beyond the Horizon",
+        "turn_ordinal": 855,
+        "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGE<TEXT>Didn’t you’ve think it.<TURN_END><TURN><SPEAKER>LUBOV<TEXT>It’s long in the flowering thing in. Something do your dealistention the bout there. He do wife me a wall. Oh, sir.<TURN_END><TURN><SPEAKER>POPOV<TEXT>You our me.<TURN_END><TURN><SPEAKER>MARROMso head, course, let’s this wouldn’t see me on tell make the w",
+        "continuation_sha256": "216bcb961db4a6383c29cedd2257255b748b65d3910e39469c9e35a094674b07",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.17449664429530198,
+          "completed_before_cap": false,
+          "completed_text_fields": 3,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 151,
+          "generated_turns_completed": 3,
+          "generated_turns_started": 4,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "speaker",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 3,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.22047244094488194,
+          "turn_completion_rate": 0.75,
+          "unknown_speakers": [
+            "LUBOV",
+            "MADGE",
+            "POPOV"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 402,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::early",
+        "prompt_sha256": "34a9084f183439ca08ec5c5c508b82334265c25e370acc5440ebcfa8ee0dec12",
+        "prompt_tokens": 402,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAUD<DIRECTION>In the latches to the turning stand gracional right to bund realing, you.<ITEM_END><TEXT>Who can go a kind n't like meting your came course, do wife me a want our eart our that have think of this. Why the nothing, let’s a mad, in fear! The me on terribly that w",
+        "continuation_sha256": "07cef50924c99ca9c92f1471c1f6e5b6aff5df2e1f61ae250ccfe3abfaf883c5",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_text",
+          "multi_speaker_generation": false,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.19291338582677164,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MAUD"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::middle",
+        "prompt_sha256": "17e8ee5ecb6f4a375e91e2c2d8c38fb217b5e46ad425c1e1e1429891464fa3ef",
+        "prompt_tokens": 58111,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 440,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MAUD<DIRECTION>Partuous to the same<ITEM_END><TEXT>What’s you to him in are is this basters it, you know, and go a kind him in to the yourse of and the sadly it, my afraid. I tell you think him, and the figitars.<ITEM_END><TEXT>You need it, I see you now, is neath! I don’t know the this ",
+        "continuation_sha256": "8e21cdf62baeaf98064ea464eb3878f41518692ee504e9f0353d7afaf8bfa184",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": false,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": 192,
+          "syntax_error_state": "after_turn_text",
+          "token_repeated_trigram_rate": 0.30708661417322836,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MAUD"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::late",
+        "prompt_sha256": "24a04b93fa7f2c2e90a115e52f88a9db549b4412e126d7b43629727666da94a9",
+        "prompt_tokens": 116536,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "The Importance of Being Earnest",
+        "turn_ordinal": 879,
+        "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGE<TEXT>Didn’t you story.<TURN_END><TURN><SPEAKER>FALDER<TEXT>The donxt..<TURN_END><TURN><SPEAKER>MRS. PATRICK<DIRECTION>Kisses him, room, soon<ITEM_END><DIRECTION>She sea little and somethings.<ITEM_END><TEXT>I don’t can do wife me a way is abour. I say, and manage; you a times the gentlemen, listen the bright fear!<TURN_END><TURN><SPEAKER>MERCHUT gets out on the",
+        "continuation_sha256": "a8cec93054672cdcb7e73802dc797de2b87e8d9a8775d0f48d18d2dbf0fb231b",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.09558823529411764,
+          "completed_before_cap": false,
+          "completed_text_fields": 3,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 138,
+          "generated_turns_completed": 3,
+          "generated_turns_started": 4,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "speaker",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 3,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.13385826771653542,
+          "turn_completion_rate": 0.75,
+          "unknown_speakers": [
+            "FALDER",
+            "MADGE",
+            "MRS. PATRICK"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::early",
+        "prompt_sha256": "0058951c2d0c1fdfb8c555b82c088b4acc6b9a45c80ab6add816e62b0d90978a",
+        "prompt_tokens": 1085,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "An Ideal Husband",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MASHA<TEXT>Didn’t you’ve the mant.<TURN_END><TURN><SPEAKER>LADY Exact<DIRECTION>The round voice. She shielded Puts outside. A kinging a differthey are on these for his eyes after and chair right the potaches. Then to the good age of passed seen out the know and said foot left her the on",
+        "continuation_sha256": "e12ab34a040e1bde4953085a2a252d7274faa7e1b4beb2f76f67b96337a753bb",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 23,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 0.5,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.15354330708661412,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "LADY Exact",
+            "MASHA"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::middle",
+        "prompt_sha256": "3bd8a33a1a92ea777c9630c87babc61da04e7992fb9f58530a0dd036d7ab12c6",
+        "prompt_tokens": 91477,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "An Ideal Husband",
+        "turn_ordinal": 599,
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGE<TEXT>Didn’t you’!<TURN_END><TURN><SPEAKER>LEW---they here is...<TURN_END><TURN><SPEAKER>COUNTY ONER<TEXT>I. I said your Min�s of say your like that it watery you.<TURN_END><TURN><SPEAKER>MARGARET<DIRECTION>Entered to for hands him and havely._<ITEM_END><TEXT>Head a man the to remember nothing, I see anovitch! Here’s a bout our woman to Mr. ",
+        "continuation_sha256": "1756c899d3af59d5cc99f3dbad623ba0c2a42870420e73c464f8d94f7b7354d1",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 1,
+          "distinct_speakers": 2,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 12,
+          "generated_turns_completed": 1,
+          "generated_turns_started": 2,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": true,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 2,
+          "speaker_format_rate": 0.5,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": 48,
+          "syntax_error_state": "after_speaker",
+          "token_repeated_trigram_rate": 0.15354330708661412,
+          "turn_completion_rate": 0.5,
+          "unknown_speakers": [
+            "LEW---they here is...",
+            "MADGE"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::late",
+        "prompt_sha256": "4a379bf9c5ae35cca04898bf81e2528781e899273b5a4991a74e0afb6b50e09d",
+        "prompt_tokens": 172674,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "An Ideal Husband",
+        "turn_ordinal": 1196,
+        "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+      },
+      {
+        "boundary": "early",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MASHIN<TEXT>At out to little the things! Let to his in all two my from to him, you know, and go away, in a little they are on the right the wife me a wall. I do it worth--and man stand the tROME<TEXT>Oh, Mr. Why could me a shall his fear!<TURN_END><TURN><SPEAKER>ELOPAKHIN<TEXT>Oh! I contry,",
+        "continuation_sha256": "6c5f1918aecfd511343df1298b038b5b10b8084e0be725636280718e6ff8d883",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 0,
+          "distinct_speakers": 1,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 0,
+          "generated_turns_completed": 0,
+          "generated_turns_started": 1,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": false,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 1,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": null,
+          "structure_valid": false,
+          "syntax_error_index": 191,
+          "syntax_error_state": "after_turn_text",
+          "token_repeated_trigram_rate": 0.2086614173228346,
+          "turn_completion_rate": 0.0,
+          "unknown_speakers": [
+            "MASHIN"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::early",
+        "prompt_sha256": "6a4784ae80acb61ae0215625abca8f31a4ccf49a2774fadf72a91577d9782f0a",
+        "prompt_tokens": 551,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Riders to the Sea",
+        "turn_ordinal": 1,
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      },
+      {
+        "boundary": "middle",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGAR<TEXT>And elease,”<TURN_END><TURN><SPEAKER>CAPTAIN<TEXT>The me.<TURN_END><TURN><SPEAKER>SHER<DIRECTION>The round voice. Mrs. HALEmanes, soon seein chair in the shakes at your evernsive with  either owing about to the has appearates the turning somethings. Dick like to shake his fears and of to gets out the co",
+        "continuation_sha256": "70a5476b5a77e0fec6319c07518490569d25014281452f6927322e72ceed8906",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": true,
+          "character_repeated_trigram_rate": 0.0,
+          "completed_before_cap": false,
+          "completed_text_fields": 2,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 20,
+          "generated_turns_completed": 2,
+          "generated_turns_started": 3,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": "turn_direction",
+          "multi_speaker_generation": true,
+          "prefix_valid": true,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 3,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": null,
+          "syntax_error_state": null,
+          "token_repeated_trigram_rate": 0.16141732283464572,
+          "turn_completion_rate": 0.6666666666666666,
+          "unknown_speakers": [
+            "CAPTAIN",
+            "MADGAR",
+            "SHER"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::middle",
+        "prompt_sha256": "6ef54107f72a40f8b1e17d45507ac031dc9d5e872dc415ca2d8ea36ef8f6e9c3",
+        "prompt_tokens": 9868,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Riders to the Sea",
+        "turn_ordinal": 62,
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      },
+      {
+        "boundary": "late",
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "continuation": "<TURN><SPEAKER>MADGAR<TEXT>And else this man. I don’t you to him in are is this be sort it, you know, and the may like a cigaret.<TURN_END><TURN><SPEAKER>LAWYA<TEXT>It is if wasn’t seem as you, you so good---<TURN_END><TURN><SPEAKER>TEL<DIRECTION>Stance._<ITEM_END><TEXT>Yes.<ITEM_END><DIRECTION>With all comples.<ITEM_END><TEXT>Well, I don’t fearing, do you get so to the w",
+        "continuation_sha256": "67672b1e77537877e6f6b63c7a2786a1289605ac5c5d00ee87db132d7190a963",
+        "max_new_tokens": 256,
+        "metrics": {
+          "censored_by_length": false,
+          "character_repeated_trigram_rate": 0.16666666666666663,
+          "completed_before_cap": false,
+          "completed_text_fields": 2,
+          "distinct_speakers": 3,
+          "generated_scenes_completed": 0,
+          "generated_scenes_started": 0,
+          "generated_text_characters": 146,
+          "generated_turns_completed": 2,
+          "generated_turns_started": 3,
+          "generated_work_completed": 0,
+          "hit_length_cap": true,
+          "incomplete_state": null,
+          "multi_speaker_generation": true,
+          "prefix_valid": false,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_fields": 3,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": false,
+          "syntax_error_index": 188,
+          "syntax_error_state": "after_turn_text",
+          "token_repeated_trigram_rate": 0.20078740157480313,
+          "turn_completion_rate": 0.6666666666666666,
+          "unknown_speakers": [
+            "LAWYA",
+            "MADGAR",
+            "TEL"
+          ],
+          "word_repeated_trigram_rate": 0.0
+        },
+        "model": "v2-transformer",
+        "model_context_tokens": 512,
+        "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::late",
+        "prompt_sha256": "d3022db5d95dfdab9b6c32b6ed7662f10bf774b4eb1ef6b9327ea993c13d83d3",
+        "prompt_tokens": 21922,
+        "seed": 123,
+        "temperature": 0.8,
+        "title": "Riders to the Sea",
+        "turn_ordinal": 122,
+        "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+      }
+    ],
+    "summary": {
+      "v2-textnca": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.7373578267448038,
+          "unique_continuation_rate": 0.5
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.9166666666666666,
+          "character_repeated_trigram_rate": 0.0,
+          "multi_speaker_generation": 0.75,
+          "prefix_valid": 0.9166666666666666,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 1.0,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.17847769028871394,
+          "turn_completion_rate": 0.375,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 11,
+          "completed_text_fields": 9,
+          "prefix_valid": 11,
+          "speaker_fields": 21,
+          "structure_valid": 0
+        },
+        "sample_count": 12,
+        "work_count": 4,
+        "work_means": {
+          "gutenberg-58569-beyond-the-horizon::Beyond the Horizon": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1692913385826772,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 0.3333333333333333,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1968503937007874,
+            "turn_completion_rate": 0.16666666666666666,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-885-an-ideal-husband::An Ideal Husband": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.17847769028871394,
+            "turn_completion_rate": 0.3333333333333333,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-994-riders-to-the-sea::Riders to the Sea": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.0,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1692913385826772,
+            "turn_completion_rate": 0.5,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      },
+      "v2-transformer": {
+        "cross_prompt": {
+          "mean_cross_work_character_trigram_jaccard": 0.21546890252293782,
+          "unique_continuation_rate": 1.0
+        },
+        "macro_average_across_works": {
+          "censored_by_length": 0.6666666666666666,
+          "character_repeated_trigram_rate": 0.052872949253229544,
+          "multi_speaker_generation": 0.6666666666666666,
+          "prefix_valid": 0.6666666666666666,
+          "scene_completion_rate": null,
+          "speaker_consistency": 0.0,
+          "speaker_format_rate": 0.9166666666666666,
+          "speaker_transition_rate": 1.0,
+          "structure_valid": 0.0,
+          "token_repeated_trigram_rate": 0.1919291338582677,
+          "turn_completion_rate": 0.46944444444444444,
+          "word_repeated_trigram_rate": 0.0
+        },
+        "raw_counts": {
+          "censored_by_length": 8,
+          "completed_text_fields": 18,
+          "prefix_valid": 8,
+          "speaker_fields": 26,
+          "structure_valid": 0
+        },
+        "sample_count": 12,
+        "work_count": 4,
+        "work_means": {
+          "gutenberg-58569-beyond-the-horizon::Beyond the Horizon": {
+            "censored_by_length": 1.0,
+            "character_repeated_trigram_rate": 0.06590794826088942,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 1.0,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19028871391076116,
+            "turn_completion_rate": 0.6,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.058165548098433995,
+            "multi_speaker_generation": 0.3333333333333333,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.24015748031496065,
+            "turn_completion_rate": 0.25,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-885-an-ideal-husband::An Ideal Husband": {
+            "censored_by_length": 0.6666666666666666,
+            "character_repeated_trigram_rate": 0.031862745098039214,
+            "multi_speaker_generation": 1.0,
+            "prefix_valid": 0.6666666666666666,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 0.6666666666666666,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.1469816272965879,
+            "turn_completion_rate": 0.5833333333333334,
+            "word_repeated_trigram_rate": 0.0
+          },
+          "gutenberg-994-riders-to-the-sea::Riders to the Sea": {
+            "censored_by_length": 0.3333333333333333,
+            "character_repeated_trigram_rate": 0.055555555555555546,
+            "multi_speaker_generation": 0.6666666666666666,
+            "prefix_valid": 0.3333333333333333,
+            "scene_completion_rate": null,
+            "speaker_consistency": 0.0,
+            "speaker_format_rate": 1.0,
+            "speaker_transition_rate": 1.0,
+            "structure_valid": 0.0,
+            "token_repeated_trigram_rate": 0.19028871391076116,
+            "turn_completion_rate": 0.4444444444444444,
+            "word_repeated_trigram_rate": 0.0
+          }
+        }
+      }
+    }
+  },
+  "identity": {
+    "artifact_hashes": {
+      "v2-textnca": {
+        "checkpoint": "v2-textnca/checkpoint-00010000",
+        "config_sha256": "acb13e5b67e48f60fe463f3f8f7cece1f23175ae41b5f0fac0ee8066f6665733",
+        "dataset_manifest_sha256": "40f9459c687ac9e8fff2cbb279cca031a8c7337ecaf3462e36c33d495396852d",
+        "model_sha256": "ac512bb7bfc22a7db2ffe4f1524fe7a01032ef9f3400894b06a1ed9024107c76",
+        "trainer_state_sha256": "6a660e4b51313e00ec9a1cf849d2c4890a4a9fee05913d743c56a11997c2bb05"
+      },
+      "v2-transformer": {
+        "checkpoint": "v2-transformer/checkpoint-00010000",
+        "config_sha256": "e22c8f21d0f533870493a9cd6c0a6698a6fda3d3c7883f8ac38eec4988ae4de5",
+        "dataset_manifest_sha256": "40f9459c687ac9e8fff2cbb279cca031a8c7337ecaf3462e36c33d495396852d",
+        "model_sha256": "d83bcdabe2f5aec8d8e6adc13deac991bc8783a6c75c3c372253983d6c782cd7",
+        "trainer_state_sha256": "65937a62aeb28ff7437e8767a8b5a43341b7d7e9a73acf2e0f36d1a1dc75e21a"
+      }
+    },
+    "run_id": "v2-d8cbe61",
+    "training_commit": "d8cbe61523f2627cb786ab1d7d19d0fbc04e5a19",
+    "v1_results_sha256": "1fd2629c19e30199e3f7fa65721d48b61a9af5b8ab531b6a9f6197d8d8d11e99"
+  },
+  "prompt_manifest": [
+    {
+      "allowed_speakers": [
+        "ANDREW",
+        "ANDY’S VOICE",
+        "BEN",
+        "FAWCETT",
+        "MARY",
+        "MAYO",
+        "MRS. ATKINS",
+        "MRS. MAYO",
+        "ROBERT",
+        "RUTH",
+        "SCOTT",
+        "THE CAPTAIN"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::early",
+      "prompt_sha256": "cf85bb883d9e5ac5ed9145f33846e344fb0a2814191cc36efa26ff44d5af0fb7",
+      "prompt_tokens": 2848,
+      "title": "Beyond the Horizon",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+    },
+    {
+      "allowed_speakers": [
+        "ANDREW",
+        "ANDY’S VOICE",
+        "BEN",
+        "FAWCETT",
+        "MARY",
+        "MAYO",
+        "MRS. ATKINS",
+        "MRS. MAYO",
+        "ROBERT",
+        "RUTH",
+        "SCOTT",
+        "THE CAPTAIN"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::middle",
+      "prompt_sha256": "323d1abfc14ae3e607ba73c595fc29afce69d27f0a1d9c7dfb1ba6bc4e24436d",
+      "prompt_tokens": 87059,
+      "title": "Beyond the Horizon",
+      "turn_ordinal": 428,
+      "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+    },
+    {
+      "allowed_speakers": [
+        "ANDREW",
+        "ANDY’S VOICE",
+        "BEN",
+        "FAWCETT",
+        "MARY",
+        "MAYO",
+        "MRS. ATKINS",
+        "MRS. MAYO",
+        "ROBERT",
+        "RUTH",
+        "SCOTT",
+        "THE CAPTAIN"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon::late",
+      "prompt_sha256": "c131941008caab1291adddd75087e52aadc5a57baff1771c7e373fabbe675a80",
+      "prompt_tokens": 167063,
+      "title": "Beyond the Horizon",
+      "turn_ordinal": 855,
+      "work_key": "gutenberg-58569-beyond-the-horizon::Beyond the Horizon"
+    },
+    {
+      "allowed_speakers": [
+        "ALGERNON",
+        "CECILY",
+        "CHASUBLE",
+        "GWENDOLEN",
+        "GWENDOLEN AND CECILY",
+        "JACK",
+        "JACK AND ALGERNON",
+        "LADY BRACKNELL",
+        "LANE",
+        "MERRIMAN",
+        "MISS PRISM"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::early",
+      "prompt_sha256": "34a9084f183439ca08ec5c5c508b82334265c25e370acc5440ebcfa8ee0dec12",
+      "prompt_tokens": 402,
+      "title": "The Importance of Being Earnest",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+    },
+    {
+      "allowed_speakers": [
+        "ALGERNON",
+        "CECILY",
+        "CHASUBLE",
+        "GWENDOLEN",
+        "GWENDOLEN AND CECILY",
+        "JACK",
+        "JACK AND ALGERNON",
+        "LADY BRACKNELL",
+        "LANE",
+        "MERRIMAN",
+        "MISS PRISM"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::middle",
+      "prompt_sha256": "17e8ee5ecb6f4a375e91e2c2d8c38fb217b5e46ad425c1e1e1429891464fa3ef",
+      "prompt_tokens": 58111,
+      "title": "The Importance of Being Earnest",
+      "turn_ordinal": 440,
+      "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+    },
+    {
+      "allowed_speakers": [
+        "ALGERNON",
+        "CECILY",
+        "CHASUBLE",
+        "GWENDOLEN",
+        "GWENDOLEN AND CECILY",
+        "JACK",
+        "JACK AND ALGERNON",
+        "LADY BRACKNELL",
+        "LANE",
+        "MERRIMAN",
+        "MISS PRISM"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest::late",
+      "prompt_sha256": "24a04b93fa7f2c2e90a115e52f88a9db549b4412e126d7b43629727666da94a9",
+      "prompt_tokens": 116536,
+      "title": "The Importance of Being Earnest",
+      "turn_ordinal": 879,
+      "work_key": "gutenberg-844-importance-of-being-earnest::The Importance of Being Earnest"
+    },
+    {
+      "allowed_speakers": [
+        "HAROLD",
+        "JAMES",
+        "LADY BASILDON",
+        "LADY CHILTERN",
+        "LADY MARKBY",
+        "LORD CAVERSHAM",
+        "LORD GORING",
+        "MABEL CHILTERN",
+        "MASON",
+        "MR. MONTFORD",
+        "MRS. CHEVELEY",
+        "MRS. MARCHMONT",
+        "PHIPPS",
+        "SIR ROBERT CHILTERN",
+        "VICOMTE DE NANJAC"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::early",
+      "prompt_sha256": "0058951c2d0c1fdfb8c555b82c088b4acc6b9a45c80ab6add816e62b0d90978a",
+      "prompt_tokens": 1085,
+      "title": "An Ideal Husband",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+    },
+    {
+      "allowed_speakers": [
+        "HAROLD",
+        "JAMES",
+        "LADY BASILDON",
+        "LADY CHILTERN",
+        "LADY MARKBY",
+        "LORD CAVERSHAM",
+        "LORD GORING",
+        "MABEL CHILTERN",
+        "MASON",
+        "MR. MONTFORD",
+        "MRS. CHEVELEY",
+        "MRS. MARCHMONT",
+        "PHIPPS",
+        "SIR ROBERT CHILTERN",
+        "VICOMTE DE NANJAC"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::middle",
+      "prompt_sha256": "3bd8a33a1a92ea777c9630c87babc61da04e7992fb9f58530a0dd036d7ab12c6",
+      "prompt_tokens": 91477,
+      "title": "An Ideal Husband",
+      "turn_ordinal": 599,
+      "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+    },
+    {
+      "allowed_speakers": [
+        "HAROLD",
+        "JAMES",
+        "LADY BASILDON",
+        "LADY CHILTERN",
+        "LADY MARKBY",
+        "LORD CAVERSHAM",
+        "LORD GORING",
+        "MABEL CHILTERN",
+        "MASON",
+        "MR. MONTFORD",
+        "MRS. CHEVELEY",
+        "MRS. MARCHMONT",
+        "PHIPPS",
+        "SIR ROBERT CHILTERN",
+        "VICOMTE DE NANJAC"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-885-an-ideal-husband::An Ideal Husband::late",
+      "prompt_sha256": "4a379bf9c5ae35cca04898bf81e2528781e899273b5a4991a74e0afb6b50e09d",
+      "prompt_tokens": 172674,
+      "title": "An Ideal Husband",
+      "turn_ordinal": 1196,
+      "work_key": "gutenberg-885-an-ideal-husband::An Ideal Husband"
+    },
+    {
+      "allowed_speakers": [
+        "ANOTHER MAN",
+        "BARTLEY",
+        "CATHLEEN",
+        "CATHLEEN AND NORA",
+        "MAURYA",
+        "NORA",
+        "ONE OF THE WOMEN",
+        "THE OLD MAN"
+      ],
+      "boundary": "early",
+      "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::early",
+      "prompt_sha256": "6a4784ae80acb61ae0215625abca8f31a4ccf49a2774fadf72a91577d9782f0a",
+      "prompt_tokens": 551,
+      "title": "Riders to the Sea",
+      "turn_ordinal": 1,
+      "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+    },
+    {
+      "allowed_speakers": [
+        "ANOTHER MAN",
+        "BARTLEY",
+        "CATHLEEN",
+        "CATHLEEN AND NORA",
+        "MAURYA",
+        "NORA",
+        "ONE OF THE WOMEN",
+        "THE OLD MAN"
+      ],
+      "boundary": "middle",
+      "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::middle",
+      "prompt_sha256": "6ef54107f72a40f8b1e17d45507ac031dc9d5e872dc415ca2d8ea36ef8f6e9c3",
+      "prompt_tokens": 9868,
+      "title": "Riders to the Sea",
+      "turn_ordinal": 62,
+      "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+    },
+    {
+      "allowed_speakers": [
+        "ANOTHER MAN",
+        "BARTLEY",
+        "CATHLEEN",
+        "CATHLEEN AND NORA",
+        "MAURYA",
+        "NORA",
+        "ONE OF THE WOMEN",
+        "THE OLD MAN"
+      ],
+      "boundary": "late",
+      "prompt_id": "gutenberg-994-riders-to-the-sea::Riders to the Sea::late",
+      "prompt_sha256": "d3022db5d95dfdab9b6c32b6ed7662f10bf774b4eb1ef6b9327ea993c13d83d3",
+      "prompt_tokens": 21922,
+      "title": "Riders to the Sea",
+      "turn_ordinal": 122,
+      "work_key": "gutenberg-994-riders-to-the-sea::Riders to the Sea"
+    }
+  ],
+  "protocol": {
+    "aggregation": "sample metrics, then work means, then macro-average across works",
+    "determinism_check": "first prompt replayed per model with exact token equality",
+    "generation_seed": 123,
+    "max_new_tokens": 256,
+    "prompt_selection": "early, middle, and late completed-turn boundary per test work",
+    "temperature": 0.8,
+    "training_seed": 123
+  },
+  "schema_version": 2,
+  "textnca_investment_decision": {
+    "criteria": {
+      "textnca_cross_work_similarity_no_better": true,
+      "textnca_test_loss_worse": true,
+      "textnca_training_slower": true,
+      "textnca_unique_rate_no_better": true
+    },
+    "decision": "stop",
+    "rule": "Stop further TextNCA investment when it loses on held-out loss and training speed and shows no advantage on exact continuation diversity or cross-work collapse."
+  },
+  "training": {
+    "comparison": {
+      "parameter_difference": 174720,
+      "parameter_difference_percent": 0.6428445281685995,
+      "textnca_test_loss_relative_percent": 24.56202416698563,
+      "textnca_test_perplexity_relative_percent": 56.09958686699538,
+      "transformer_test_throughput_speedup": 3.629956074367167,
+      "transformer_training_speedup": 3.2956556471312055
+    },
+    "models": {
+      "v2-textnca": {
+        "best_validation": {
+          "elapsed_seconds": 20.08312416700028,
+          "loss": 2.245425291797515,
+          "perplexity": 9.44443134164137,
+          "split": "validation",
+          "step": 9250,
+          "tokens": 426483,
+          "tokens_per_second": 21235.889219904264
+        },
+        "elapsed_seconds": 4169.5084373750005,
+        "final_train_loss": 2.2231569290161133,
+        "final_validation": {
+          "elapsed_seconds": 20.077079667000362,
+          "loss": 2.2455727277005875,
+          "perplexity": 9.445823892558709,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 426483,
+          "tokens_per_second": 21242.28259655649
+        },
+        "parameters": 27353920,
+        "seen_tokens": 20475138,
+        "test": {
+          "elapsed_seconds": 22.56051670800116,
+          "loss": 2.25838301609296,
+          "perplexity": 9.567605987201658,
+          "split": "test",
+          "step": 10000,
+          "tokens": 478206,
+          "tokens_per_second": 21196.58898727274
+        },
+        "validation_curve": [
+          {
+            "loss": 3.5867894313278974,
+            "step": 250
+          },
+          {
+            "loss": 2.874320522115532,
+            "step": 500
+          },
+          {
+            "loss": 2.7578810412770336,
+            "step": 750
+          },
+          {
+            "loss": 2.5487821969690723,
+            "step": 1000
+          },
+          {
+            "loss": 2.6375549555261433,
+            "step": 1250
+          },
+          {
+            "loss": 2.5623825622473158,
+            "step": 1500
+          },
+          {
+            "loss": 2.5131961455971172,
+            "step": 1750
+          },
+          {
+            "loss": 2.7003187953353724,
+            "step": 2000
+          },
+          {
+            "loss": 2.548818534155743,
+            "step": 2250
+          },
+          {
+            "loss": 2.5857887222717553,
+            "step": 2500
+          },
+          {
+            "loss": 2.4721326762864266,
+            "step": 2750
+          },
+          {
+            "loss": 2.5130308621026147,
+            "step": 3000
+          },
+          {
+            "loss": 2.5137587032246156,
+            "step": 3250
+          },
+          {
+            "loss": 2.4688733460195804,
+            "step": 3500
+          },
+          {
+            "loss": 2.619930143997625,
+            "step": 3750
+          },
+          {
+            "loss": 2.4614541559293177,
+            "step": 4000
+          },
+          {
+            "loss": 2.4798590616219975,
+            "step": 4250
+          },
+          {
+            "loss": 2.4108376673484972,
+            "step": 4500
+          },
+          {
+            "loss": 2.4232179348686853,
+            "step": 4750
+          },
+          {
+            "loss": 2.3903993615641626,
+            "step": 5000
+          },
+          {
+            "loss": 2.3994133881527078,
+            "step": 5250
+          },
+          {
+            "loss": 2.413652764180921,
+            "step": 5500
+          },
+          {
+            "loss": 2.372550126340854,
+            "step": 5750
+          },
+          {
+            "loss": 2.3780213074258127,
+            "step": 6000
+          },
+          {
+            "loss": 2.340830742557441,
+            "step": 6250
+          },
+          {
+            "loss": 2.349179681248835,
+            "step": 6500
+          },
+          {
+            "loss": 2.323100494997932,
+            "step": 6750
+          },
+          {
+            "loss": 2.3134477779457576,
+            "step": 7000
+          },
+          {
+            "loss": 2.329137859901325,
+            "step": 7250
+          },
+          {
+            "loss": 2.2864160458046174,
+            "step": 7500
+          },
+          {
+            "loss": 2.2987252332275334,
+            "step": 7750
+          },
+          {
+            "loss": 2.275156108421416,
+            "step": 8000
+          },
+          {
+            "loss": 2.2662631454902655,
+            "step": 8250
+          },
+          {
+            "loss": 2.279523282809998,
+            "step": 8500
+          },
+          {
+            "loss": 2.2502149802566684,
+            "step": 8750
+          },
+          {
+            "loss": 2.2681895788169237,
+            "step": 9000
+          },
+          {
+            "loss": 2.245425291797515,
+            "step": 9250
+          },
+          {
+            "loss": 2.24982233982839,
+            "step": 9500
+          },
+          {
+            "loss": 2.2459407939518177,
+            "step": 9750
+          },
+          {
+            "loss": 2.2455727277005875,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 4910.683910952952
+      },
+      "v2-transformer": {
+        "best_validation": {
+          "elapsed_seconds": 5.812941791000412,
+          "loss": 1.786320026449664,
+          "perplexity": 5.967451945221771,
+          "split": "validation",
+          "step": 8000,
+          "tokens": 426483,
+          "tokens_per_second": 73367.84288125513
+        },
+        "elapsed_seconds": 1265.1529418749997,
+        "final_train_loss": 1.2629703283309937,
+        "final_validation": {
+          "elapsed_seconds": 5.476903624999977,
+          "loss": 1.7969191109283023,
+          "perplexity": 6.031037853445751,
+          "split": "validation",
+          "step": 10000,
+          "tokens": 426483,
+          "tokens_per_second": 77869.36364066508
+        },
+        "parameters": 27179200,
+        "seen_tokens": 20475138,
+        "test": {
+          "elapsed_seconds": 6.2150935839999875,
+          "loss": 1.8130590211551252,
+          "perplexity": 6.129168038960753,
+          "split": "test",
+          "step": 10000,
+          "tokens": 478206,
+          "tokens_per_second": 76942.68695021488
+        },
+        "validation_curve": [
+          {
+            "loss": 2.986562422329847,
+            "step": 250
+          },
+          {
+            "loss": 2.629491851642991,
+            "step": 500
+          },
+          {
+            "loss": 2.688847154977547,
+            "step": 750
+          },
+          {
+            "loss": 2.4924301385135443,
+            "step": 1000
+          },
+          {
+            "loss": 2.3683727727007327,
+            "step": 1250
+          },
+          {
+            "loss": 2.2616357497553023,
+            "step": 1500
+          },
+          {
+            "loss": 2.190574612632933,
+            "step": 1750
+          },
+          {
+            "loss": 2.217949366579749,
+            "step": 2000
+          },
+          {
+            "loss": 2.149024647546949,
+            "step": 2250
+          },
+          {
+            "loss": 2.1197156563350523,
+            "step": 2500
+          },
+          {
+            "loss": 1.979091889680758,
+            "step": 2750
+          },
+          {
+            "loss": 2.0299030760064367,
+            "step": 3000
+          },
+          {
+            "loss": 1.966366530944485,
+            "step": 3250
+          },
+          {
+            "loss": 1.9187215219360296,
+            "step": 3500
+          },
+          {
+            "loss": 1.9586142172989969,
+            "step": 3750
+          },
+          {
+            "loss": 1.9249004997707997,
+            "step": 4000
+          },
+          {
+            "loss": 1.9279644822746635,
+            "step": 4250
+          },
+          {
+            "loss": 1.835342768765155,
+            "step": 4500
+          },
+          {
+            "loss": 1.9223853606855372,
+            "step": 4750
+          },
+          {
+            "loss": 1.885685964796296,
+            "step": 5000
+          },
+          {
+            "loss": 1.873644591137535,
+            "step": 5250
+          },
+          {
+            "loss": 1.904043278056731,
+            "step": 5500
+          },
+          {
+            "loss": 1.8401780144500923,
+            "step": 5750
+          },
+          {
+            "loss": 1.9070607320285553,
+            "step": 6000
+          },
+          {
+            "loss": 1.8052869430791258,
+            "step": 6250
+          },
+          {
+            "loss": 1.8987501183599713,
+            "step": 6500
+          },
+          {
+            "loss": 1.8711544309521861,
+            "step": 6750
+          },
+          {
+            "loss": 1.8440171720465703,
+            "step": 7000
+          },
+          {
+            "loss": 1.885449314406564,
+            "step": 7250
+          },
+          {
+            "loss": 1.8128951366009167,
+            "step": 7500
+          },
+          {
+            "loss": 1.874979731227014,
+            "step": 7750
+          },
+          {
+            "loss": 1.786320026449664,
+            "step": 8000
+          },
+          {
+            "loss": 1.8500265297841956,
+            "step": 8250
+          },
+          {
+            "loss": 1.8377714853504565,
+            "step": 8500
+          },
+          {
+            "loss": 1.806837429078357,
+            "step": 8750
+          },
+          {
+            "loss": 1.8280965944083278,
+            "step": 9000
+          },
+          {
+            "loss": 1.7924625295664078,
+            "step": 9250
+          },
+          {
+            "loss": 1.810234840540061,
+            "step": 9500
+          },
+          {
+            "loss": 1.798736289689494,
+            "step": 9750
+          },
+          {
+            "loss": 1.7969191109283023,
+            "step": 10000
+          }
+        ],
+        "wall_tokens_per_second": 16183.923162408451
+      }
+    }
+  },
+  "v1_to_v2": {
+    "textnca": {
+      "cross_work_similarity_change": -0.15284864752906813,
+      "elapsed_seconds_change": 675.382684874975,
+      "test_loss_change": -0.2382281455002171,
+      "test_loss_change_percent": -9.542060420341755,
+      "unique_continuation_rate_change": -0.05555555555555558
+    },
+    "transformer": {
+      "cross_work_similarity_change": 0.028924639533094404,
+      "elapsed_seconds_change": 200.16023920798034,
+      "test_loss_change": -0.4964141034044447,
+      "test_loss_change_percent": -21.494690634216138,
+      "unique_continuation_rate_change": 0.0
+    }
+  }
+}

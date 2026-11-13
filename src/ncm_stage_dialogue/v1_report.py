@@ -63,7 +63,9 @@ def _load_json_lines(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
-def _runner_results(run_root: Path) -> dict[str, dict[str, Any]]:
+def _runner_results(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> dict[str, dict[str, Any]]:
     results: dict[str, dict[str, Any]] = {}
     current: str | None = None
     for line in (run_root / "supervisor.log").read_text(encoding="utf-8").splitlines():
@@ -73,15 +75,17 @@ def _runner_results(run_root: Path) -> dict[str, dict[str, Any]]:
             if current is None:
                 raise ValueError("supervisor result has no experiment name")
             results[current] = json.loads(line)
-    if set(results) != set(MODEL_NAMES):
-        raise ValueError("supervisor log does not contain both V1 results")
+    if set(results) != set(model_names):
+        raise ValueError("supervisor log does not contain both comparison results")
     return results
 
 
-def _training_summary(run_root: Path) -> dict[str, Any]:
-    runner = _runner_results(run_root)
+def _training_summary(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> dict[str, Any]:
+    runner = _runner_results(run_root, model_names)
     models: dict[str, Any] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         events = _load_json_lines(run_root / name / "metrics.jsonl")
         train = [event for event in events if event["split"] == "train"]
         validation = [event for event in events if event["split"] == "validation"]
@@ -104,8 +108,8 @@ def _training_summary(run_root: Path) -> dict[str, Any]:
                 {"step": event["step"], "loss": event["loss"]} for event in validation
             ],
         }
-    textnca = models["v1-textnca"]
-    transformer = models["v1-transformer"]
+    textnca = models[model_names[0]]
+    transformer = models[model_names[1]]
     return {
         "models": models,
         "comparison": {
@@ -223,11 +227,12 @@ def _generate_samples(
     seed: int,
     temperature: float,
     max_new_tokens: int,
+    model_names: tuple[str, str] = MODEL_NAMES,
 ) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
     samples: list[dict[str, Any]] = []
     manifest: dict[str, Any] | None = None
     prompt_manifest: list[dict[str, Any]] | None = None
-    for name in MODEL_NAMES:
+    for name in model_names:
         config = run_root / "configs" / f"{name}.json"
         model, model_config, _, dataset, checkpoint = _load_model_for_checkpoint(config, None)
         if manifest is None:
@@ -289,14 +294,16 @@ def _generate_samples(
     assert manifest is not None and prompt_manifest is not None
     summaries = {
         name: _macro_generation_summary([sample for sample in samples if sample["model"] == name])
-        for name in MODEL_NAMES
+        for name in model_names
     }
     return samples, summaries, {"dataset": manifest, "prompts": prompt_manifest}
 
 
-def _artifact_hashes(run_root: Path) -> dict[str, Any]:
+def _artifact_hashes(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> dict[str, Any]:
     hashes: dict[str, Any] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         checkpoint_name = (run_root / name / "latest").read_text(encoding="utf-8").strip()
         checkpoint = run_root / name / checkpoint_name
         hashes[name] = {
@@ -309,10 +316,12 @@ def _artifact_hashes(run_root: Path) -> dict[str, Any]:
     return hashes
 
 
-def _shared_training_commit(run_root: Path) -> str:
+def _shared_training_commit(
+    run_root: Path, model_names: tuple[str, str] = MODEL_NAMES
+) -> str:
     """Require both final checkpoints to come from one source revision."""
     commits: dict[str, str] = {}
-    for name in MODEL_NAMES:
+    for name in model_names:
         checkpoint_name = (run_root / name / "latest").read_text(encoding="utf-8").strip()
         trainer_state = json.loads(
             (run_root / name / checkpoint_name / "trainer_state.json").read_text(encoding="utf-8")
@@ -323,12 +332,14 @@ def _shared_training_commit(run_root: Path) -> str:
     return next(iter(commits.values()))
 
 
-def _curve_svg(training: dict[str, Any]) -> str:
+def _curve_svg(
+    training: dict[str, Any], model_names: tuple[str, str] = MODEL_NAMES
+) -> str:
     width, height = 800, 420
     left, right, top, bottom = 70, 30, 30, 55
     curves = {
-        "TextNCA": training["models"]["v1-textnca"]["validation_curve"],
-        "Transformer": training["models"]["v1-transformer"]["validation_curve"],
+        "TextNCA": training["models"][model_names[0]]["validation_curve"],
+        "Transformer": training["models"][model_names[1]]["validation_curve"],
     }
     points = [point for curve in curves.values() for point in curve]
     x_max = max(point["step"] for point in points)
